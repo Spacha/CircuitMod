@@ -101,11 +101,12 @@ class SwitchElm extends CircuitElm {
 	}
 
 	void mouseUp() {
-		if (momentary)
-			toggle();
+		//if (momentary)
+		//	toggle();
 	}
 
 	void toggle() {
+		System.out.println("asdasdaddsdadasd");
 		position++;
 		if (position >= posCount)
 			position = 0;

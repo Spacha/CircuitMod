@@ -64,7 +64,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	private static final long serialVersionUID = 1L;
 
-	final String PROGRAM_NAME = "CircuitMod v2.7";
+	final String PROGRAM_NAME = "CircuitMod v2.7-beta";
 
 	final int SETUP_READ_OK = 0;
 	final int SETUP_READ_DUMP_WARNING = 1;
@@ -263,7 +263,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	String startCircuitText = null;
 	String baseURL = "http://circuitmod.sourceforge.net/";
 
-	public void init(String initCircuit) {
+	public boolean init(String initCircuit) {
 		String euroResistor = null;
 		String useFrameStr = null;
 		boolean printable = false;
@@ -283,8 +283,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					x = URLDecoder.decode(x, "UTF-8");
 					startCircuitText = x;
 				} catch (Exception e) {
-					// System.out.println("can't decode " + x);
+					//System.out.println("can't decode " + x);
 					e.printStackTrace();
+					return false;
 				}
 			}
 			in = doc.lastIndexOf('/');
@@ -305,6 +306,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			if (x != null && x.equalsIgnoreCase("true"))
 				convention = false;
 		} catch (Exception e) {
+			//return false;
 		}
 
 		boolean euro = (euroResistor != null
@@ -665,7 +667,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		scopeMenu = buildScopeMenu(false);
 		transScopeMenu = buildScopeMenu(true);
 
-		getSetupList(circuitsMenu, false);
+		if (!getSetupList(circuitsMenu, false))
+			return false;
 
 		// Init SaveOpenDialog
 		saveOpenDialog = new SaveOpenDialog(this);
@@ -684,6 +687,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// Set current "saved" circuit
 		savedCircuit = dumpCircuit();
 		// TODO: add status line
+		
+		return true;
 	}
 
 	void setFrameAndShow() {
@@ -1823,6 +1828,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void stop(String s, CircuitElm ce) {
+		System.out.println("Stopping.");
 		stopMessage = s;
 		circuitMatrix = null;
 		stopElm = ce;
@@ -2308,7 +2314,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	void doFlipHorizontal(CircuitElm elm) {
 		System.out.println(elm.dump());
 	}
-
+	
 	///////////////////
 	// About methods //
 	///////////////////
@@ -2361,6 +2367,15 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	void showSetupReadErrorDialog() {
 		Object[] options = { "   Ok   " };
 		JOptionPane.showOptionDialog(this, "ERROR. The file cannot be opened.",
+				"Error", JOptionPane.PLAIN_MESSAGE, JOptionPane.ERROR_MESSAGE,
+				null, options, options[0]);
+	}
+	
+	void showErrorDialog(String message) {
+		//System.out.println(message);
+		//new ErrorFrame(message);
+		Object[] options = { "   Ok   " };
+		JOptionPane.showOptionDialog(this, "ERROR. " + message,
 				"Error", JOptionPane.PLAIN_MESSAGE, JOptionPane.ERROR_MESSAGE,
 				null, options, options[0]);
 	}
@@ -2571,20 +2586,29 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		System.out.print(((Scrollbar) e.getSource()).getValue() + "\n");
 	}
 
-	ByteArrayOutputStream readUrlData(URL url) throws java.io.IOException  {
-		Object o = url.getContent();
-		FilterInputStream fis = (FilterInputStream) o;
-		ByteArrayOutputStream ba = new ByteArrayOutputStream(fis.available());
-		int blen = 1024;
-		byte b[] = new byte[blen];
-		while (true) {
-			int len = fis.read(b);
-			if (len <= 0)
-				break;
-			ba.write(b, 0, len);
+	ByteArrayOutputStream readUrlData(URL url) throws Exception {
+		try {
+			Object o = url.getContent();
+			
+			// using try here to automatically close the stream on exit
+			try (FilterInputStream fis = (FilterInputStream) o) {
+				ByteArrayOutputStream ba = new ByteArrayOutputStream(fis.available());
+				int blen = 1024;
+				byte b[] = new byte[blen];
+				while (true) {
+					int len = fis.read(b);
+					if (len <= 0)
+						break;
+					ba.write(b, 0, len);
+				}
+				return ba;
+			} catch(java.io.IOException e) {
+				throw e;  // let it fall through
+			}
+			
+		} catch (Exception e) {
+			throw e;  // let it fall through
 		}
-		fis.close();
-		return ba;
 	}
 
 	URL getCodeBase() {
@@ -2601,20 +2625,20 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 	}
 
-	void getSetupList(Menu menu, @SuppressWarnings("unused") boolean retry) {
+	boolean getSetupList(Menu menu, @SuppressWarnings("unused") boolean retry) {
 		Menu stack[] = new Menu[6];
 		int stackptr = 0;
 		stack[stackptr++] = menu;
 		try {
 			URL url = new URL(getCodeBase() + "setuplist.txt");
 			ByteArrayOutputStream ba = readUrlData(url);
+			
 			byte b[] = ba.toByteArray();
 			int len = ba.size();
 			int p;
 			if (len == 0 || b[0] != '#') {
 				// got a redirect, try again
-				getSetupList(menu, true);
-				return;
+				return getSetupList(menu, true);
 			}
 			for (p = 0; p < len;) {
 				int l;
@@ -2649,10 +2673,15 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				}
 				p += l;
 			}
+		//} catch (Exception e) {
 		} catch (Exception e) {
-			e.printStackTrace();
-			stop("Can't read setuplist.txt!", null);
+			//e.printStackTrace();
+			//stop("Can't read setuplist.txt!", null);
+			showErrorDialog("Cannot read \"setuplist.txt\"! Make sure it is included in the installation folder.");
+			return false;
 		}
+		
+		return true;
 	}
 
 	int readSetup(String text) {
@@ -3143,6 +3172,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
 				clearSelection();
 		}
+
+		if (doSwitch(e.getX(), e.getY()))
+			return;
 	}
 
 	@Override
@@ -3194,8 +3226,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		if (tempMouseMode != MODE_SELECT && tempMouseMode != MODE_DRAG_SELECTED)
 			clearSelection();
-		if (doSwitch(e.getX(), e.getY()))
-			return;
+
 		initDragX = e.getX();
 		initDragY = e.getY();
 		dragging = true;

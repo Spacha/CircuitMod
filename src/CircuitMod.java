@@ -23,6 +23,11 @@ public class CircuitMod extends Applet implements ComponentListener {
 	public void init() {
 		addComponentListener(this);
 	}
+	
+	//public static void showErrorDialog(String message) {
+	//	//System.out.println(message);
+	//	new ErrorFrame();
+	//}
 
 	public static void main(String args[]) {
 		// Create program frame
@@ -39,27 +44,38 @@ public class CircuitMod extends Applet implements ComponentListener {
 		Thread t1 = new Thread() {
 			public void run() {
 				// If a file is being loaded at startup
+				
+				boolean initOk = false;
 				if (a.length > 0) {
-					ogf.init(a[0]);
+					initOk = ogf.init(a[0]);
+					//ogf.init(a[0]);
 				} else {
-					ogf.init(null);
+					initOk = ogf.init(null);
+					//ogf.init(null);
 				}
+				
+				if (!initOk)
+				{
+					logoFrame.dispose();
+					//showErrorDialog("Error during initialization!");
+				} else {
 
-				// When program finishes initializing, dispose logo and show
-				// program frame.
-				// Make it so that the logo is shown at least 1.5 seconds.
-				long timeElapsed = (System.nanoTime() - time) / 1000000;
-
-				if (timeElapsed < 1500) {
-					try {
-						sleep(1500 - (int) timeElapsed);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+					// When program finishes initializing, dispose logo and show
+					// program frame.
+					// Make it so that the logo is shown at least 1.5 seconds.
+					long timeElapsed = (System.nanoTime() - time) / 1000000;
+	
+					if (timeElapsed < 1500) {
+						try {
+							sleep(1500 - (int) timeElapsed);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 					}
+	
+					logoFrame.dispose();
+					ogf.setFrameAndShow();
 				}
-
-				logoFrame.dispose();
-				ogf.setFrameAndShow();
 			}
 		};
 		t1.start();
