@@ -29,12 +29,12 @@
     <opt>-Denv.path=&quot;%PATH%&quot;</opt>
   </jre>
   <versionInfo>
-    <fileVersion>2.6.0.0</fileVersion>
-    <txtFileVersion>2.6</txtFileVersion>
-    <fileDescription>CircuitMod v2.6</fileDescription>
+    <fileVersion>2.7.0.0</fileVersion>
+    <txtFileVersion>2.7</txtFileVersion>
+    <fileDescription>CircuitMod v2.7</fileDescription>
     <copyright>GNU GPL v3.0</copyright>
-    <productVersion>2.6.0.0</productVersion>
-    <txtProductVersion>2.6</txtProductVersion>
+    <productVersion>2.7.0.0</productVersion>
+    <txtProductVersion>2.7</txtProductVersion>
     <productName>CircuitMod</productName>
     <companyName></companyName>
     <internalName>CircuitMod</internalName>

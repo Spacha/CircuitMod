@@ -271,7 +271,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		CircuitElm.initClass(this);
 
-		try {
+		// FIXME: Is this even necessary?
+		try {/*
 			baseURL = applet.getDocumentBase().getFile();
 			// look for circuit embedded in URL
 			String doc = applet.getDocumentBase().toString();
@@ -284,6 +285,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					startCircuitText = x;
 				} catch (Exception e) {
 					//System.out.println("can't decode " + x);
+					showErrorDialog("Initialization: Can't decode " + x + ".");
 					e.printStackTrace();
 					return false;
 				}
@@ -304,9 +306,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				printable = true;
 			x = applet.getParameter("conventionalCurrent");
 			if (x != null && x.equalsIgnoreCase("true"))
-				convention = false;
+				convention = false;*/
 		} catch (Exception e) {
-			//return false;
+			showErrorDialog("Initialization: Error during parameter parsing.");
+			return false;
 		}
 
 		boolean euro = (euroResistor != null
@@ -667,8 +670,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		scopeMenu = buildScopeMenu(false);
 		transScopeMenu = buildScopeMenu(true);
 
-		if (!getSetupList(circuitsMenu, false))
+		if (!getSetupList(circuitsMenu, false)) {
+			showErrorDialog("Initialization: Cannot read file \"setuplist.txt\"!\n"
+					      + "Make sure it is included in the installation folder.");
 			return false;
+		}
 
 		// Init SaveOpenDialog
 		saveOpenDialog = new SaveOpenDialog(this);
@@ -2677,7 +2683,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} catch (Exception e) {
 			//e.printStackTrace();
 			//stop("Can't read setuplist.txt!", null);
-			showErrorDialog("Cannot read \"setuplist.txt\"! Make sure it is included in the installation folder.");
 			return false;
 		}
 		

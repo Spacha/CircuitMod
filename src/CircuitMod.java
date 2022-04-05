@@ -24,11 +24,6 @@ public class CircuitMod extends Applet implements ComponentListener {
 		addComponentListener(this);
 	}
 	
-	//public static void showErrorDialog(String message) {
-	//	//System.out.println(message);
-	//	new ErrorFrame();
-	//}
-
 	public static void main(String args[]) {
 		// Create program frame
 		ogf = new CirSim(null);
@@ -48,16 +43,12 @@ public class CircuitMod extends Applet implements ComponentListener {
 				boolean initOk = false;
 				if (a.length > 0) {
 					initOk = ogf.init(a[0]);
-					//ogf.init(a[0]);
 				} else {
 					initOk = ogf.init(null);
-					//ogf.init(null);
 				}
 				
-				if (!initOk)
-				{
+				if (!initOk) {
 					logoFrame.dispose();
-					//showErrorDialog("Error during initialization!");
 				} else {
 
 					// When program finishes initializing, dispose logo and show
