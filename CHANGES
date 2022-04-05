@@ -1,0 +1,142 @@
+
+*****************
+* Version 2.7   *
+*****************
+
+federoggio add:
+	If Character error in development make in Eclipse:
+	File->Properties-> (set character set in UTF-8)
+
+	- EditDialog.java in problems, when you put 100 in ohms in resistor, it set 99.8 ohms.
+
+
+
+errtee add:
+	2016-01-04:
+	bugfixes
+	========
+	resize window to 0 -> stack trace
+	select in options menu -> mouse mode = 0
+
+	improvements
+	============
+	a grid is shown
+
+	all shortcuts work
+	  'A';AntennaElm
+	  'a';OpAmpElm
+	  'c';CapacitorElm
+	  'd';DiodeElm
+	  'f';NMosfetElm
+	  'g';GroundElm
+	  'i';CurrentElm
+	  'I';InverterElm
+	  'j';NJfetElm
+	  'l';InductorElm
+	  'L';LogicInputElm
+	  'M';LogicOutputElm
+	  'm';MemristorElm
+	  'O';OutputElm
+	  'p';ProbeElm
+	  'R';RailElm
+	  'r';ResistorElm
+	  'S';Switch2Elm
+	  's';SwitchElm
+	  'T';TransformerElm
+	  't';NTransistorElm
+	  'v';VoltageElm
+	  'w';WireElm
+	  'x';TextElm
+	  'z';ZenerElm
+
+	circuitChanged behaves right (I hope)
+	can move elements with arrow keys
+	Alt+TAB (Alt+Shift+TAB) cyclic selects elements
+
+	Help->Keyboard Shortcuts
+	    reads file shortcuts.txt
+
+	New Look and feel: Metal (avoid linux compilation problem.)
+
+
+
+
+
+
+
+*****************
+* Version 2.6   *
+*****************
+
+fgg192 agregó:
+	-adicion de ChangesAssociations=yes en INNO setup iss
+	-mejoras de rendimiento en CirSim.java
+
+federoggio agregó:
+	-reduccion de metodos "deprecates" en CirSim.java y Circuit.java
+	-nueva grafica en splash (logo.png)
+	-el modulo Circuit.java pasa a llamarse CircuitMod.java
+		(Esto es para futura compatibilidad con MacOS X)
+	-Creacion de Wrapper e Instalador para MacOS X 10.6 (pmdoc file)
+	 (requirió MacOS X 10.6 con Xcode, en Developer/Application/Utilities
+	  hay dos aplicaciones (Jar Bundler y PackageMaker).
+	  Con Jar Bundler es necesario agregar la carpeta "circuits" despues
+	  de generar el *.app. ver contenido y copiar y pegar la carpeta para
+	  agregarlo.
+
+
+
+*****************
+* Version 2.5.1 *
+*****************
+
+fgg192 agregó:
+	-Añadido Help->About.
+	-Adición de File->New.
+	-Eliminación de Blank Circuit.
+	-Comprobación de archivo al cargar.
+	-Añadido v2.5 a la imagen de Splash.
+	-Movido pushUndo() de mousePressed(MouseEvent e) al final del método.
+
+federoggio agregó:
+	-Apertura por shell de Windows en INNO Setup.
+	-Mejoras en los circuitos (Circuits->Logic Transistors)
+
+
+***************
+* Version 2.5 *
+***************
+
+fgg192 agregó:
+	-Creación de sistema de guardado de archivos en formato .cmf.
+	-Comprobación de guardado de archivos al abrir archivos o cerrar el programa.
+	-Cargado de archivos desde explorer en Windows; al seleccionar "Abrir" a un archivo .cmf desde explorer se
+	 abre el programa y se carga el circuito del archivo. Para ello se debe crear una entrada de registro que
+	 asocie el formato de archivo con el programa.
+	-Eliminación de menús Import y Export.
+	-Ventana maximizada.
+	-Reemplazamiento de KeyListener por KeyboardFocusManager. De esta manera se evita tener que
+	 seleccionar el área del Canvas para poder usar el teclado al principio; el teclado funciona desde
+	 el comienzo.
+	-Adición de funcionalidad para tecla SUPRIMIR (revisar).
+	-Adición de logo al comienzo mientras el programa se carga.
+	-Adición de iconos al Frame.
+
+
+federoggio agregó:
+	-Pagina de desarrollo: http://circuitmod.sourceforge.net/
+	-Titulo de la Ventana: CircuitMod v2.5
+	-Adicion de Menu and Modulo: InverterSTElm.java (filecode:186)
+		(Logic Gates->Add ST Inverter)
+	-Adicion de Circuito de Prueba ST Inverter (setuplist.txt -> osc-st.txt)
+		(Circuits->Misc Devices->Schmitt Trigger Osc)
+	-Adicion ChipCDElm.java para manejar la serie CD4000
+	-Adicion de Prueba (Sequencial Logic->Counter->4511 Full Test)
+	-Mejora en 4017 (Ahora se comporta como debe ser)
+	-Incorporacion de apertura por Shell (Falla Aún) en INNO Setup file.
+
+
+
+
+
+

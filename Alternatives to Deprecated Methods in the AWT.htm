@@ -1,0 +1,645 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Alternatives to Deprecated Methods in the AWT</title>
+<script language="JavaScript">
+<!-- hide
+function openWin(term) {
+  url="../../information/glossary.html#" + term;
+  myWin= window.open(url, "Glossary",
+              "width=400,height=150,scrollbars=yes,status=no,toolbar=no,menubar=no");
+  myWin.focus();
+}
+//-->
+</script>
+</head>
+<body BGCOLOR="#ffffff" LINK="#000099">
+<B><FONT SIZE="-1">The Java</font><sup><font size="-2">TM</font></sup> <font size="-1">Tutorial</FONT></B>
+<br>
+<table width="550" summary="layout">
+<tr>
+<td align="left" valign="middle">
+<a href="deprecatedIO.html" target="_top"><img src="../../images/PreviousArrow.gif" width="26" height="26" align="middle" border="0" alt="Previous Page"></a>
+<a href="../TOC.html#converting" target="_top"><img src="../../images/TOCIcon.gif" width="26" height="26" align="middle" border="0" alt="Lesson Contents"></a>
+<a href="deprecatedlist.html" target="_top"><img src="../../images/NextArrow.gif" width="26" height="26" align="middle" border="0" alt="Next Page"></a></td>
+
+<td align="center" valign="middle">
+<font size="-1">
+<a href="../../index.html" target="_top">Start of Tutorial</a>
+&gt;
+<a href="../index.html" target="_top">Start of Trail</a>
+&gt;
+<a href="index.html" target="_top">Start of Lesson</a>
+</font>
+</td>
+
+<td align="right" valign="middle">
+<font size="-1">
+<a href="../../search.html" target="_top">Search</a>
+<br><a href="../../forms/sendusmail.html">Feedback Form</a>
+</font>
+</td>
+
+</tr>
+</table>
+<img src="../../images/blueline.gif" width="550" height="8" ALIGN="BOTTOM" ALT="">
+<br>
+
+<font size="-1">
+<b>Trail</b>: JDK(TM) 1.1 &#8212; And Beyond!
+<br>
+<b>Lesson</b>: Migrating to 1.1
+</font>
+
+<h2>
+Alternatives to Deprecated Methods in the AWT
+</h2>
+<blockquote>
+This section lists all the deprecated AWT methods
+and their 1.1 replacements.
+A script named <code>updateAWT</code> can 
+make the simplest replacements for you.
+See <a href=converting.html>How to Convert Your Program</a>
+for instructions and examples of using the script.
+
+<p>
+
+A table similar to this one is in
+<a href="nameChangesAWT.html">Simple Name Changes in the AWT</a>.
+That table contains a bit less information than this one,
+and it's alphabetized by the 1.1 column
+to help you easily undo incorrect changes
+that the script has made.
+
+<p>
+
+In the following table, 
+method names in <b>bold font</b>
+are the preferred method names.
+Some of the valid 1.1 substitutes for event-handling methods
+are less preferable
+than other 1.1 solutions.
+For example, 
+although <code>gotFocus</code>
+can be replaced by <code>processFocusEvent</code>,
+we'd rather you replaced it with
+<code>focusGained</code> implemented in a <code>FocusListener</code>,
+as described in
+<a href=convertingAWT.html#events>How to Convert Event-Handling Code</a>.
+
+<p>
+
+<table border=1>
+<tr>
+    <th>Deprecated Method
+    </th>
+<th>Class Where Deprecated
+    </th>
+<th>1.1 Replacement
+</th>
+</tr>
+<tr>
+    <td><code>action</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td> See <a href=convertingAWT.html#events>How
+	 to Convert Event-Handling Code</a>
+	 for examples of handling action events.
+</td>
+</tr>
+<tr>
+    <td><code>allowsMultipleSelections</code>
+    </td>
+<td><code>List</code>
+    </td>
+<td><code><b>isMultipleMode</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>appendText</code>
+    </td>
+<td><code>TextArea</code>
+    </td>
+<td><code><b>append</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>bounds</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>getBounds</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>clear</code>
+    </td>
+<td><code>List</code>
+    </td>
+<td><code><b>removeAll</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>countComponents</code>
+    </td>
+<td><code>Container</code>
+    </td>
+<td><code><b>getComponentCount</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>countItems</code>
+    </td>
+<td><code>Choice, List, Menu</code>
+    </td>
+<td><code><b>getItemCount</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>countMenus</code>
+    </td>
+<td><code>MenuBar</code>
+    </td>
+<td><code><b>getMenuCount</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>deliverEvent</code>
+    </td>
+<td><code>Component, Container</code>
+    </td>
+<td><code><b>dispatchEvent</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>disable()</code>
+    </td>
+<td><code>MenuItem</code>
+    </td>
+<td><code><b>setEnabled(false)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>enable()</code>
+    </td>
+<td><code>Component, MenuItem</code>
+    </td>
+<td><code><b>setEnabled(true)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>enable(<em>expression</em>)</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>setEnabled(<em>expression</em>)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getBoundingBox</code>
+    </td>
+<td><code>Polygon</code>
+    </td>
+<td><code><b>getBounds</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getClipRect</code>
+    </td>
+<td><code>Graphics</code>
+    </td>
+<td><code><b>getClipBounds</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getCurrent</code>
+    </td>
+<td><code>CheckboxGroup</code>
+    </td>
+<td><code><b>getSelectedCheckbox</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getCursorType</code>
+    </td>
+<td><code>Frame</code>
+    </td>
+<td><code><b>getCursor</b></code> method in <code>Component</code>
+</td>
+</tr>
+<tr>
+    <td><code>getLineIncrement</code>
+    </td>
+<td><code>Scrollbar</code>
+    </td>
+<td><code><b>getUnitIncrement</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getPageIncrement</code>
+    </td>
+<td><code>Scrollbar</code>
+    </td>
+<td><code><b>getBlockIncrement</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>getPeer</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><em>No replacement.</em>
+</td>
+</tr>
+<tr>
+    <td><code>getVisible</code>
+    </td>
+<td><code>Scrollbar</code>
+    </td>
+<td><code><b>getVisibleAmount</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>gotFocus</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processFocusEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>handleEvent</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>hide</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>setVisible(false)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>insertText</code>
+    </td>
+<td><code>TextArea</code>
+    </td>
+<td><code><b>insert</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>insets</code>
+    </td>
+<td><code>Container</code>
+    </td>
+<td><code><b>getInsets</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>inside</code>
+    </td>
+<td><code>Component, Polygon, Rectangle</code>
+    </td>
+<td><code><b>contains</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>isSelected</code>
+    </td>
+<td><code>List</code>
+    </td>
+<td><code><b>isIndexSelected</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>keyDown</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processKeyEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>keyUp</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processKeyEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>layout</code>
+    </td>
+<td><code>Component, Container, ScrollPane</code>
+    </td>
+<td><code><b>doLayout</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>locate</code>
+    </td>
+<td><code>Component, Container</code>
+    </td>
+<td><code><b>getComponentAt</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>location</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>getLocation</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>lostFocus</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processFocusEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>minimumSize</code>
+    </td>
+<td><code>Component, Container, TextArea, TextField</code>
+    </td>
+<td><code><b>getMinimumSize</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>mouseDown</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>mouseDrag</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseMotionEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>mouseEnter</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>mouseExit</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>mouseMove</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseMotionEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>mouseUp</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code>processMouseEvent</code>
+	<br>
+	    See <a href=convertingAWT.html#events>How
+	    to Convert Event-Handling Code</a>
+	    for information 
+	    on preferred ways to handle events.
+</td>
+</tr>
+<tr>
+    <td><code>move</code>
+    </td>
+<td><code>Component, Rectangle</code>
+    </td>
+<td><code><b>setLocation</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>nextFocus</code>
+    </td>
+<td><code>Component, Container, Window</code>
+    </td>
+<td><code><b>transferFocus</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>postEvent</code>
+    </td>
+<td><code>Component, Window</code>
+    </td>
+<td><code><b>dispatchEvent</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>preferredSize</code>
+    </td>
+<td><code>Component, Container, TextArea, TextField</code>
+    </td>
+<td><code><b>getPreferredSize</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>replaceText</code>
+    </td>
+<td><code>TextArea</code>
+    </td>
+<td><code><b>replaceRange</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>reshape</code>
+    </td>
+<td><code>Component, Rectangle</code>
+    </td>
+<td><code><b>setBounds</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>resize</code>
+    </td>
+<td><code>Component, Rectangle</code>
+    </td>
+<td><code><b>setSize</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>setCurrent</code>
+    </td>
+<td><code>CheckboxGroup</code>
+    </td>
+<td><code><b>setSelectedCheckbox</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>setCursor</code>
+    </td>
+<td><code>Frame</code>
+    </td>
+<td><code><b>setCursor</b></code> method in <code>Component</code>
+</td>
+</tr>
+<tr>
+    <td><code>setEchoCharacter</code>
+    </td>
+<td><code>TextField</code>
+    </td>
+<td><code><b>setEchoChar</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>setLineIncrement</code>
+    </td>
+<td><code>Scrollbar</code>
+    </td>
+<td><code><b>setUnitIncrement</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>setMultipleSelections</code>
+    </td>
+<td><code>List</code>
+    </td>
+<td><code><b>setMultipleMode</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>setPageIncrement</code>
+    </td>
+<td><code>Scrollbar</code>
+    </td>
+<td><code><b>setBlockIncrement</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>show()</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>setVisible(true)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>show(<em>expression</em>)</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>setVisible(<em>expression</em>)</b></code>
+</td>
+</tr>
+<tr>
+    <td><code>size</code>
+    </td>
+<td><code>Component</code>
+    </td>
+<td><code><b>getSize</b></code>
+</td>
+</tr>
+</table>
+
+</blockquote>
+
+<img src="../../images/blueline.gif" width="550" height="8" ALIGN="BOTTOM" ALT="">
+<br>
+<table width="550" summary="layout">
+<tr>
+<td align="left" valign="middle">
+<a href="deprecatedIO.html" target="_top"><img src="../../images/PreviousArrow.gif" width="26" height="26" align="middle" border="0" alt="Previous Page"></a>
+<a href="../TOC.html#converting" target="_top"><img src="../../images/TOCIcon.gif" width="26" height="26" align="middle" border="0" alt="Lesson Contents"></a>
+<a href="deprecatedlist.html" target="_top"><img src="../../images/NextArrow.gif" width="26" height="26" align="middle" border="0" alt="Next Page"></a></td>
+
+<td align="center" valign="middle">
+<font size="-1">
+<a href="../../index.html" target="_top">Start of Tutorial</a>
+&gt;
+<a href="../index.html" target="_top">Start of Trail</a>
+&gt;
+<a href="index.html" target="_top">Start of Lesson</a>
+</font>
+</td>
+
+<td align="right" valign="middle">
+<font size="-1">
+<a href="../../search.html" target="_top">Search</a>
+<br><a href="../../forms/sendusmail.html">Feedback Form</a>
+</font>
+</td>
+
+</tr>
+</table>
+<p>
+<font size="-1">
+<a href="../../information/copyright.html">Copyright</a>
+1995-2005 Sun Microsystems, Inc.  All rights reserved.
+</font>
+</p>
+</body>
+</html>

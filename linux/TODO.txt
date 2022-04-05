@@ -1,0 +1,9 @@
+
+Create Install with Windows
+===================================
+First use Winrar to create tar
+and after make:
+
+gzip = gzip -c linux.tar > linux.tar.gz
+bzip2 = bzip2 -z linux.tar (WARNING: compress over itself the file)
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>E:\Local\Lab\Eclipse\CircuitMod v2.6\setup\circuitmod.jar</jar>
+  <outfile>E:\Local\Lab\Eclipse\CircuitMod v2.6\setup\circuitmod.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>E:\Local\Lab\Eclipse\CircuitMod v2.6\setup\circuitmod.ico</icon>
+  <classPath>
+    <mainClass>CircuitMod</mainClass>
+    <cp>.</cp>
+  </classPath>
+  <jre>
+    <path>C:\Program Files\Java\jdk1.6.0_25\bin</path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.6.0_25</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+    <opt>-Denv.path=&quot;%PATH%&quot;</opt>
+  </jre>
+  <versionInfo>
+    <fileVersion>2.6.0.0</fileVersion>
+    <txtFileVersion>2.6</txtFileVersion>
+    <fileDescription>CircuitMod v2.6</fileDescription>
+    <copyright>GNU GPL v3.0</copyright>
+    <productVersion>2.6.0.0</productVersion>
+    <txtProductVersion>2.6</txtProductVersion>
+    <productName>CircuitMod</productName>
+    <companyName></companyName>
+    <internalName>CircuitMod</internalName>
+    <originalFilename>circuitmod.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

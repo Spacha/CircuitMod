@@ -1,0 +1,13 @@
+
+CircuitMod Require Java JRE Runtime
+=========================================
+
+Check if you have Java Installed on your Windows
+If you have the "Java" Icon in your Control Panel
+You can press next without problems.
+
+If NOT:
+
+Download and Install Java JRE Runtime
+
+http://www.java.com/download/index.jsp
