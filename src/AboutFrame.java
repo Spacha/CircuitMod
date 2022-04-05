@@ -30,7 +30,7 @@ public class AboutFrame extends JDialog implements WindowListener {
 	private static final long serialVersionUID = 1L;
 	private final String TITLE = "About CircuitMod";
 	private final String NAMES_TITLE = "Brought to you by:";
-	private final String[] NAMES = { "federoggio", "fgg192", "errtee" };
+	private final String[] NAMES = { "federoggio", "fgg192", "errtee", "Spacha" };
 	private final String NAME_ORIGINAL_TITLE = "Original code by:";
 	private final String NAME_ORIGINAL = "Paul Falstad";
 
