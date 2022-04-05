@@ -17,7 +17,7 @@ class InverterSTElm extends CircuitElm {
 		super(xa, ya, xb, yb, f);
 		noDiagonal = true;
 		try {
-			slewRate = new Double(st.nextToken()).doubleValue();
+			slewRate = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 			slewRate = .5;
 		}

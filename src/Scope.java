@@ -554,15 +554,15 @@ class Scope {
 
 	void undump(StringTokenizer st) {
 		reset();
-		int e = new Integer(st.nextToken()).intValue();
+		int e = Integer.valueOf(st.nextToken()).intValue();
 		if (e == -1)
 			return;
 		elm = sim.getElm(e);
-		speed = new Integer(st.nextToken()).intValue();
-		value = new Integer(st.nextToken()).intValue();
-		int flags = new Integer(st.nextToken()).intValue();
-		minMaxV = new Double(st.nextToken()).doubleValue();
-		minMaxI = new Double(st.nextToken()).doubleValue();
+		speed = Integer.valueOf(st.nextToken()).intValue();
+		value = Integer.valueOf(st.nextToken()).intValue();
+		int flags = Integer.valueOf(st.nextToken()).intValue();
+		minMaxV = Double.valueOf(st.nextToken()).doubleValue();
+		minMaxI = Double.valueOf(st.nextToken()).doubleValue();
 		if (minMaxV == 0)
 			minMaxV = .5;
 		if (minMaxI == 0)
@@ -570,10 +570,10 @@ class Scope {
 		text = null;
 		yElm = null;
 		try {
-			position = new Integer(st.nextToken()).intValue();
+			position = Integer.valueOf(st.nextToken()).intValue();
 			int ye = -1;
 			if ((flags & FLAG_YELM) != 0) {
-				ye = new Integer(st.nextToken()).intValue();
+				ye = Integer.valueOf(st.nextToken()).intValue();
 				if (ye != -1)
 					yElm = sim.getElm(ye);
 			}
@@ -615,7 +615,7 @@ class Scope {
 				Class<?> rasclass = Class.forName("java.awt.image.Raster");
 				Constructor<?> cstr = biclass.getConstructor(new Class[] { int.class, int.class, int.class });
 				image = (Image) cstr.newInstance(
-						new Object[] { new Integer(w), new Integer(h), new Integer(BufferedImage.TYPE_INT_RGB) });
+						new Object[] { Integer.valueOf(w), Integer.valueOf(h), Integer.valueOf(BufferedImage.TYPE_INT_RGB) });
 				Method m = biclass.getMethod("getRaster");
 				Object ras = m.invoke(image);
 				Object db = rasclass.getMethod("getDataBuffer").invoke(ras);

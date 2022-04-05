@@ -19,8 +19,8 @@ class CapacitorElm extends CircuitElm {
 	public CapacitorElm(int xa, int ya, int xb, int yb, int f,
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		capacitance = new Double(st.nextToken()).doubleValue();
-		voltdiff = new Double(st.nextToken()).doubleValue();
+		capacitance = Double.valueOf(st.nextToken()).doubleValue();
+		voltdiff = Double.valueOf(st.nextToken()).doubleValue();
 	}
 
 	boolean isTrapezoidal() {

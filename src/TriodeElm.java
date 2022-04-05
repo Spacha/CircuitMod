@@ -17,8 +17,8 @@ class TriodeElm extends CircuitElm {
 
 	public TriodeElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		mu = new Double(st.nextToken()).doubleValue();
-		kg1 = new Double(st.nextToken()).doubleValue();
+		mu = Double.valueOf(st.nextToken()).doubleValue();
+		kg1 = Double.valueOf(st.nextToken()).doubleValue();
 		setup();
 	}
 

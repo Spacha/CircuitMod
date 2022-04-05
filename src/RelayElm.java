@@ -47,13 +47,13 @@ class RelayElm extends CircuitElm {
 
 	public RelayElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		poleCount = new Integer(st.nextToken()).intValue();
-		inductance = new Double(st.nextToken()).doubleValue();
-		coilCurrent = new Double(st.nextToken()).doubleValue();
-		r_on = new Double(st.nextToken()).doubleValue();
-		r_off = new Double(st.nextToken()).doubleValue();
-		onCurrent = new Double(st.nextToken()).doubleValue();
-		coilR = new Double(st.nextToken()).doubleValue();
+		poleCount = Integer.valueOf(st.nextToken()).intValue();
+		inductance = Double.valueOf(st.nextToken()).doubleValue();
+		coilCurrent = Double.valueOf(st.nextToken()).doubleValue();
+		r_on = Double.valueOf(st.nextToken()).doubleValue();
+		r_off = Double.valueOf(st.nextToken()).doubleValue();
+		onCurrent = Double.valueOf(st.nextToken()).doubleValue();
+		coilR = Double.valueOf(st.nextToken()).doubleValue();
 		noDiagonal = true;
 		ind = new Inductor(sim);
 		ind.setup(inductance, coilCurrent, Inductor.FLAG_BACK_EULER);

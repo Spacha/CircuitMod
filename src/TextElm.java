@@ -23,7 +23,7 @@ class TextElm extends CircuitElm {
 
 	public TextElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		size = new Integer(st.nextToken()).intValue();
+		size = Integer.valueOf(st.nextToken()).intValue();
 		text = st.nextToken();
 		while (st.hasMoreTokens())
 			text += ' ' + st.nextToken();

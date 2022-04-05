@@ -32,8 +32,8 @@ class SwitchElm extends CircuitElm {
 		else if (str.compareTo("false") == 0)
 			position = (this instanceof LogicInputElm) ? 1 : 0;
 		else
-			position = new Integer(str).intValue();
-		momentary = new Boolean(st.nextToken()).booleanValue();
+			position = Integer.valueOf(str).intValue();
+		momentary = Boolean.valueOf(st.nextToken()).booleanValue();
 		posCount = 2;
 	}
 

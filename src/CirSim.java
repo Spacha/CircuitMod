@@ -319,7 +319,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		isMac = (os.indexOf("Mac ") == 0);
 		ctrlMetaKey = (isMac) ? "⌘" : "Ctrl";
 		String jv = System.getProperty("java.class.version");
-		double jvf = new Double(jv).doubleValue();
+		double jvf = Double.valueOf(jv).doubleValue();
 		if (jvf >= 48) {
 			muString = "μ";
 			ohmString = "Ω";
@@ -2571,7 +2571,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		System.out.print(((Scrollbar) e.getSource()).getValue() + "\n");
 	}
 
-	ByteArrayOutputStream readUrlData(URL url) throws java.io.IOException {
+	ByteArrayOutputStream readUrlData(URL url) throws java.io.IOException  {
 		Object o = url.getContent();
 		FilterInputStream fis = (FilterInputStream) o;
 		ByteArrayOutputStream ba = new ByteArrayOutputStream(fis.available());
@@ -2583,6 +2583,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				break;
 			ba.write(b, 0, len);
 		}
+		fis.close();
 		return ba;
 	}
 
@@ -2741,12 +2742,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 						break;
 					}
 					if (tint >= '0' && tint <= '9')
-						tint = new Integer(type).intValue();
-					int x1 = new Integer(st.nextToken()).intValue();
-					int y1 = new Integer(st.nextToken()).intValue();
-					int x2 = new Integer(st.nextToken()).intValue();
-					int y2 = new Integer(st.nextToken()).intValue();
-					int f = new Integer(st.nextToken()).intValue();
+						tint = Integer.valueOf(type).intValue();
+					int x1 = Integer.valueOf(st.nextToken()).intValue();
+					int y1 = Integer.valueOf(st.nextToken()).intValue();
+					int x2 = Integer.valueOf(st.nextToken()).intValue();
+					int y2 = Integer.valueOf(st.nextToken()).intValue();
+					int f = Integer.valueOf(st.nextToken()).intValue();
 					CircuitElm ce = null;
 					Class<?> cls = dumpTypes[tint];
 					if (cls == null) {
@@ -2765,11 +2766,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					// invoke constructor with starting coordinates
 					Object oarr[] = new Object[6];
 					// oarr[0] = this;
-					oarr[0] = new Integer(x1);
-					oarr[1] = new Integer(y1);
-					oarr[2] = new Integer(x2);
-					oarr[3] = new Integer(y2);
-					oarr[4] = new Integer(f);
+					oarr[0] = Integer.valueOf(x1);
+					oarr[1] = Integer.valueOf(y1);
+					oarr[2] = Integer.valueOf(x2);
+					oarr[3] = Integer.valueOf(y2);
+					oarr[4] = Integer.valueOf(f);
 					oarr[5] = st;
 					ce = (CircuitElm) cstr.newInstance(oarr);
 					ce.setPoints();
@@ -2803,27 +2804,27 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void readHint(StringTokenizer st) {
-		hintType = new Integer(st.nextToken()).intValue();
-		hintItem1 = new Integer(st.nextToken()).intValue();
-		hintItem2 = new Integer(st.nextToken()).intValue();
+		hintType = Integer.valueOf(st.nextToken()).intValue();
+		hintItem1 = Integer.valueOf(st.nextToken()).intValue();
+		hintItem2 = Integer.valueOf(st.nextToken()).intValue();
 	}
 
 	void readOptions(StringTokenizer st) {
-		int flags = new Integer(st.nextToken()).intValue();
+		int flags = Integer.valueOf(st.nextToken()).intValue();
 		dotsCheckItem.setState((flags & 1) != 0);
 		smallGridCheckItem.setState((flags & 2) != 0);
 		voltsCheckItem.setState((flags & 4) == 0);
 		powerCheckItem.setState((flags & 8) == 8);
 		showValuesCheckItem.setState((flags & 16) == 0);
-		timeStep = new Double(st.nextToken()).doubleValue();
-		double sp = new Double(st.nextToken()).doubleValue();
+		timeStep = Double.valueOf(st.nextToken()).doubleValue();
+		double sp = Double.valueOf(st.nextToken()).doubleValue();
 		int sp2 = (int) (Math.log(10 * sp) * 24 + 61.5);
 		// int sp2 = (int) (Math.log(sp)*24+1.5);
 		speedBar.setValue(sp2);
-		currentBar.setValue(new Integer(st.nextToken()).intValue());
-		CircuitElm.voltageRange = new Double(st.nextToken()).doubleValue();
+		currentBar.setValue(Integer.valueOf(st.nextToken()).intValue());
+		CircuitElm.voltageRange = Double.valueOf(st.nextToken()).doubleValue();
 		try {
-			powerBar.setValue(new Integer(st.nextToken()).intValue());
+			powerBar.setValue(Integer.valueOf(st.nextToken()).intValue());
 		} catch (Exception e) {
 		}
 		setGrid();
@@ -3229,8 +3230,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		// invoke constructor with starting coordinates
 		Object oarr[] = new Object[2];
-		oarr[0] = new Integer(x0);
-		oarr[1] = new Integer(y0);
+		oarr[0] = Integer.valueOf(x0);
+		oarr[1] = Integer.valueOf(y0);
 		try {
 			return (CircuitElm) cstr.newInstance(oarr);
 		} catch (Exception ee) {

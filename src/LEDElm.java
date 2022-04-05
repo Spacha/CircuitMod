@@ -19,9 +19,9 @@ class LEDElm extends DiodeElm {
 		if ((f & FLAG_FWDROP) == 0)
 			fwdrop = 2.1024259;
 		setup();
-		colorR = new Double(st.nextToken()).doubleValue();
-		colorG = new Double(st.nextToken()).doubleValue();
-		colorB = new Double(st.nextToken()).doubleValue();
+		colorR = Double.valueOf(st.nextToken()).doubleValue();
+		colorG = Double.valueOf(st.nextToken()).doubleValue();
+		colorB = Double.valueOf(st.nextToken()).doubleValue();
 	}
 
 	@Override

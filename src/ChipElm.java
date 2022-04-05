@@ -33,14 +33,14 @@ abstract class ChipElm extends CircuitElm {
 	public ChipElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
 		if (needsBits())
-			bits = new Integer(st.nextToken()).intValue();
+			bits = Integer.valueOf(st.nextToken()).intValue();
 		noDiagonal = true;
 		setupPins();
 		setSize((f & FLAG_SMALL) != 0 ? 1 : 2);
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			if (pins[i].state) {
-				volts[i] = new Double(st.nextToken()).doubleValue();
+				volts[i] = Double.valueOf(st.nextToken()).doubleValue();
 				pins[i].value = volts[i] > 2.5;
 			}
 		}

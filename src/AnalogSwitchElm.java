@@ -20,8 +20,8 @@ class AnalogSwitchElm extends CircuitElm {
 		r_on = 20;
 		r_off = 1e10;
 		try {
-			r_on = new Double(st.nextToken()).doubleValue();
-			r_off = new Double(st.nextToken()).doubleValue();
+			r_on = Double.valueOf(st.nextToken()).doubleValue();
+			r_off = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 		}
 

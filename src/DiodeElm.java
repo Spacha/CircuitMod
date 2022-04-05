@@ -24,7 +24,7 @@ class DiodeElm extends CircuitElm {
 		zvoltage = 0;
 		if ((f & FLAG_FWDROP) > 0) {
 			try {
-				fwdrop = new Double(st.nextToken()).doubleValue();
+				fwdrop = Double.valueOf(st.nextToken()).doubleValue();
 			} catch (Exception e) {
 			}
 		}

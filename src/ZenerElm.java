@@ -14,7 +14,7 @@ class ZenerElm extends DiodeElm {
 
 	public ZenerElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f, st);
-		zvoltage = new Double(st.nextToken()).doubleValue();
+		zvoltage = Double.valueOf(st.nextToken()).doubleValue();
 		setup();
 	}
 

@@ -23,15 +23,15 @@ class TransistorElm extends CircuitElm {
 	public TransistorElm(int xa, int ya, int xb, int yb, int f,
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		pnp = new Integer(st.nextToken()).intValue();
+		pnp = Integer.valueOf(st.nextToken()).intValue();
 		beta = 100;
 		try {
-			lastvbe = new Double(st.nextToken()).doubleValue();
-			lastvbc = new Double(st.nextToken()).doubleValue();
+			lastvbe = Double.valueOf(st.nextToken()).doubleValue();
+			lastvbc = Double.valueOf(st.nextToken()).doubleValue();
 			volts[0] = 0;
 			volts[1] = -lastvbe;
 			volts[2] = -lastvbc;
-			beta = new Double(st.nextToken()).doubleValue();
+			beta = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 		}
 		setup();

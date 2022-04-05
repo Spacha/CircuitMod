@@ -30,9 +30,9 @@ class OpAmpElm extends CircuitElm {
 		// retain it to keep the file format the same
 		gbw = 1e6;
 		try {
-			maxOut = new Double(st.nextToken()).doubleValue();
-			minOut = new Double(st.nextToken()).doubleValue();
-			gbw = new Double(st.nextToken()).doubleValue();
+			maxOut = Double.valueOf(st.nextToken()).doubleValue();
+			minOut = Double.valueOf(st.nextToken()).doubleValue();
+			gbw = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 		}
 		noDiagonal = true;

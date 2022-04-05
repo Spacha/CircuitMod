@@ -18,11 +18,11 @@ class MemristorElm extends CircuitElm {
 	public MemristorElm(int xa, int ya, int xb, int yb, int f,
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		r_on = new Double(st.nextToken()).doubleValue();
-		r_off = new Double(st.nextToken()).doubleValue();
-		dopeWidth = new Double(st.nextToken()).doubleValue();
-		totalWidth = new Double(st.nextToken()).doubleValue();
-		mobility = new Double(st.nextToken()).doubleValue();
+		r_on = Double.valueOf(st.nextToken()).doubleValue();
+		r_off = Double.valueOf(st.nextToken()).doubleValue();
+		dopeWidth = Double.valueOf(st.nextToken()).doubleValue();
+		totalWidth = Double.valueOf(st.nextToken()).doubleValue();
+		mobility = Double.valueOf(st.nextToken()).doubleValue();
 		resistance = 100;
 	}
 

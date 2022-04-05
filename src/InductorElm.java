@@ -18,8 +18,8 @@ class InductorElm extends CircuitElm {
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
 		ind = new Inductor(sim);
-		inductance = new Double(st.nextToken()).doubleValue();
-		current = new Double(st.nextToken()).doubleValue();
+		inductance = Double.valueOf(st.nextToken()).doubleValue();
+		current = Double.valueOf(st.nextToken()).doubleValue();
 		ind.setup(inductance, current, flags);
 	}
 

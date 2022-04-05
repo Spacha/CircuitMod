@@ -27,14 +27,14 @@ class SCRElm extends CircuitElm {
 		super(xa, ya, xb, yb, f);
 		setDefaults();
 		try {
-			lastvac = new Double(st.nextToken()).doubleValue();
-			lastvag = new Double(st.nextToken()).doubleValue();
+			lastvac = Double.valueOf(st.nextToken()).doubleValue();
+			lastvag = Double.valueOf(st.nextToken()).doubleValue();
 			volts[anode] = 0;
 			volts[cnode] = -lastvac;
 			volts[gnode] = -lastvag;
-			triggerI = new Double(st.nextToken()).doubleValue();
-			holdingI = new Double(st.nextToken()).doubleValue();
-			cresistance = new Double(st.nextToken()).doubleValue();
+			triggerI = Double.valueOf(st.nextToken()).doubleValue();
+			holdingI = Double.valueOf(st.nextToken()).doubleValue();
+			cresistance = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 		}
 		setup();

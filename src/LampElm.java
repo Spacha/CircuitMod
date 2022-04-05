@@ -19,11 +19,11 @@ class LampElm extends CircuitElm {
 
 	public LampElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		temp = new Double(st.nextToken()).doubleValue();
-		nom_pow = new Double(st.nextToken()).doubleValue();
-		nom_v = new Double(st.nextToken()).doubleValue();
-		warmTime = new Double(st.nextToken()).doubleValue();
-		coolTime = new Double(st.nextToken()).doubleValue();
+		temp = Double.valueOf(st.nextToken()).doubleValue();
+		nom_pow = Double.valueOf(st.nextToken()).doubleValue();
+		nom_v = Double.valueOf(st.nextToken()).doubleValue();
+		warmTime = Double.valueOf(st.nextToken()).doubleValue();
+		coolTime = Double.valueOf(st.nextToken()).doubleValue();
 	}
 
 	@Override

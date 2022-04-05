@@ -19,8 +19,8 @@ class ThermistorElm extends CircuitElm {
 
 	public ThermistorElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		minresistance = new Double(st.nextToken()).doubleValue();
-		maxresistance = new Double(st.nextToken()).doubleValue();
+		minresistance = Double.valueOf(st.nextToken()).doubleValue();
+		maxresistance = Double.valueOf(st.nextToken()).doubleValue();
 		createSlider();
 	}
 

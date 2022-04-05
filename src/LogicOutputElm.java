@@ -20,7 +20,7 @@ class LogicOutputElm extends CircuitElm {
 			StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
 		try {
-			threshold = new Double(st.nextToken()).doubleValue();
+			threshold = Double.valueOf(st.nextToken()).doubleValue();
 		} catch (Exception e) {
 			threshold = 2.5;
 		}

@@ -21,10 +21,10 @@ class SweepElm extends CircuitElm {
 
 	public SweepElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
 		super(xa, ya, xb, yb, f);
-		minF = new Double(st.nextToken()).doubleValue();
-		maxF = new Double(st.nextToken()).doubleValue();
-		maxV = new Double(st.nextToken()).doubleValue();
-		sweepTime = new Double(st.nextToken()).doubleValue();
+		minF = Double.valueOf(st.nextToken()).doubleValue();
+		maxF = Double.valueOf(st.nextToken()).doubleValue();
+		maxV = Double.valueOf(st.nextToken()).doubleValue();
+		sweepTime = Double.valueOf(st.nextToken()).doubleValue();
 		reset();
 	}
 
