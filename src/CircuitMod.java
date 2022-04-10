@@ -23,7 +23,7 @@ public class CircuitMod extends Applet implements ComponentListener {
 	public void init() {
 		addComponentListener(this);
 	}
-	
+
 	public static void main(String args[]) {
 		// Create program frame
 		ogf = new CirSim(null);
@@ -39,14 +39,14 @@ public class CircuitMod extends Applet implements ComponentListener {
 		Thread t1 = new Thread() {
 			public void run() {
 				// If a file is being loaded at startup
-				
+
 				boolean initOk = false;
 				if (a.length > 0) {
 					initOk = ogf.init(a[0]);
 				} else {
 					initOk = ogf.init(null);
 				}
-				
+
 				if (!initOk) {
 					logoFrame.dispose();
 				} else {
@@ -55,7 +55,7 @@ public class CircuitMod extends Applet implements ComponentListener {
 					// program frame.
 					// Make it so that the logo is shown at least 1.5 seconds.
 					long timeElapsed = (System.nanoTime() - time) / 1000000;
-	
+
 					if (timeElapsed < 1500) {
 						try {
 							sleep(1500 - (int) timeElapsed);
@@ -63,7 +63,7 @@ public class CircuitMod extends Applet implements ComponentListener {
 							e.printStackTrace();
 						}
 					}
-	
+
 					logoFrame.dispose();
 					ogf.setFrameAndShow();
 				}

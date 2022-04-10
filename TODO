@@ -1,6 +1,8 @@
 * Bugs:
   * Text dragging sometimes drags the whole schematic to a non-grid position making the schematic unusable
+  	* Steps to reproduce: 1. Make a schematic, 2. Add text, 3. Select all (e.g. Ctrl+A), 4. Move all by dragging from a text element, 5. Chaos.
 
 * Fixing Deprecations
   * Applet. What to use? https://www.oracle.com/technetwork/java/javase/migratingfromapplets-2872444.pdf
+  	* Wev
   * Update the project to newer version of AWT: https://www.iitk.ac.in/esc101/05Aug/tutorial/post1.0/converting/

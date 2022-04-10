@@ -2931,14 +2931,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 		dragging = true;
 		if (success) {
-			if (tempMouseMode == MODE_DRAG_SELECTED
-					&& mouseElm instanceof TextElm) {
-				dragX = e.getX();
-				dragY = e.getY();
-			} else {
-				dragX = snapGrid(e.getX());
-				dragY = snapGrid(e.getY());
-			}
+			dragX = snapGrid(e.getX());
+			dragY = snapGrid(e.getY());
 		}
 		cv.repaint(pause);
 	}
@@ -2991,17 +2985,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		if (mouseElm != null && !mouseElm.isSelected())
 			mouseElm.setSelected(me = true);
 
-		// snap grid, unless we're only dragging text elements
-		int i;
-		for (i = 0; i != elmList.size(); i++) {
-			CircuitElm ce = getElm(i);
-			if (ce.isSelected() && !(ce instanceof TextElm))
-				break;
-		}
-		if (i != elmList.size()) {
-			x = snapGrid(x);
-			y = snapGrid(y);
-		}
+		x = snapGrid(x);
+		y = snapGrid(y);
 
 		int dx = x - dragX;
 		int dy = y - dragY;
@@ -3014,6 +2999,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		boolean allowed = true;
 
 		// check if moves are allowed
+		int i;
 		for (i = 0; allowed && i != elmList.size(); i++) {
 			CircuitElm ce = getElm(i);
 			if (ce.isSelected() && !ce.allowMove(dx, dy))
@@ -3245,6 +3231,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		pushUndo();
 		dragElm = constructElement(addingClass, x0, y0);
+
+		if (dragElm instanceof TextElm) {
+			elmList.addElement(dragElm);
+			dragElm = null;
+			dragging = false;
+		}
 	}
 
 	CircuitElm constructElement(Class<?> c, int x0, int y0) {

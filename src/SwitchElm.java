@@ -106,7 +106,6 @@ class SwitchElm extends CircuitElm {
 	}
 
 	void toggle() {
-		System.out.println("asdasdaddsdadasd");
 		position++;
 		if (position >= posCount)
 			position = 0;

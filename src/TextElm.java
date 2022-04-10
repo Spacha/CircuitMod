@@ -66,14 +66,6 @@ class TextElm extends CircuitElm {
 	}
 
 	@Override
-	void drag(int xx, int yy) {
-		x = xx;
-		y = yy;
-		x2 = xx + 16;
-		y2 = yy;
-	}
-
-	@Override
 	void draw(Graphics g) {
 		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 		Font f = new Font("SansSerif", 0, size);
