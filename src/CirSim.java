@@ -999,8 +999,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				|| tempMouseMode == MODE_DRAG_SELECTED)
 			for (i = 0; i != elmList.size(); i++) {
 				CircuitElm ce = getElm(i);
-				ce.drawPost(g, ce.x, ce.y);
-				ce.drawPost(g, ce.x2, ce.y2);
+				if (ce.nodes.length > 0) {
+					ce.drawPost(g, ce.x, ce.y);
+					ce.drawPost(g, ce.x2, ce.y2);
+				}
 			}
 		int badnodes = 0;
 		// find bad connections, nodes not connected to other elements which
