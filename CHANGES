@@ -1,3 +1,16 @@
+*****************
+* Version 2.8   *
+*****************
+
+2022-04-12 Spacha add:
+	* Error handling + dialog on startup (init)
+	* New layout using GridBagLayout, effects especially the sidebar
+	* Fixed bugged text element drag (text also snaps to grid)
+	* Fixed many deprecation warnings (many still remain)
+	[X] Tested on Windows
+	[ ] Tested on Linux
+	[ ] Tested on OSX
+
 
 *****************
 * Version 2.7   *

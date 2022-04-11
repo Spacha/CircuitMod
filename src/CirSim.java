@@ -66,7 +66,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	private static final long serialVersionUID = 1L;
 
-	final String PROGRAM_NAME = "CircuitMod v2.7-beta";
+	final String PROGRAM_NAME = "CircuitMod v2.8";
 
 	final int SETUP_READ_OK = 0;
 	final int SETUP_READ_DUMP_WARNING = 1;
