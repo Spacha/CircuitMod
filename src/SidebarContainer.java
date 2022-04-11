@@ -1,10 +1,9 @@
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
-import java.awt.Label;
+import java.awt.Dimension;
 import java.awt.Panel;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Label;
 
 import java.awt.Component;
 

@@ -360,7 +360,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		main.add(cv, gbc);
 
 		gbc.weightx = 0;	// fixed size
-		gbc.insets = new java.awt.Insets(10, 10, 10, 10);
+		gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 		sidebar = new SidebarContainer(this);
 		main.add(sidebar, gbc);
 

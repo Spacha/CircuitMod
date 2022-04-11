@@ -8,6 +8,8 @@ import java.awt.LayoutManager;
 import java.awt.Panel;
 import java.awt.Scrollbar;
 
+// FIXME: This has become obsolete - it is not used and can be removed!
+
 class CircuitLayout implements LayoutManager {
 	public CircuitLayout() {
 	}
