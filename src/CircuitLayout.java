@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Insets;
 import java.awt.Label;
 import java.awt.LayoutManager;
+import java.awt.Panel;
 import java.awt.Scrollbar;
 
 class CircuitLayout implements LayoutManager {
@@ -45,7 +46,7 @@ class CircuitLayout implements LayoutManager {
 			Component m = target.getComponent(i);
 			if (m.isVisible()) {
 				Dimension d = m.getPreferredSize();
-				if (m instanceof Scrollbar)
+				if (m instanceof Scrollbar || m instanceof Panel)
 					d.width = barwidth;
 				if (m instanceof Choice && d.width > barwidth)
 					d.width = barwidth;

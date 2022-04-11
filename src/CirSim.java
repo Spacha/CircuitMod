@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
@@ -209,6 +211,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	CircuitCanvas cv;
+	SidebarContainer sidebar;
 	CircuitMod applet;
 
 	SaveOpenDialog saveOpenDialog;
@@ -340,12 +343,26 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		dumpTypes['?'] = Scope.class;
 		dumpTypes['B'] = Scope.class;
 
-		main.setLayout(new CircuitLayout());
+		// set a horizontal 2-panel layout with fixed size toolbox
+		GridBagLayout gbl = new GridBagLayout();
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.anchor = GridBagConstraints.NORTHWEST;
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weighty = 1;
+
+		main.setLayout(gbl);
+
+		gbc.weightx = 1;	// fill remaining space
 		cv = new CircuitCanvas(this);
 		cv.addComponentListener(this);
 		cv.addMouseMotionListener(this);
 		cv.addMouseListener(this);
-		main.add(cv);
+		main.add(cv, gbc);
+
+		gbc.weightx = 0;	// fixed size
+		gbc.insets = new java.awt.Insets(10, 10, 10, 10);
+		sidebar = new SidebarContainer(this);
+		main.add(sidebar, gbc);
 
 		keyboardInit();
 
@@ -589,28 +606,31 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				"Select"));
 		main.add(mainMenu);
 
-		main.add(resetButton = new Button("Reset"));
+		/////////////////////////////////////////////////////////////////////////////////////////
+
+		//main.setBounds(circuitMatrixFullSize, dragY, infoWidth, HINT_3DB_C);
+		sidebar.add(resetButton = new Button("Reset"));
 		resetButton.addActionListener(this);
 		dumpMatrixButton = new Button("Dump Matrix");
 		// main.add(dumpMatrixButton);
 		dumpMatrixButton.addActionListener(this);
 		stoppedCheck = new Checkbox("Stopped");
 		stoppedCheck.addItemListener(this);
-		main.add(stoppedCheck);
+		sidebar.add(stoppedCheck);
 
-		main.add(new Label("Simulation Speed", Label.CENTER));
+		sidebar.add(new Label("Simulation Speed", Label.CENTER));
 
 		// was max of 140 (260)
-		main.add(speedBar = new Scrollbar(Scrollbar.HORIZONTAL, 3, 1, 0, 260));
+		sidebar.add(speedBar = new Scrollbar(Scrollbar.HORIZONTAL, 3, 1, 0, 260));
 		speedBar.addAdjustmentListener(this);
 
-		main.add(new Label("Current Speed", Label.CENTER));
+		sidebar.add(new Label("Current Speed", Label.CENTER));
 		currentBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100);
 		currentBar.addAdjustmentListener(this);
-		main.add(currentBar);
+		sidebar.add(currentBar);
 
-		main.add(powerLabel = new Label("Power Brightness", Label.CENTER));
-		main.add(powerBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100));
+		sidebar.add(powerLabel = new Label("Power Brightness", Label.CENTER));
+		sidebar.add(powerBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100));
 		powerBar.addAdjustmentListener(this);
 
 		powerBar.setEnabled(false);
@@ -626,13 +646,19 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		modeInfoLabel = new Label("Select");
 		modeInfoLabel.setFont(f);
 
+		sidebar.addSeparator();
+		sidebar.addSpacer();
+		sidebar.addSeparator();
+
 		if (useFrame) {
-			main.add(new Label(""));
-			main.add(new Label("Current Circuit"));
-			main.add(titleLabel);
-			main.add(new Label("Current Mode"));
-			main.add(modeInfoLabel);
+			sidebar.add(new Label(""));
+			sidebar.add(new Label("Current Circuit"));
+			sidebar.add(titleLabel);
+			sidebar.add(new Label("Current Mode"));
+			sidebar.add(modeInfoLabel);
 		}
+
+		///////////////////////////////////////////////////////////////////////////////////////
 
 		setGrid();
 		elmList = new Vector<CircuitElm>();
