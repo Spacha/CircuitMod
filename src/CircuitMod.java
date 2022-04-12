@@ -1,28 +1,6 @@
-import java.applet.Applet;
-import java.awt.Graphics;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-//import java.io.FileNotFoundException;
-//import java.io.PrintWriter;
+public class CircuitMod {
 
-public class CircuitMod extends Applet implements ComponentListener {
-
-	private static final long serialVersionUID = 1L;
 	static CirSim ogf;
-
-	void destroyFrame() {
-		if (ogf != null)
-			ogf.dispose();
-		ogf = null;
-		repaint();
-	}
-
-	boolean started = false;
-
-	@Override
-	public void init() {
-		addComponentListener(this);
-	}
 
 	public static void main(String args[]) {
 		// Create program frame
@@ -70,57 +48,5 @@ public class CircuitMod extends Applet implements ComponentListener {
 			}
 		};
 		t1.start();
-	}
-
-	void showFrame() {
-		if (ogf == null) {
-			started = true;
-			ogf = new CirSim(this);
-			ogf.init(null);
-			repaint();
-		}
-	}
-
-	public void toggleSwitch(int x) {
-		ogf.toggleSwitch(x);
-	}
-
-	@Override
-	public void paint(Graphics g) {
-		String s = "Applet is open in a separate window.";
-		if (!started)
-			s = "Applet is starting.";
-		else if (ogf == null)
-			s = "Applet is finished.";
-		else if (ogf.useFrame)
-			ogf.triggerShow();
-		g.drawString(s, 10, 30);
-	}
-
-	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentShown(ComponentEvent e) {
-		showFrame();
-	}
-
-	@Override
-	public void componentResized(ComponentEvent e) {
-		if (ogf != null)
-			ogf.componentResized(e);
-	}
-
-	@Override
-	public void destroy() {
-		if (ogf != null)
-			ogf.dispose();
-		ogf = null;
-		repaint();
 	}
 };

@@ -81,7 +81,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public static final int sourceRadius = 7;
 	public static final double freqMult = 3.14159265 * 2 * 4;
 
-	public String getAppletInfo() {
+	public String getAppInfo() {
 		return "CircuitMod, Original by Paul Falstad";
 	}
 
@@ -188,7 +188,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	int voltageSourceCount;
 	int circuitMatrixSize, circuitMatrixFullSize;
 	boolean circuitNeedsMap;
-	public boolean useFrame;
 	int scopeCount;
 	Scope scopes[];
 	int scopeColCount[];
@@ -212,7 +211,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	CircuitCanvas cv;
 	SidebarContainer sidebar;
-	CircuitMod applet;
+	CircuitMod app;
 
 	SaveOpenDialog saveOpenDialog;
 	String savedCircuit;
@@ -236,8 +235,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		iconList.add(img32.getImage());
 		setIconImages(iconList);
 
-		applet = a;
-		useFrame = false;
+		app = a;
 
 		// Set native look and feel
 		try {
@@ -268,7 +266,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	public boolean init(String initCircuit) {
 		String euroResistor = null;
-		String useFrameStr = null;
 		boolean printable = false;
 		boolean convention = true;
 
@@ -303,7 +300,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			startCircuit = applet.getParameter("startCircuit");
 			startLabel = applet.getParameter("startLabel");
 			euroResistor = applet.getParameter("euroResistors");
-			useFrameStr = applet.getParameter("useFrame");
 			String x = applet.getParameter("whiteBackground");
 			if (x != null && x.equalsIgnoreCase("true"))
 				printable = true;
@@ -317,12 +313,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		boolean euro = (euroResistor != null
 				&& euroResistor.equalsIgnoreCase("true"));
-		useFrame = (useFrameStr == null
-				|| !useFrameStr.equalsIgnoreCase("false"));
-		if (useFrame)
-			main = this;
-		else
-			main = applet;
+
+		main = this;
+
 		String os = System.getProperty("os.name");
 		isMac = (os.indexOf("Mac ") == 0);
 		ctrlMetaKey = (isMac) ? "⌘" : "Ctrl";
@@ -368,13 +361,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		mainMenu = new PopupMenu();
 		MenuBar mb = null;
-		if (useFrame)
-			mb = new MenuBar();
+		mb = new MenuBar();
 		Menu m = new Menu("File");
-		if (useFrame)
-			mb.add(m);
-		else
-			mainMenu.add(m);
+		mb.add(m);
 		m.add(newItem = getMenuItem("New"));
 		m.add(openItem = getMenuItem("Open..."));
 		m.addSeparator();
@@ -399,24 +388,15 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		pasteItem.setEnabled(false);
 		m.add(selectAllItem = getMenuItem("Select All"));
 		selectAllItem.setShortcut(new MenuShortcut(KeyEvent.VK_A));
-		if (useFrame)
-			mb.add(m);
-		else
-			mainMenu.add(m);
+		mb.add(m);
 
 		m = new Menu("Scope");
-		if (useFrame)
-			mb.add(m);
-		else
-			mainMenu.add(m);
+		mb.add(m);
 		m.add(getMenuItem("Stack All", "stackAll"));
 		m.add(getMenuItem("Unstack All", "unstackAll"));
 
 		optionsMenu = m = new Menu("Options");
-		if (useFrame)
-			mb.add(m);
-		else
-			mainMenu.add(m);
+		mb.add(m);
 		
 		m.add(dotsCheckItem = getCheckItem("Show Current"));
 		dotsCheckItem.setState(true);
@@ -450,16 +430,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		m.add(optionsItem = getMenuItem("Other Options..."));
 
 		Menu circuitsMenu = new Menu("Circuits");
-		if (useFrame)
-			mb.add(circuitsMenu);
-		else
-			mainMenu.add(circuitsMenu);
+		mb.add(circuitsMenu);
 
 		Menu helpMenu = new Menu("Help");
-		if (useFrame)
-			mb.add(helpMenu);
-		else
-			mainMenu.add(helpMenu);
+		mb.add(helpMenu);
 
 		helpMenu.add(aboutItem = getMenuItem("About CircuitMod"));
 		helpMenu.add(shortcutItem = getMenuItem("Keyboard Shortcuts"));
@@ -650,13 +624,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		sidebar.addSpacer();
 		sidebar.addSeparator();
 
-		if (useFrame) {
-			sidebar.add(new Label(""));
-			sidebar.add(new Label("Current Circuit"));
-			sidebar.add(titleLabel);
-			sidebar.add(new Label("Current Mode"));
-			sidebar.add(modeInfoLabel);
-		}
+		sidebar.add(new Label(""));
+		sidebar.add(new Label("Current Circuit"));
+		sidebar.add(titleLabel);
+		sidebar.add(new Label("Current Mode"));
+		sidebar.add(modeInfoLabel);
 
 		///////////////////////////////////////////////////////////////////////////////////////
 
@@ -707,8 +679,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		savedCircuit = null;
 		circuitIsModified = false;
 
-		if (useFrame)
-			setMenuBar(mb);
+		setMenuBar(mb);
+
 		if (initCircuit != null) {
 			loadStartup(initCircuit);
 		} else if (startCircuitText != null)
@@ -724,34 +696,23 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void setFrameAndShow() {
-		if (useFrame) {
-			//Dimension screen = getToolkit().getScreenSize();
-			handleResize();
-			// resize(860, 640);
-			// Dimension x = getSize();
-			// move((screen.width - x.width)/2, (screen.height - x.height)/2);
-			// setBounds(
-			// (screen.width - 860)/2,
-			// (screen.height - 640)/2,
-			// 860, 640
-			// );
-			// show();
-			setSize(860, 640);
-			setLocationByPlatform(true);
-			setVisible(true);
+		//Dimension screen = getToolkit().getScreenSize();
+		handleResize();
+		// resize(860, 640);
+		// Dimension x = getSize();
+		// move((screen.width - x.width)/2, (screen.height - x.height)/2);
+		// setBounds(
+		// (screen.width - 860)/2,
+		// (screen.height - 640)/2,
+		// 860, 640
+		// );
+		// show();
+		setSize(860, 640);
+		setLocationByPlatform(true);
+		setVisible(true);
 
-			// Start maximized
-			// setExtendedState( getExtendedState()|MAXIMIZED_BOTH );
-		} else {
-			if (!powerCheckItem.getState()) {
-				main.remove(powerBar);
-				main.remove(powerLabel);
-				main.validate();
-			}
-			setVisible(false);
-			handleResize();
-			applet.validate();
-		}
+		// Start maximized
+		// setExtendedState( getExtendedState()|MAXIMIZED_BOTH );
 
 		main.requestFocus();
 	}
@@ -903,10 +864,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void destroyFrame() {
-		if (applet == null)
+		if (app == null)
 			dispose();
-		else
-			applet.destroyFrame();
 	}
 
 	@Override
@@ -2647,8 +2606,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	URL getCodeBase() {
 		try {
-			if (applet != null)
-				return applet.getCodeBase();
+			/*if (applet != null)
+				return applet.getCodeBase();*/
 			File f = new File(System.getProperty("java.class.path"));
 			File dir = f.getAbsoluteFile().getParentFile();
 			String path = dir.toString();
