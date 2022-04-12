@@ -9,6 +9,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -63,8 +65,9 @@ public class ShortcutsFrame extends JDialog implements WindowListener {
 		textArea.setEditable(false);
 		textArea.setBorder(flatBorder);
 		try {
-			FileReader fileReader = new FileReader("shortcuts.txt");
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			URL url = getClass().getResource("resources/shortcuts.txt");
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(url.openStream()));
+
 			String inputFile = "";
 			String textFieldReadable = bufferedReader.readLine();
 			while (textFieldReadable != null) {
