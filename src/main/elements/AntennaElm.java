@@ -25,16 +25,14 @@ public class AntennaElm extends RailElm {
 	}
 
 	@Override
-	double getVoltage() {
-		fmphase += 2 * pi * (2200 + Math.sin(2 * pi * sim.t * 13) * 100)
-				* sim.timeStep;
+	public double getVoltage() {
+		double t = sim.getTime();
+		fmphase += 2 * pi * (2200 + Math.sin(2 * pi * t * 13) * 100) * sim.getTimeStep();
 		double fm = 3 * Math.sin(fmphase);
-		return Math.sin(2 * pi * sim.t * 3000)
-				* (1.3 + Math.sin(2 * pi * sim.t * 12)) * 3
-				+ Math.sin(2 * pi * sim.t * 2710)
-						* (1.3 + Math.sin(2 * pi * sim.t * 13)) * 3
-				+ Math.sin(2 * pi * sim.t * 2433)
-						* (1.3 + Math.sin(2 * pi * sim.t * 14)) * 3
+		return Math.sin(2 * pi * t * 3000)
+				* (1.3 + Math.sin(2 * pi * t * 12)) * 3
+				+ Math.sin(2 * pi * t * 2710) * (1.3 + Math.sin(2 * pi * t * 13)) * 3
+				+ Math.sin(2 * pi * t * 2433) * (1.3 + Math.sin(2 * pi * t * 14)) * 3
 				+ fm;
 	}
 

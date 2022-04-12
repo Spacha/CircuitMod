@@ -8,7 +8,7 @@ import javax.swing.JCheckBox;
 
 import main.EditInfo;
 
-public public class CapacitorElm extends CircuitElm {
+public class CapacitorElm extends CircuitElm {
 	double capacitance;
 	double compResistance, voltdiff;
 	Point plate1[], plate2[];
@@ -77,7 +77,7 @@ public public class CapacitorElm extends CircuitElm {
 		drawThickLine(g, point1, lead1);
 		setPowerColor(g, false);
 		drawThickLine(g, plate1[0], plate1[1]);
-		if (sim.powerCheckItem.getState())
+		if (sim.isShowingPower())
 			g.setColor(Color.gray);
 
 		// draw second lead and plate
@@ -92,7 +92,7 @@ public public class CapacitorElm extends CircuitElm {
 			drawDots(g, point2, lead2, -curcount);
 		}
 		drawPosts(g);
-		if (sim.showValuesCheckItem.getState()) {
+		if (sim.isShowingValues()) {
 			String s = getShortUnitText(capacitance, "F");
 			drawValues(g, s, hs);
 		}
@@ -105,10 +105,11 @@ public public class CapacitorElm extends CircuitElm {
 		// parallel with a resistor. Trapezoidal is more accurate
 		// than backward euler but can cause oscillatory behavior
 		// if RC is small relative to the timestep.
+		double dt = sim.getTimeStep();
 		if (isTrapezoidal())
-			compResistance = sim.timeStep / (2 * capacitance);
+			compResistance = dt / (2 * capacitance);
 		else
-			compResistance = sim.timeStep / capacitance;
+			compResistance = dt / capacitance;
 		sim.stampResistor(nodes[0], nodes[1], compResistance);
 		sim.stampRightSide(nodes[0]);
 		sim.stampRightSide(nodes[1]);
@@ -157,8 +158,7 @@ public public class CapacitorElm extends CircuitElm {
 			return new EditInfo("Capacitance (F)", capacitance, 0, 0);
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Trapezoidal Approximation",
-					isTrapezoidal());
+			ei.setCheckbox( new JCheckBox("Trapezoidal Approximation", isTrapezoidal()) );
 			return ei;
 		}
 		return null;
@@ -166,10 +166,10 @@ public public class CapacitorElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.value > 0)
-			capacitance = ei.value;
+		if (n == 0 && ei.getValue() > 0)
+			capacitance = ei.getValue();
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags &= ~FLAG_BACK_EULER;
 			else
 				flags |= FLAG_BACK_EULER;
@@ -177,7 +177,7 @@ public public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return true;
 	}
 }

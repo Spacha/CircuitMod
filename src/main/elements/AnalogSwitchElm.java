@@ -109,7 +109,7 @@ public class AnalogSwitchElm extends CircuitElm {
 		else
 			yy = y;
 		int q1 = abs(x - xx) + abs(y - yy);
-		int q2 = (q1 / 2) % sim.gridSize;
+		int q2 = (q1 / 2) % sim.getGridSize();
 		if (q2 != 0)
 			return;
 		x2 = xx;
@@ -149,8 +149,7 @@ public class AnalogSwitchElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Normally closed",
-					(flags & FLAG_INVERT) != 0);
+			ei.setCheckbox(new JCheckBox("Normally closed", (flags & FLAG_INVERT) != 0));
 			return ei;
 		}
 		if (n == 1)
@@ -163,11 +162,10 @@ public class AnalogSwitchElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			flags = (ei.checkbox.isSelected()) ? (flags | FLAG_INVERT)
-					: (flags & ~FLAG_INVERT);
-		if (n == 1 && ei.value > 0)
-			r_on = ei.value;
-		if (n == 2 && ei.value > 0)
-			r_off = ei.value;
+			flags = ei.isChecked() ? (flags | FLAG_INVERT) : (flags & ~FLAG_INVERT);
+
+		double val = ei.getValue();
+		if (n == 1 && val > 0) r_on  = val;
+		if (n == 2 && val > 0) r_off = val;
 	}
 }

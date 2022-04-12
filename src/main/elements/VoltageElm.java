@@ -95,7 +95,7 @@ public class VoltageElm extends CircuitElm {
 					getVoltage());
 	}
 
-	double getVoltage() {
+	public double getVoltage() {
 		double w = 2 * pi * (sim.t - freqTimeZero) * frequency + phaseShift;
 		switch (waveform) {
 		case WF_DC:

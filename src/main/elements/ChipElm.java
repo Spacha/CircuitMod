@@ -30,7 +30,7 @@ public abstract class ChipElm extends CircuitElm {
 
 		noDiagonal = true;
 		setupPins();
-		setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+		setSize(sim.isSmallGrid() ? 1 : 2);
 	}
 
 	public ChipElm(int xa, int ya, int xb, int yb, int f, StringTokenizer st) {
@@ -83,7 +83,7 @@ public abstract class ChipElm extends CircuitElm {
 			drawDots(g, b, a, p.curcount);
 
 			if (p.bubble) {
-				g.setColor(sim.printableCheckItem.getState() ? Color.white
+				g.setColor(sim.isUsingWhiteBackground() ? Color.white
 						: Color.black);
 				drawThickCircle(g, p.bubbleX, p.bubbleY, 1);
 				g.setColor(lightGrayColor);
@@ -258,7 +258,7 @@ public abstract class ChipElm extends CircuitElm {
 	}
 
 	@Override
-	void setCurrent(int x, double c) {
+	public void setCurrent(int x, double c) {
 		int i;
 		for (i = 0; i != getPostCount(); i++)
 			if (pins[i].output && pins[i].voltSource == x)
@@ -283,12 +283,12 @@ public abstract class ChipElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Flip X", (flags & FLAG_FLIP_X) != 0);
+			ei.setCheckbox(new JCheckBox("Flip X", (flags & FLAG_FLIP_X) != 0));
 			return ei;
 		}
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Flip Y", (flags & FLAG_FLIP_Y) != 0);
+			ei.setCheckbox(new JCheckBox("Flip Y", (flags & FLAG_FLIP_Y) != 0));
 			return ei;
 		}
 		return null;
@@ -297,14 +297,14 @@ public abstract class ChipElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_FLIP_X;
 			else
 				flags &= ~FLAG_FLIP_X;
 			setPoints();
 		}
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_FLIP_Y;
 			else
 				flags &= ~FLAG_FLIP_Y;

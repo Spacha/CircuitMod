@@ -35,7 +35,7 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == CurrentElm.class;
 	}
 
@@ -66,7 +66,7 @@ public class CurrentElm extends CircuitElm {
 		g.fillPolygon(arrow);
 		setBbox(point1, point2, cr);
 		doDots(g);
-		if (sim.showValuesCheckItem.getState()) {
+		if (sim.isShowingValues()) {
 			String s = getShortUnitText(currentValue, "A");
 			if (dx == 0 || dy == 0)
 				drawValues(g, s, cr);
@@ -89,7 +89,7 @@ public class CurrentElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		currentValue = ei.value;
+		currentValue = ei.getValue();
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[1] - volts[0];
 	}
 }

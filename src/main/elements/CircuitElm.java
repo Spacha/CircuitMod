@@ -23,7 +23,7 @@ public abstract class CircuitElm implements Editable {
 	static double currentMult, powerMult;
 	static Point ps1, ps2;
 	protected static CirSim sim;
-	static Color whiteColor, selectColor, lightGrayColor;
+	public static Color whiteColor, selectColor, lightGrayColor;
 	static Font unitsFont;
 
 	public static NumberFormat showFormat, shortFormat, noCommaFormat;
@@ -49,6 +49,14 @@ public abstract class CircuitElm implements Editable {
 
 	int getDefaultFlags() {
 		return 0;
+	}
+	
+	public static double getVoltageRange() {
+		return voltageRange;
+	}
+	
+	public static void setVoltageRange(double r) {
+		voltageRange = r;
 	}
 
 	static void initClass(CirSim s) {
@@ -127,11 +135,11 @@ public abstract class CircuitElm implements Editable {
 	void draw(@SuppressWarnings("unused") Graphics g) {
 	}
 
-	void setCurrent(@SuppressWarnings("unused") int x, double c) {
+	public void setCurrent(@SuppressWarnings("unused") int x, double c) {
 		current = c;
 	}
 
-	double getCurrent() {
+	public double getCurrent() {
 		return current;
 	}
 
@@ -381,7 +389,7 @@ public abstract class CircuitElm implements Editable {
 		return voltSource;
 	}
 
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0] - volts[1];
 	}
 
@@ -560,15 +568,15 @@ public abstract class CircuitElm implements Editable {
 		}
 	}
 
-	static String getVoltageDText(double v) {
+	public static String getVoltageDText(double v) {
 		return getUnitText(Math.abs(v), "V");
 	}
 
-	static String getVoltageText(double v) {
+	public static String getVoltageText(double v) {
 		return getUnitText(v, "V");
 	}
 
-	static String getUnitText(double v, String u) {
+	public static String getUnitText(double v, String u) {
 		double va = Math.abs(v);
 		if (va < 1e-14)
 			return "0 " + u;
@@ -610,7 +618,7 @@ public abstract class CircuitElm implements Editable {
 		return shortFormat.format(v * 1e-9) + "G" + u;
 	}
 
-	static String getCurrentText(double i) {
+	public static String getCurrentText(double i) {
 		return getUnitText(i, "A");
 	}
 
@@ -719,11 +727,11 @@ public abstract class CircuitElm implements Editable {
 		return getVoltageDiff() * current;
 	}
 
-	double getScopeValue(int x) {
+	public double getScopeValue(int x) {
 		return (x == 1) ? getPower() : getVoltageDiff();
 	}
 
-	String getScopeUnits(int x) {
+	public String getScopeUnits(int x) {
 		return (x == 1) ? "W" : "V";
 	}
 
@@ -772,34 +780,36 @@ public abstract class CircuitElm implements Editable {
 	void selectRect(Rectangle r) {
 		selected = r.intersects(boundingBox);
 	}
+	
+	// FIXME: What are these generic math operations doing here? 
 
-	static int abs(int x) {
+	public static int abs(int x) {
 		return x < 0 ? -x : x;
 	}
 
-	static int sign(int x) {
+	public static int sign(int x) {
 		return (x < 0) ? -1 : (x == 0) ? 0 : 1;
 	}
 
-	static int min(int a, int b) {
+	public static int min(int a, int b) {
 		return (a < b) ? a : b;
 	}
 
-	static int max(int a, int b) {
+	public static int max(int a, int b) {
 		return (a > b) ? a : b;
 	}
 
-	static double distance(Point p1, Point p2) {
+	public static double distance(Point p1, Point p2) {
 		double x = p1.x - p2.x;
 		double y = p1.y - p2.y;
 		return Math.sqrt(x * x + y * y);
 	}
 
-	Rectangle getBoundingBox() {
+	public Rectangle getBoundingBox() {
 		return boundingBox;
 	}
 
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return false;
 	}
 }

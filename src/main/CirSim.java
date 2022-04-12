@@ -1947,7 +1947,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	// stamp value x on the right side of row i, representing an
 	// independent current source flowing into node i
-	void stampRightSide(int i, double x) {
+	public void stampRightSide(int i, double x) {
 		if (i > 0) {
 			if (circuitNeedsMap) {
 				i = circuitRowInfo[i - 1].mapRow;
@@ -1959,16 +1959,24 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	// indicate that the value on the right side of row i changes in doStep()
-	void stampRightSide(int i) {
+	public void stampRightSide(int i) {
 		// System.out.println("rschanges true " + (i-1));
 		if (i > 0)
 			circuitRowInfo[i - 1].rsChanges = true;
 	}
 
 	// indicate that the values on the left side of row i change in doStep()
-	void stampNonLinear(int i) {
+	public void stampNonLinear(int i) {
 		if (i > 0)
 			circuitRowInfo[i - 1].lsChanges = true;
+	}
+	
+	public double getTime() {
+		return t;
+	}
+	
+	public double getTimeStep() {
+		return timeStep;
 	}
 
 	double getIterCount() {
@@ -2702,7 +2710,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void readSetupFile(String str, String title) {
-		t = 0;
+		resetTime();
 		// System.out.println(str);
 		try {
 			URL url = getClass().getResource("resources/circuits/" + str);
@@ -2870,21 +2878,16 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	///////////////////////////////////////////////////////
 	// STATUS QUERY
 	/////////////////////////////////////////////////////
-	public boolean isSmallGrid() {
-		return smallGridCheckItem.getState();
-	}
-	public boolean isStopped() {
-		return stoppedCheckItem.getState();
-	}
-	public boolean isShowingCurrent() {
-		return dotsCheckItem.getState();
-	}
-	public boolean isShowingVoltage() {
-		return voltsCheckItem.getState();
-	}
-	public boolean isShowingPower() {
-		return powerCheckItem.getState();
-	}
+	public boolean isStopped() { 					return stoppedCheckItem.getState(); }
+	public boolean isShowingCurrent() { 			return dotsCheckItem.getState(); }
+	public boolean isShowingVoltage() { 			return voltsCheckItem.getState(); }
+	public boolean isShowingPower() { 				return powerCheckItem.getState(); }
+	public boolean isSmallGrid() { 					return smallGridCheckItem.getState(); }
+	public boolean isShowingValues() { 				return showValuesCheckItem.getState(); }
+	//public boolean isShowingConductance() { 		return showConductanceCheckItem.getState();
+	public boolean isUsingEuroResistors() { 		return euroResistorCheckItem.getState(); }
+	public boolean isUsingWhiteBackground() { 		return printableCheckItem.getState(); }
+	public boolean isUsingConventionalCurrent() { 	return conventionCheckItem.getState(); }
 	/////////////////////////////////////////////////////
 
 	public int snapGrid(int x) {
@@ -3444,6 +3447,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		gridSize = (smallGridCheckItem.getState()) ? 8 : 16;
 		gridMask = ~(gridSize - 1);
 		gridRound = gridSize / 2 - 1;
+	}
+	
+	public int getGridSize() {
+		return gridSize;	
 	}
 
 	void pushUndo() {

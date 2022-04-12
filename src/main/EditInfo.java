@@ -27,6 +27,14 @@ public class EditInfo {
 		return this;
 	}
 	
+	public void setCheckbox(JCheckBox cb) {
+		checkbox = cb;
+	}
+	
+	public boolean isChecked() {
+		return checkbox.isSelected();
+	}
+	
 	public String getName() { return name; }
 	public double getValue() { return value; }
 
