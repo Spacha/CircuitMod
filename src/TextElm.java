@@ -61,6 +61,11 @@ class TextElm extends CircuitElm {
 	}
 
 	@Override
+	boolean canViewInScope() {
+		return false;
+	}
+
+	@Override
 	boolean needsShortcut() {
 		return getClass() == TextElm.class;
 	}
