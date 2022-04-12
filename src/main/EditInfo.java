@@ -27,16 +27,34 @@ public class EditInfo {
 		return this;
 	}
 	
+	public void setText(String s) {
+		text = s;
+	}
+	
 	public void setCheckbox(JCheckBox cb) {
 		checkbox = cb;
+	}
+	
+	public void setChoice(JComboBox<?> c, int selectedIndex) {
+		choice = c;
+		choice.setSelectedIndex(selectedIndex);
+	}
+	
+	public int getChoice() {
+		return choice.getSelectedIndex();
 	}
 	
 	public boolean isChecked() {
 		return checkbox.isSelected();
 	}
 	
+	public boolean setNewDialog(boolean b) {
+		return newDialog = b;
+	}
+	
 	public String getName() { return name; }
 	public double getValue() { return value; }
+	public String getText() { return textf.getText(); }
 
 	String name, text;
 	double value, minval, maxval;

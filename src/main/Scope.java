@@ -17,16 +17,16 @@ import main.elements.OutputElm;
 import main.elements.ProbeElm;
 import main.elements.TransistorElm;
 
-class Scope {
+public class Scope {
 	final int FLAG_YELM = 32;
-	static final int VAL_POWER = 1;
-	static final int VAL_IB = 1;
-	static final int VAL_IC = 2;
-	static final int VAL_IE = 3;
-	static final int VAL_VBE = 4;
-	static final int VAL_VBC = 5;
-	static final int VAL_VCE = 6;
-	static final int VAL_R = 2;
+	public static final int VAL_POWER = 1;
+	public static final int VAL_IB = 1;
+	public static final int VAL_IC = 2;
+	public static final int VAL_IE = 3;
+	public static final int VAL_VBE = 4;
+	public static final int VAL_VBC = 5;
+	public static final int VAL_VCE = 6;
+	public static final int VAL_R = 2;
 	double minV[], maxV[], minMaxV;
 	double minI[], maxI[], minMaxI;
 	int scopePointCount = 128;

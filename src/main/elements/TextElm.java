@@ -69,7 +69,7 @@ public class TextElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == TextElm.class;
 	}
 
@@ -91,7 +91,7 @@ public class TextElm extends CircuitElm {
 		for (i = 0; i != lines.size(); i++) {
 			String s = (lines.elementAt(i));
 			if ((flags & FLAG_CENTER) != 0)
-				x = (sim.winSize.width - fm.stringWidth(s)) / 2;
+				x = (sim.getWindowWidth() - fm.stringWidth(s)) / 2;
 			g.drawString(s, x, cury);
 			if ((flags & FLAG_BAR) != 0) {
 				int by = cury - fm.getAscent();
@@ -109,20 +109,19 @@ public class TextElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("Text", 0, -1, -1);
-			ei.text = text;
+			ei.setText(text);
 			return ei;
 		}
 		if (n == 1)
 			return new EditInfo("Size", size, 5, 100);
 		if (n == 2) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Center", (flags & FLAG_CENTER) != 0);
+			ei.setCheckbox(new JCheckBox("Center", (flags & FLAG_CENTER) != 0));
 			return ei;
 		}
 		if (n == 3) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Draw Bar On Top",
-					(flags & FLAG_BAR) != 0);
+			ei.setCheckbox(new JCheckBox("Draw Bar On Top", (flags & FLAG_BAR) != 0));
 			return ei;
 		}
 		return null;
@@ -131,19 +130,19 @@ public class TextElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			text = ei.textf.getText();
+			text = ei.getText();
 			split();
 		}
 		if (n == 1)
-			size = (int) ei.value;
+			size = (int) ei.getValue();
 		if (n == 3) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_BAR;
 			else
 				flags &= ~FLAG_BAR;
 		}
 		if (n == 2) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_CENTER;
 			else
 				flags &= ~FLAG_CENTER;

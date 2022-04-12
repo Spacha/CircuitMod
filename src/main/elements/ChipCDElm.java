@@ -208,7 +208,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			pins[i].value = false;

@@ -40,7 +40,7 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == LogicOutputElm.class;
 	}
 
@@ -98,7 +98,7 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -117,7 +117,7 @@ public class LogicOutputElm extends CircuitElm {
 			return new EditInfo("Threshold", threshold, 10, -10);
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Current Required", needsPullDown());
+			ei.setCheckbox(new JCheckBox("Current Required", needsPullDown()));
 			return ei;
 		}
 		return null;
@@ -126,9 +126,9 @@ public class LogicOutputElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			threshold = ei.value;
+			threshold = ei.getValue();
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags = FLAG_PULLDOWN;
 			else
 				flags &= ~FLAG_PULLDOWN;

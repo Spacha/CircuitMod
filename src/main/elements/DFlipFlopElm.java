@@ -76,7 +76,7 @@ public class DFlipFlopElm extends ChipElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 2) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Reset Pin", hasReset());
+			ei.setCheckbox(new JCheckBox("Reset Pin", hasReset()));
 			return ei;
 		}
 		return super.getEditInfo(n);
@@ -85,7 +85,7 @@ public class DFlipFlopElm extends ChipElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 2) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_RESET;
 			else
 				flags &= ~FLAG_RESET;

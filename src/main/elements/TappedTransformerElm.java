@@ -120,7 +120,7 @@ public class TappedTransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = curcount[0] = curcount[1] = 0;
 	}
 
@@ -166,8 +166,9 @@ public class TappedTransformerElm extends CircuitElm {
 		a[4] = a[8] = -4 * (1 + cc) / ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
 		a[5] = a[7] = 4 * cc / ((2 * cc * cc - cc - 1) * l1 * ratio * ratio);
 		int i;
+		double dt = sim.getTimeStep();
 		for (i = 0; i != 9; i++)
-			a[i] *= sim.timeStep / 2;
+			a[i] *= dt / 2;
 		sim.stampConductance(nodes[0], nodes[1], a[0]);
 		sim.stampVCCurrentSource(nodes[0], nodes[1], nodes[2], nodes[3], a[1]);
 		sim.stampVCCurrentSource(nodes[0], nodes[1], nodes[3], nodes[4], a[2]);
@@ -257,8 +258,8 @@ public class TappedTransformerElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			inductance = ei.value;
+			inductance = ei.getValue();
 		if (n == 1)
-			ratio = ei.value;
+			ratio = ei.getValue();
 	}
 }

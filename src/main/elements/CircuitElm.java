@@ -125,7 +125,7 @@ public abstract class CircuitElm implements Editable {
 				+ " " + y2 + " " + flags;
 	}
 
-	void reset() {
+	public void reset() {
 		int i;
 		for (i = 0; i != getPostCount() + getInternalNodeCount(); i++)
 			volts[i] = 0;

@@ -37,7 +37,7 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		current = curcount = 0;
 		// put small charge on caps when reset to start oscillators
 		voltdiff = 1e-3;

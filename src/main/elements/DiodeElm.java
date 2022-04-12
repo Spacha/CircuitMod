@@ -78,7 +78,7 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		diode.reset();
 		volts[0] = volts[1] = curcount = 0;
 	}
@@ -134,12 +134,12 @@ public class DiodeElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		fwdrop = ei.value;
+		fwdrop = ei.getValue();
 		setup();
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == DiodeElm.class;
 	}
 }

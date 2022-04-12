@@ -33,7 +33,7 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == InductorElm.class;
 	}
 
@@ -58,7 +58,7 @@ public class InductorElm extends CircuitElm {
 		draw2Leads(g);
 		setPowerColor(g, false);
 		drawCoil(g, 8, lead1, lead2, v1, v2);
-		if (sim.showValuesCheckItem.getState()) {
+		if (sim.isShowingValues()) {
 			String s = getShortUnitText(inductance, "H");
 			drawValues(g, s, hs);
 		}
@@ -67,7 +67,7 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		current = volts[0] = volts[1] = curcount = 0;
 		ind.reset();
 	}
@@ -113,8 +113,7 @@ public class InductorElm extends CircuitElm {
 			return new EditInfo("Inductance (H)", inductance, 0, 0);
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Trapezoidal Approximation",
-					ind.isTrapezoidal());
+			ei.setCheckbox(new JCheckBox("Trapezoidal Approximation", ind.isTrapezoidal()));
 			return ei;
 		}
 		return null;
@@ -123,9 +122,9 @@ public class InductorElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			inductance = ei.value;
+			inductance = ei.getValue();
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags &= ~Inductor.FLAG_BACK_EULER;
 			else
 				flags |= Inductor.FLAG_BACK_EULER;

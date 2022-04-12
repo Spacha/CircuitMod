@@ -97,13 +97,14 @@ public class LEDElm extends DiodeElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
+		double val = ei.getValue();
 		if (n == 0)
 			super.setEditValue(0, ei);
 		if (n == 1)
-			colorR = ei.value;
+			colorR = val;
 		if (n == 2)
-			colorG = ei.value;
+			colorG = val;
 		if (n == 3)
-			colorB = ei.value;
+			colorB = val;
 	}
 }

@@ -214,7 +214,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	int selectedItemIndex = 0;
 	Vector<String> undoStack, redoStack;
 
-	int getrand(int x) {
+	public int getrand(int x) {
 		int q = random.nextInt();
 		if (q < 0)
 			q = -q;
@@ -1276,6 +1276,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public int elmCount() {
 		return elmList.size();
 	}
+	
+	public int nodeCount() {
+		return nodeList.size();
+	}
 
 	int locateElm(CircuitElm elm) {
 		int i;
@@ -1283,6 +1287,18 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			if (elm == elmList.elementAt(i))
 				return i;
 		return -1;
+	}
+	
+	public CircuitElm getElmAt(int i) {
+		return elmList.elementAt(i);
+	}
+	
+	public void setAnalyzeFlag(boolean flag) {
+		analyzeFlag = flag;
+	}
+	
+	public boolean getAnalyzeFlag() {
+		return analyzeFlag;
 	}
 
 	void analyzeCircuit() {
@@ -1837,7 +1853,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 	}
 
-	void stop(String s, CircuitElm ce) {
+	public void stop(String s, CircuitElm ce) {
 		System.out.println("Stopping.");
 		stopMessage = s;
 		circuitMatrix = null;
@@ -1924,7 +1940,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	// stamp value x in row i, column j, meaning that a voltage change
 	// of dv in node j will increase the current into node i by x dv.
 	// (Unless i or j is a voltage source node.)
-	void stampMatrix(int i, int j, double x) {
+	public void stampMatrix(int i, int j, double x) {
 		if (i > 0 && j > 0) {
 			if (circuitNeedsMap) {
 				i = circuitRowInfo[i - 1].mapRow;
@@ -1978,12 +1994,24 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public double getTimeStep() {
 		return timeStep;
 	}
+	
+	public boolean getConverged() {
+		return converged;
+	}
+	
+	public void setConverged(boolean c) {
+		converged = c;
+	}
 
 	double getIterCount() {
 		if (speedBar.getValue() == 0)
 			return 0;
 		// return (Math.exp((speedBar.getValue()-1)/24.) + .5);
 		return .1 * Math.exp((speedBar.getValue() - 61) / 24.);
+	}
+	
+	public int getSubIterations() {
+		return subIterations;
 	}
 
 	boolean converged;
@@ -2888,6 +2916,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public boolean isUsingEuroResistors() { 		return euroResistorCheckItem.getState(); }
 	public boolean isUsingWhiteBackground() { 		return printableCheckItem.getState(); }
 	public boolean isUsingConventionalCurrent() { 	return conventionCheckItem.getState(); }
+	
+	public int getWindowWidth() { 					return winSize.width; }
+	public int getWindowHeight() { 					return winSize.height; }
+	public int getMouseMode() { 					return mouseMode; }
+	public CircuitElm getPlotXElm( ) { 				return plotXElm; }
+	public CircuitElm getPlotYElm( ) { 				return plotYElm; }
 	/////////////////////////////////////////////////////
 
 	public int snapGrid(int x) {
@@ -2904,10 +2938,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			heldSwitchElm = se;
 		needAnalyze();
 		return true;
-	}
-	
-	public int getMouseMode() {
-		return mouseMode;
 	}
 	
 	@Override

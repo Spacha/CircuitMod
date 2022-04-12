@@ -81,7 +81,7 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		super.reset();
 		state = false;
 	}
@@ -133,18 +133,20 @@ public class SparkGapElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (ei.value > 0 && n == 0)
-			onresistance = ei.value;
-		if (ei.value > 0 && n == 1)
-			offresistance = ei.value;
-		if (ei.value > 0 && n == 2)
-			breakdown = ei.value;
-		if (ei.value > 0 && n == 3)
-			holdcurrent = ei.value;
+		double val = ei.getValue();
+
+		if (val > 0 && n == 0)
+			onresistance = val;
+		if (val > 0 && n == 1)
+			offresistance = val;
+		if (val > 0 && n == 2)
+			breakdown = val;
+		if (val > 0 && n == 3)
+			holdcurrent = val;
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return false;
 	}
 }

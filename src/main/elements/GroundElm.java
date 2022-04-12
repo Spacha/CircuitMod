@@ -39,17 +39,17 @@ public class GroundElm extends CircuitElm {
 	}
 
 	@Override
-	void setCurrent(int x, double c) {
+	public void setCurrent(int x, double c) {
 		current = -c;
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(0, nodes[0], voltSource, 0);
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return 0;
 	}
 
@@ -70,7 +70,7 @@ public class GroundElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return true;
 	}
 }

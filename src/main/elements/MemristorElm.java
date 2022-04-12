@@ -36,7 +36,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == MemristorElm.class;
 	}
 
@@ -101,14 +101,14 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		dopeWidth = 0;
 	}
 
 	@Override
 	void startIteration() {
 		double wd = dopeWidth / totalWidth;
-		dopeWidth += sim.timeStep * mobility * r_on * current / totalWidth;
+		dopeWidth += sim.getTimeStep() * mobility * r_on * current / totalWidth;
 		if (dopeWidth < 0)
 			dopeWidth = 0;
 		if (dopeWidth > totalWidth)
@@ -136,12 +136,12 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	double getScopeValue(int x) {
+	public double getScopeValue(int x) {
 		return (x == 2) ? resistance : (x == 1) ? getPower() : getVoltageDiff();
 	}
 
 	@Override
-	String getScopeUnits(int x) {
+	public String getScopeUnits(int x) {
 		return (x == 2) ? CirSim.OHM_STR : (x == 1) ? "W" : "V";
 	}
 
@@ -163,15 +163,16 @@ public class MemristorElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
+		double val = ei.getValue();
 		if (n == 0)
-			r_on = ei.value;
+			r_on = val;
 		if (n == 1)
-			r_off = ei.value;
+			r_off = val;
 		if (n == 2)
-			dopeWidth = ei.value * 1e-9;
+			dopeWidth = val * 1e-9;
 		if (n == 3)
-			totalWidth = ei.value * 1e-9;
+			totalWidth = val * 1e-9;
 		if (n == 4)
-			mobility = ei.value * 1e-12;
+			mobility = val * 1e-12;
 	}
 }

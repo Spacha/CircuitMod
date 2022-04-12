@@ -54,7 +54,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		lastv1 = lastv2 = volts[0] = volts[1] = volts[2] = curcount = 0;
 	}
 
@@ -96,7 +96,7 @@ public class MosfetElm extends CircuitElm {
 			setVoltageColor(g, pnp == 1 ? volts[1] : volts[2]);
 			g.fillPolygon(arrowPoly);
 		}
-		if (sim.powerCheckItem.getState())
+		if (sim.isShowingPower())
 			g.setColor(Color.gray);
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, point1, gate[1]);
@@ -137,7 +137,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	double getCurrent() {
+	public double getCurrent() {
 		return ids;
 	}
 
@@ -221,7 +221,7 @@ public class MosfetElm extends CircuitElm {
 		double vgs = vs[gate] - vs[source];
 		double vds = vs[drain] - vs[source];
 		if (Math.abs(lastv1 - vs[1]) > .01 || Math.abs(lastv2 - vs[2]) > .01)
-			sim.converged = false;
+			sim.setConverged(false);
 		lastv1 = vs[1];
 		lastv2 = vs[2];
 		double realvgs = vgs;
@@ -297,7 +297,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[2] - volts[1];
 	}
 
@@ -312,7 +312,7 @@ public class MosfetElm extends CircuitElm {
 			return new EditInfo("Threshold Voltage", pnp * vt, .01, 5);
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Digital Symbol", drawDigital());
+			ei.setCheckbox(new JCheckBox("Digital Symbol", drawDigital()));
 			return ei;
 		}
 
@@ -322,9 +322,9 @@ public class MosfetElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			vt = pnp * ei.value;
+			vt = pnp * ei.getValue();
 		if (n == 1) {
-			flags = (ei.checkbox.isSelected()) ? (flags | FLAG_DIGITAL)
+			flags = (ei.isChecked()) ? (flags | FLAG_DIGITAL)
 					: (flags & ~FLAG_DIGITAL);
 			setPoints();
 		}

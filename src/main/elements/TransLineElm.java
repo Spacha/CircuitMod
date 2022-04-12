@@ -14,7 +14,7 @@ public class TransLineElm extends CircuitElm {
 
 	public TransLineElm(int xx, int yy) {
 		super(xx, yy);
-		delay = 1000 * sim.timeStep;
+		delay = 1000 * sim.getTimeStep();
 		imped = 75;
 		noDiagonal = true;
 		reset();
@@ -55,8 +55,8 @@ public class TransLineElm extends CircuitElm {
 	void drag(int xx, int yy) {
 		xx = sim.snapGrid(xx);
 		yy = sim.snapGrid(yy);
-		int w1 = max(sim.gridSize, abs(yy - y));
-		int w2 = max(sim.gridSize, abs(xx - x));
+		int w1 = max(sim.getGridSize(), abs(yy - y));
+		int w2 = max(sim.getGridSize(), abs(xx - x));
 		if (w1 > w2) {
 			xx = x;
 			width = w2;
@@ -72,10 +72,10 @@ public class TransLineElm extends CircuitElm {
 	Point posts[], inner[];
 
 	@Override
-	void reset() {
-		if (sim.timeStep == 0)
+	public void reset() {
+		if (sim.getTimeStep() == 0)
 			return;
-		lenSteps = (int) (delay / sim.timeStep);
+		lenSteps = (int) (delay / sim.getTimeStep());
 		// System.out.println(lenSteps + " steps");
 		if (lenSteps > 100000)
 			voltageL = voltageR = null;
@@ -93,7 +93,7 @@ public class TransLineElm extends CircuitElm {
 		int ds = (dy == 0) ? sign(dx) : -sign(dy);
 		Point p3 = interpPoint(point1, point2, 0, -width * ds);
 		Point p4 = interpPoint(point1, point2, 1, -width * ds);
-		int sep = sim.gridSize / 2;
+		int sep = sim.getGridSize() / 2;
 		Point p5 = interpPoint(point1, point2, 0, -(width / 2 - sep) * ds);
 		Point p6 = interpPoint(point1, point2, 1, -(width / 2 - sep) * ds);
 		Point p7 = interpPoint(point1, point2, 0, -(width / 2 + sep) * ds);
@@ -159,7 +159,7 @@ public class TransLineElm extends CircuitElm {
 	}
 
 	@Override
-	void setCurrent(int v, double c) {
+	public void setCurrent(int v, double c) {
 		if (v == voltSource1)
 			current1 = c;
 		else
@@ -252,11 +252,11 @@ public class TransLineElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			delay = ei.value;
+			delay = ei.getValue();
 			reset();
 		}
 		if (n == 1) {
-			imped = ei.value;
+			imped = ei.getValue();
 			reset();
 		}
 	}

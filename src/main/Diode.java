@@ -1,14 +1,14 @@
 package main;
-class Diode {
+public class Diode {
 	int nodes[];
 	CirSim sim;
 
-	Diode(CirSim s) {
+	public Diode(CirSim s) {
 		sim = s;
 		nodes = new int[2];
 	}
 
-	void setup(double fw, double zv) {
+	public void setup(double fw, double zv) {
 		fwdrop = fw;
 		zvoltage = zv;
 		vdcoef = Math.log(1 / leakage + 1) / fwdrop;
@@ -25,7 +25,7 @@ class Diode {
 		}
 	}
 
-	void reset() {
+	public void reset() {
 		lastvoltdiff = 0;
 	}
 
@@ -87,14 +87,14 @@ class Diode {
 		return vnew;
 	}
 
-	void stamp(int n0, int n1) {
+	public void stamp(int n0, int n1) {
 		nodes[0] = n0;
 		nodes[1] = n1;
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
-	void doStep(double voltdiff) {
+	public void doStep(double voltdiff) {
 		// used to have .1 here, but needed .01 for peak detector
 		if (Math.abs(voltdiff - lastvoltdiff) > .01)
 			sim.converged = false;
@@ -130,7 +130,7 @@ class Diode {
 		}
 	}
 
-	double calculateCurrent(double voltdiff) {
+	public double calculateCurrent(double voltdiff) {
 		if (voltdiff >= 0 || zvoltage == 0)
 			return leakage * (Math.exp(voltdiff * vdcoef) - 1);
 		return leakage * (Math.exp(voltdiff * vdcoef) - Math.exp((-voltdiff - zoffset) * vdcoef) - 1);

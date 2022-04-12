@@ -103,14 +103,14 @@ public class ZenerElm extends DiodeElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			fwdrop = ei.value;
+			fwdrop = ei.getValue();
 		if (n == 1)
-			zvoltage = ei.value;
+			zvoltage = ei.getValue();
 		setup();
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == ZenerElm.class;
 	}
 }

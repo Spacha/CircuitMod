@@ -62,7 +62,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == TransformerElm.class;
 	}
 
@@ -136,7 +136,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		current[0] = current[1] = volts[0] = volts[1] = volts[2] = volts[3] = curcount[0] = curcount[1] = 0;
 	}
 
@@ -176,7 +176,7 @@ public class TransformerElm extends CircuitElm {
 		double m = couplingCoef * Math.sqrt(l1 * l2);
 		// build inverted matrix
 		double deti = 1 / (l1 * l2 - m * m);
-		double ts = isTrapezoidal() ? sim.timeStep / 2 : sim.timeStep;
+		double ts = isTrapezoidal() ? sim.getTimeStep() / 2 : sim.getTimeStep();
 		a1 = l2 * deti * ts; // we multiply dt/2 into a1..a4 here
 		a2 = -m * deti * ts;
 		a3 = -m * deti * ts;
@@ -251,8 +251,7 @@ public class TransformerElm extends CircuitElm {
 					.setDimensionless();
 		if (n == 3) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Trapezoidal Approximation",
-					isTrapezoidal());
+			ei.setCheckbox(new JCheckBox("Trapezoidal Approximation", isTrapezoidal()));
 			return ei;
 		}
 		return null;
@@ -260,14 +259,16 @@ public class TransformerElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
+		double val = ei.getValue();
+
 		if (n == 0)
-			inductance = ei.value;
+			inductance = val;
 		if (n == 1)
-			ratio = ei.value;
-		if (n == 2 && ei.value > 0 && ei.value < 1)
-			couplingCoef = ei.value;
+			ratio = val;
+		if (n == 2 && val > 0 && val < 1)
+			couplingCoef = val;
 		if (n == 3) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags &= ~Inductor.FLAG_BACK_EULER;
 			else
 				flags |= Inductor.FLAG_BACK_EULER;

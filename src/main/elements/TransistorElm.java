@@ -53,7 +53,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		volts[0] = volts[1] = volts[2] = 0;
 		lastvbc = lastvbe = curcount_c = curcount_e = curcount_b = 0;
 	}
@@ -87,7 +87,7 @@ public class TransistorElm extends CircuitElm {
 		g.fillPolygon(arrowPoly);
 		// draw base
 		setVoltageColor(g, volts[0]);
-		if (sim.powerCheckItem.getState())
+		if (sim.isShowingPower())
 			g.setColor(Color.gray);
 		drawThickLine(g, point1, base);
 		// draw dots
@@ -190,7 +190,7 @@ public class TransistorElm extends CircuitElm {
 			} else {
 				vnew = vt * Math.log(vnew / vt);
 			}
-			sim.converged = false;
+			sim.setConverged(false);
 			// System.out.println(vnew + " " + oo + " " + vold);
 		}
 		return (vnew);
@@ -209,14 +209,14 @@ public class TransistorElm extends CircuitElm {
 		double vbe = volts[0] - volts[2]; // typically positive
 		if (Math.abs(vbc - lastvbc) > .01 || // .01
 				Math.abs(vbe - lastvbe) > .01)
-			sim.converged = false;
+			sim.setConverged(false);
 		gmin = 0;
-		if (sim.subIterations > 100) {
+		if (sim.getSubIterations() > 100) {
 			// if we have trouble converging, put a conductance in parallel with
 			// all P-N junctions.
 			// Gradually increase the conductance value for each iteration.
 			gmin = Math
-					.exp(-9 * Math.log(10) * (1 - sim.subIterations / 3000.));
+					.exp(-9 * Math.log(10) * (1 - sim.getSubIterations() / 3000.));
 			if (gmin > .1)
 				gmin = .1;
 		}
@@ -295,7 +295,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	double getScopeValue(int x) {
+	public double getScopeValue(int x) {
 		switch (x) {
 		case Scope.VAL_IB:
 			return ib;
@@ -314,7 +314,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	String getScopeUnits(int x) {
+	public String getScopeUnits(int x) {
 		switch (x) {
 		case Scope.VAL_IB:
 		case Scope.VAL_IC:
@@ -331,7 +331,7 @@ public class TransistorElm extends CircuitElm {
 			return new EditInfo("Beta/hFE", beta, 10, 1000).setDimensionless();
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Swap E/C", (flags & FLAG_FLIP) != 0);
+			ei.setCheckbox(new JCheckBox("Swap E/C", (flags & FLAG_FLIP) != 0));
 			return ei;
 		}
 		return null;
@@ -340,11 +340,11 @@ public class TransistorElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			beta = ei.value;
+			beta = ei.getValue();
 			setup();
 		}
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_FLIP;
 			else
 				flags &= ~FLAG_FLIP;

@@ -24,7 +24,7 @@ public class RailElm extends VoltageElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == RailElm.class;
 	}
 	// TODO
@@ -76,7 +76,7 @@ public class RailElm extends VoltageElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 

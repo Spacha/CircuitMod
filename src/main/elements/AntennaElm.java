@@ -42,7 +42,7 @@ public class AntennaElm extends RailElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == AntennaElm.class;
 	}
 }

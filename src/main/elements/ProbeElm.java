@@ -26,7 +26,7 @@ public class ProbeElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == ProbeElm.class;
 	}
 
@@ -48,7 +48,7 @@ public class ProbeElm extends CircuitElm {
 	void draw(Graphics g) {
 		int hs = 8;
 		setBbox(point1, point2, hs);
-		boolean selected = (needsHighlight() || sim.plotYElm == this);
+		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
 		double len = (selected || sim.dragElm == this) ? 16 : dn - 32;
 		calcLeads((int) len);
 		setVoltageColor(g, volts[0]);
@@ -61,9 +61,9 @@ public class ProbeElm extends CircuitElm {
 		drawThickLine(g, lead2, point2);
 		Font f = new Font("SansSerif", Font.BOLD, 14);
 		g.setFont(f);
-		if (this == sim.plotXElm)
+		if (this == sim.getPlotXElm())
 			drawCenteredText(g, "X", center.x, center.y, true);
-		if (this == sim.plotYElm)
+		if (this == sim.getPlotYElm())
 			drawCenteredText(g, "Y", center.x, center.y, true);
 		if (mustShowVoltage()) {
 			String s = getShortUnitText(volts[0], "V");
@@ -91,7 +91,7 @@ public class ProbeElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Show Voltage", mustShowVoltage());
+			ei.setCheckbox(new JCheckBox("Show Voltage", mustShowVoltage()));
 			return ei;
 		}
 		return null;
@@ -100,7 +100,7 @@ public class ProbeElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags = FLAG_SHOWVOLTAGE;
 			else
 				flags &= ~FLAG_SHOWVOLTAGE;

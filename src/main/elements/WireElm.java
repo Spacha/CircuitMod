@@ -72,7 +72,7 @@ public class WireElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -85,12 +85,12 @@ public class WireElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Show Current", mustShowCurrent());
+			ei.setCheckbox(new JCheckBox("Show Current", mustShowCurrent()));
 			return ei;
 		}
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Show Voltage", mustShowVoltage());
+			ei.setCheckbox(new JCheckBox("Show Voltage", mustShowVoltage()));
 			return ei;
 		}
 		return null;
@@ -99,13 +99,13 @@ public class WireElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags = FLAG_SHOWCURRENT;
 			else
 				flags &= ~FLAG_SHOWCURRENT;
 		}
 		if (n == 1) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags = FLAG_SHOWVOLTAGE;
 			else
 				flags &= ~FLAG_SHOWVOLTAGE;
@@ -113,7 +113,7 @@ public class WireElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return true;
 	}
 }

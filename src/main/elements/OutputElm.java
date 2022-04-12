@@ -27,7 +27,7 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == OutputElm.class;
 	}
 
@@ -44,15 +44,15 @@ public class OutputElm extends CircuitElm {
 
 	@Override
 	void draw(Graphics g) {
-		boolean selected = (needsHighlight() || sim.plotYElm == this);
+		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
 		Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
 		g.setFont(f);
 		g.setColor(selected ? selectColor : whiteColor);
 		String s = (flags & FLAG_VALUE) != 0 ? getVoltageText(volts[0]) : "out";
 		FontMetrics fm = g.getFontMetrics();
-		if (this == sim.plotXElm)
+		if (this == sim.getPlotXElm())
 			s = "X";
-		if (this == sim.plotYElm)
+		if (this == sim.getPlotYElm())
 			s = "Y";
 		interpPoint(point1, point2, lead1,
 				1 - (fm.stringWidth(s) / 2 + 8) / dn);
@@ -66,7 +66,7 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -80,8 +80,7 @@ public class OutputElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Show Voltage",
-					(flags & FLAG_VALUE) != 0);
+			ei.setCheckbox(new JCheckBox("Show Voltage", (flags & FLAG_VALUE) != 0));
 			return ei;
 		}
 		return null;
@@ -90,7 +89,7 @@ public class OutputElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			flags = (ei.checkbox.isSelected()) ? (flags | FLAG_VALUE)
+			flags = (ei.isChecked()) ? (flags | FLAG_VALUE)
 					: (flags & ~FLAG_VALUE);
 	}
 }

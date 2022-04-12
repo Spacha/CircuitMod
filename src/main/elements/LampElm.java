@@ -44,7 +44,7 @@ public class LampElm extends CircuitElm {
 	int bulbR;
 
 	@Override
-	void reset() {
+	public void reset() {
 		super.reset();
 		temp = roomTemp;
 	}
@@ -151,9 +151,9 @@ public class LampElm extends CircuitElm {
 		double capw = cap * warmTime / .4;
 		double capc = cap * coolTime / .4;
 		// System.out.println(nom_r + " " + (resistance/nom_r));
-		temp += getPower() * sim.timeStep / capw;
+		temp += getPower() * sim.getTimeStep() / capw;
 		double cr = 2600 / nom_pow;
-		temp -= sim.timeStep * (temp - roomTemp) / (capc * cr);
+		temp -= sim.getTimeStep() * (temp - roomTemp) / (capc * cr);
 		// System.out.println(capw + " " + capc + " " + temp + " " +resistance);
 	}
 
@@ -187,13 +187,15 @@ public class LampElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.value > 0)
-			nom_pow = ei.value;
-		if (n == 1 && ei.value > 0)
-			nom_v = ei.value;
-		if (n == 2 && ei.value > 0)
-			warmTime = ei.value;
-		if (n == 3 && ei.value > 0)
-			coolTime = ei.value;
+		double val = ei.getValue();
+
+		if (n == 0 && val > 0)
+			nom_pow = val;
+		if (n == 1 && val > 0)
+			nom_v = val;
+		if (n == 2 && val > 0)
+			warmTime = val;
+		if (n == 3 && val > 0)
+			coolTime = val;
 	}
 }

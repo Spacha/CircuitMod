@@ -77,7 +77,7 @@ public class SweepElm extends CircuitElm {
 		if (tm > 1000)
 			tm = 2000 - tm;
 		double w = 1 + tm * .002;
-		if (!sim.stoppedCheckItem.getState())
+		if (!sim.isStopped())
 			w = 1 + 2 * (frequency - minF) / (maxF - minF);
 		for (i = -xl; i <= xl; i++) {
 			int yy = yc + (int) (.95 * Math.sin(i * pi * w / xl) * wl);
@@ -86,7 +86,7 @@ public class SweepElm extends CircuitElm {
 			ox = xc + i;
 			oy = yy;
 		}
-		if (sim.showValuesCheckItem.getState()) {
+		if (sim.isShowingValues()) {
 			String s = getShortUnitText(frequency, "Hz");
 			if (dx == 0 || dy == 0)
 				drawValues(g, s, circleSize);
@@ -113,17 +113,17 @@ public class SweepElm extends CircuitElm {
 			dir = 1;
 		}
 		if ((flags & FLAG_LOG) == 0) {
-			fadd = dir * sim.timeStep * (maxF - minF) / sweepTime;
+			fadd = dir * sim.getTimeStep() * (maxF - minF) / sweepTime;
 			fmul = 1;
 		} else {
 			fadd = 0;
-			fmul = Math.pow(maxF / minF, dir * sim.timeStep / sweepTime);
+			fmul = Math.pow(maxF / minF, dir * sim.getTimeStep() / sweepTime);
 		}
-		savedTimeStep = sim.timeStep;
+		savedTimeStep = sim.getTimeStep();
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		frequency = minF;
 		freqTime = 0;
 		dir = 1;
@@ -135,10 +135,10 @@ public class SweepElm extends CircuitElm {
 	@Override
 	void startIteration() {
 		// has timestep been changed?
-		if (sim.timeStep != savedTimeStep)
+		if (sim.getTimeStep() != savedTimeStep)
 			setParams();
 		v = Math.sin(freqTime) * maxV;
-		freqTime += frequency * 2 * pi * sim.timeStep;
+		freqTime += frequency * 2 * pi * sim.getTimeStep();
 		frequency = frequency * fmul + fadd;
 		if (frequency >= maxF && dir == 1) {
 			if ((flags & FLAG_BIDIR) != 0) {
@@ -161,7 +161,7 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -196,15 +196,14 @@ public class SweepElm extends CircuitElm {
 			return new EditInfo("Sweep Time (s)", sweepTime, 0, 0);
 		if (n == 3) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Logarithmic", (flags & FLAG_LOG) != 0);
+			ei.setCheckbox(new JCheckBox("Logarithmic", (flags & FLAG_LOG) != 0));
 			return ei;
 		}
 		if (n == 4)
 			return new EditInfo("Max Voltage", maxV, 0, 0);
 		if (n == 5) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Bidirectional",
-					(flags & FLAG_BIDIR) != 0);
+			ei.setCheckbox(new JCheckBox("Bidirectional", (flags & FLAG_BIDIR) != 0));
 			return ei;
 		}
 		return null;
@@ -212,29 +211,30 @@ public class SweepElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		double maxfreq = 1 / (8 * sim.timeStep);
+		double maxfreq = 1 / (8 * sim.getTimeStep());
+		double val = ei.getValue();
 		if (n == 0) {
-			minF = ei.value;
+			minF = val;
 			if (minF > maxfreq)
 				minF = maxfreq;
 		}
 		if (n == 1) {
-			maxF = ei.value;
+			maxF = val;
 			if (maxF > maxfreq)
 				maxF = maxfreq;
 		}
 		if (n == 2)
-			sweepTime = ei.value;
+			sweepTime = val;
 		if (n == 3) {
 			flags &= ~FLAG_LOG;
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_LOG;
 		}
 		if (n == 4)
-			maxV = ei.value;
+			maxV = val;
 		if (n == 5) {
 			flags &= ~FLAG_BIDIR;
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_BIDIR;
 		}
 		setParams();

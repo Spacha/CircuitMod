@@ -46,7 +46,7 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == SwitchElm.class;
 	}
 
@@ -141,7 +141,7 @@ public class SwitchElm extends CircuitElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Momentary Switch", momentary);
+			ei.setCheckbox(new JCheckBox("Momentary Switch", momentary));
 			return ei;
 		}
 		return null;
@@ -150,6 +150,6 @@ public class SwitchElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			momentary = ei.checkbox.isSelected();
+			momentary = ei.isChecked();
 	}
 }

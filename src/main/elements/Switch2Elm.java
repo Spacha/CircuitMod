@@ -34,7 +34,7 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == Switch2Elm.class;
 	}
 
@@ -119,8 +119,8 @@ public class Switch2Elm extends SwitchElm {
 		super.toggle();
 		if (link != 0) {
 			int i;
-			for (i = 0; i != sim.elmList.size(); i++) {
-				Object o = sim.elmList.elementAt(i);
+			for (i = 0; i != sim.elmCount(); i++) {
+				Object o = sim.getElmAt(i);
 				if (o instanceof Switch2Elm) {
 					Switch2Elm s2 = (Switch2Elm) o;
 					if (s2.link == link)
@@ -147,7 +147,7 @@ public class Switch2Elm extends SwitchElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 1) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Center Off", hasCenterOff());
+			ei.setCheckbox(new JCheckBox("Center Off", hasCenterOff()));
 			return ei;
 		}
 		return super.getEditInfo(n);
@@ -157,7 +157,7 @@ public class Switch2Elm extends SwitchElm {
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 1) {
 			flags &= ~FLAG_CENTER_OFF;
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_CENTER_OFF;
 			if (hasCenterOff())
 				momentary = false;

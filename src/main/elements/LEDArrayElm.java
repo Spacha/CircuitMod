@@ -78,7 +78,7 @@ public class LEDArrayElm extends ChipElm {
 	}
 
 	void setColor(Graphics g, int p) {
-		g.setColor(pins[p].value ? Color.green : sim.printableCheckItem.getState() ? Color.white : darkgreen);
+		g.setColor(pins[p].value ? Color.green : sim.isUsingWhiteBackground() ? Color.white : darkgreen);
 	}
 
 	@Override

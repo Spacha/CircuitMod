@@ -33,7 +33,7 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		volts[0] = volts[1] = volts[2] = 0;
 		curcount = 0;
 	}
@@ -152,7 +152,7 @@ public class TriodeElm extends CircuitElm {
 		double vgk = vs[grid] - vs[cath];
 		double vpk = vs[plate] - vs[cath];
 		if (Math.abs(lastv0 - vs[0]) > .01 || Math.abs(lastv1 - vs[1]) > .01 || Math.abs(lastv2 - vs[2]) > .01)
-			sim.converged = false;
+			sim.setConverged(false);
 		lastv0 = vs[0];
 		lastv1 = vs[1];
 		lastv2 = vs[2];

@@ -90,7 +90,7 @@ public class Matrix5x7Elm extends ChipElm {
 	}
 
 	void setColor(Graphics g, int p) {
-		g.setColor(pins[p].value ? Color.red : sim.printableCheckItem.getState() ? Color.white : darkred);
+		g.setColor(pins[p].value ? Color.red : sim.isUsingWhiteBackground() ? Color.white : darkred);
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class OpAmpElm extends CircuitElm {
 		maxOut = 15;
 		minOut = -15;
 		gbw = 1e6;
-		setSize(sim.smallGridCheckItem.getState() ? 1 : 2);
+		setSize(sim.isSmallGrid() ? 1 : 2);
 		setGain();
 	}
 
@@ -153,7 +153,7 @@ public class OpAmpElm extends CircuitElm {
 
 	@Override
 	void stamp() {
-		int vn = sim.nodeList.size() + voltSource;
+		int vn = sim.nodeCount() + voltSource;
 		sim.stampNonLinear(vn);
 		sim.stampMatrix(nodes[2], vn, 1);
 	}
@@ -162,11 +162,11 @@ public class OpAmpElm extends CircuitElm {
 	void doStep() {
 		double vd = volts[1] - volts[0];
 		if (Math.abs(lastvd - vd) > .1)
-			sim.converged = false;
+			sim.setConverged(false);
 		else if (volts[2] > maxOut + .1 || volts[2] < minOut - .1)
-			sim.converged = false;
+			sim.setConverged(false);
 		double x = 0;
-		int vn = sim.nodeList.size() + voltSource;
+		int vn = sim.nodeCount() + voltSource;
 		double dx = 0;
 		if (vd >= maxOut / gain && (lastvd >= 0 || sim.getrand(4) == 1)) {
 			dx = 1e-4;
@@ -206,7 +206,7 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[2] - volts[1];
 	}
 
@@ -216,7 +216,7 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == OpAmpElm.class;
 	}
 
@@ -232,8 +232,8 @@ public class OpAmpElm extends CircuitElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			maxOut = ei.value;
+			maxOut = ei.getValue();
 		if (n == 1)
-			minOut = ei.value;
+			minOut = ei.getValue();
 	}
 }

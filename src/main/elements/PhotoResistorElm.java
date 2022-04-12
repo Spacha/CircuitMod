@@ -46,10 +46,12 @@ public class PhotoResistorElm extends CircuitElm {
 	Point ps3, ps4;
 
 	void createSlider() {
-		CirSim.main.add(label = new Label("Light Level", Label.CENTER));
+		// TODO
+		System.out.println("Implement PhotoResistorElm.java:createSlider() and PhotoResistorElm.java:delete().");
+		//CirSim.main.add(label = new Label("Light Level", Label.CENTER));
 		int value = 50;
-		CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		CirSim.main.validate();
+		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		//CirSim.main.validate();
 	}
 
 	@Override
@@ -62,8 +64,9 @@ public class PhotoResistorElm extends CircuitElm {
 
 	@Override
 	void delete() {
-		CirSim.main.remove(label);
-		CirSim.main.remove(slider);
+		// TODO
+		//CirSim.main.remove(label);
+		//CirSim.main.remove(slider);
 	}
 
 	@Override
@@ -126,9 +129,11 @@ public class PhotoResistorElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (ei.value > 0 && n == 0)
-			minresistance = ei.value;
-		if (ei.value > 0 && n == 1)
-			maxresistance = ei.value;
+		double val = ei.getValue();
+
+		if (val > 0 && n == 0)
+			minresistance = val;
+		if (val > 0 && n == 1)
+			maxresistance = val;
 	}
 }

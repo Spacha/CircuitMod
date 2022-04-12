@@ -46,7 +46,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == LogicInputElm.class;
 	}
 
@@ -84,7 +84,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	void setCurrent(int vs, double c) {
+	public void setCurrent(int vs, double c) {
 		current = -c;
 	}
 
@@ -102,7 +102,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -125,7 +125,7 @@ public class LogicInputElm extends SwitchElm {
 	public EditInfo getEditInfo(int n) {
 		if (n == 0) {
 			EditInfo ei = new EditInfo("", 0, 0, 0);
-			ei.checkbox = new JCheckBox("Momentary Switch", momentary);
+			ei.setCheckbox(new JCheckBox("Momentary Switch", momentary));
 			return ei;
 		}
 		if (n == 1)
@@ -138,10 +138,10 @@ public class LogicInputElm extends SwitchElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			momentary = ei.checkbox.isSelected();
+			momentary = ei.isChecked();
 		if (n == 1)
-			hiV = ei.value;
+			hiV = ei.getValue();
 		if (n == 2)
-			loV = ei.value;
+			loV = ei.getValue();
 	}
 }

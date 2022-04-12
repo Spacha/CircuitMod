@@ -37,23 +37,26 @@ public class VarRailElm extends RailElm {
 	}
 
 	void createSlider() {
+		// TODO
+		System.out.println("Implement VarRailElm.java:createSlider() and VarRailElm.java:delete().");
 		waveform = WF_VAR;
-		CirSim.main.add(label = new Label(sliderText, Label.CENTER));
+		//CirSim.main.add(label = new Label(sliderText, Label.CENTER));
 		int value = (int) ((frequency - bias) * 100 / (maxVoltage - bias));
-		CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		CirSim.main.validate();
+		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		//CirSim.main.validate();
 	}
 
 	@Override
-	double getVoltage() {
+	public double getVoltage() {
 		frequency = slider.getValue() * (maxVoltage - bias) / 100. + bias;
 		return frequency;
 	}
 
 	@Override
 	void delete() {
-		CirSim.main.remove(label);
-		CirSim.main.remove(slider);
+		// TODO
+		//CirSim.main.remove(label);
+		//CirSim.main.remove(slider);
 	}
 
 	@Override
@@ -64,7 +67,7 @@ public class VarRailElm extends RailElm {
 			return new EditInfo("Max Voltage", maxVoltage, -20, 20);
 		if (n == 2) {
 			EditInfo ei = new EditInfo("Slider Text", 0, -1, -1);
-			ei.text = sliderText;
+			ei.setText(sliderText);
 			return ei;
 		}
 		return null;
@@ -73,11 +76,11 @@ public class VarRailElm extends RailElm {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			bias = ei.value;
+			bias = ei.getValue();
 		if (n == 1)
-			maxVoltage = ei.value;
+			maxVoltage = ei.getValue();
 		if (n == 2) {
-			sliderText = ei.textf.getText();
+			sliderText = ei.getText();
 			label.setText(sliderText);
 		}
 	}

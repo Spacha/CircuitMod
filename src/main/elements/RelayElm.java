@@ -207,7 +207,7 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		super.reset();
 		ind.reset();
 		coilCurrent = coilCurCount = 0;
@@ -320,8 +320,7 @@ public class RelayElm extends CircuitElm {
 			return new EditInfo("Coil Resistance (ohms)", coilR, 0, 0);
 		if (n == 6) {
 			EditInfo ei = new EditInfo("", 0, -1, -1);
-			ei.checkbox = new JCheckBox("Swap Coil Direction",
-					(flags & FLAG_SWAP_COIL) != 0);
+			ei.setCheckbox(new JCheckBox("Swap Coil Direction", (flags & FLAG_SWAP_COIL) != 0));
 			return ei;
 		}
 		return null;
@@ -329,24 +328,25 @@ public class RelayElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.value > 0) {
-			inductance = ei.value;
+		double val = ei.getValue();
+		if (n == 0 && val > 0) {
+			inductance = val;
 			ind.setup(inductance, coilCurrent, Inductor.FLAG_BACK_EULER);
 		}
-		if (n == 1 && ei.value > 0)
-			r_on = ei.value;
-		if (n == 2 && ei.value > 0)
-			r_off = ei.value;
-		if (n == 3 && ei.value > 0)
-			onCurrent = ei.value;
-		if (n == 4 && ei.value >= 1) {
-			poleCount = (int) ei.value;
+		if (n == 1 && val > 0)
+			r_on = val;
+		if (n == 2 && val > 0)
+			r_off = val;
+		if (n == 3 && val > 0)
+			onCurrent = val;
+		if (n == 4 && val >= 1) {
+			poleCount = (int) val;
 			setPoints();
 		}
-		if (n == 5 && ei.value > 0)
-			coilR = ei.value;
+		if (n == 5 && val > 0)
+			coilR = val;
 		if (n == 6) {
-			if (ei.checkbox.isSelected())
+			if (ei.isChecked())
 				flags |= FLAG_SWAP_COIL;
 			else
 				flags &= ~FLAG_SWAP_COIL;

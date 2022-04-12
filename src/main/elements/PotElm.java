@@ -61,23 +61,30 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	void createSlider() {
-		CirSim.main.add(label = new Label(sliderText, Label.CENTER));
+		// TODO
+		System.out.println("Implement PotElm.java:createSlider() and PotElm.java:delete().");
+		//CirSim.addComponent(label = new Label(sliderText, Label.CENTER));
+		//CirSim.addComponent(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		
+		// Old way:
+		//CirSim.main.add(label = new Label(sliderText, Label.CENTER));
 		int value = (int) (position * 100);
-		CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		CirSim.main.validate();
+		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		//CirSim.main.validate();
 		slider.addAdjustmentListener(this);
 	}
 
 	@Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
-		sim.analyzeFlag = true;
+		sim.setAnalyzeFlag(true);
 		setPoints();
 	}
 
 	@Override
 	void delete() {
-		CirSim.main.remove(label);
-		CirSim.main.remove(slider);
+		// TODO
+		//CirSim.main.remove(label);
+		//CirSim.main.remove(slider);
 	}
 
 	Point post3, corner2, arrowPoint, midpoint, arrow1, arrow2;
@@ -100,7 +107,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 			point2.x = point1.x;
 		}
 		if (offset == 0)
-			offset = sim.gridSize;
+			offset = sim.getGridSize();
 		dn = distance(point1, point2);
 		int bodyLen = 32;
 		calcLeads(bodyLen);
@@ -124,7 +131,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 		int segments = 16;
 		int i;
 		int ox = 0;
-		int hs = sim.euroResistorCheckItem.getState() ? 6 : 8;
+		int hs = sim.isUsingEuroResistors() ? 6 : 8;
 		double v1 = volts[0];
 		double v2 = volts[1];
 		double v3 = volts[2];
@@ -133,7 +140,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 		setPowerColor(g, true);
 		double segf = 1. / segments;
 		int divide = (int) (segments * position);
-		if (!sim.euroResistorCheckItem.getState()) {
+		if (!sim.isUsingEuroResistors()) {
 			// draw zigzag
 			for (i = 0; i != segments; i++) {
 				int nx = 0;
@@ -224,7 +231,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 			return new EditInfo("Resistance (ohms)", maxResistance, 0, 0);
 		if (n == 1) {
 			EditInfo ei = new EditInfo("Slider Text", 0, -1, -1);
-			ei.text = sliderText;
+			ei.setText(sliderText);
 			return ei;
 		}
 		return null;
@@ -233,9 +240,9 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0)
-			maxResistance = ei.value;
+			maxResistance = ei.getValue();
 		if (n == 1) {
-			sliderText = ei.textf.getText();
+			sliderText = ei.getText();
 			label.setText(sliderText);
 		}
 	}

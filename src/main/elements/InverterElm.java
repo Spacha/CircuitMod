@@ -37,7 +37,7 @@ public class InverterElm extends CircuitElm {
 	}
 
 	@Override
-	boolean needsShortcut() {
+	public boolean needsShortcut() {
 		return getClass() == InverterElm.class;
 	}
 
@@ -86,13 +86,13 @@ public class InverterElm extends CircuitElm {
 	void doStep() {
 		double v0 = volts[1];
 		double out = volts[0] > 2.5 ? 0 : 5;
-		double maxStep = slewRate * sim.timeStep * 1e9;
+		double maxStep = slewRate * sim.getTimeStep() * 1e9;
 		out = Math.max(Math.min(v0 + maxStep, out), v0 - maxStep);
 		sim.updateVoltageSource(0, nodes[1], voltSource, out);
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[0];
 	}
 
@@ -112,7 +112,7 @@ public class InverterElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		slewRate = ei.value;
+		slewRate = ei.getValue();
 	}
 
 	// there is no current path through the inverter input, but there

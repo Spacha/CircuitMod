@@ -61,7 +61,7 @@ public class SCRElm extends CircuitElm {
 	}
 
 	@Override
-	void reset() {
+	public void reset() {
 		volts[anode] = volts[cnode] = volts[gnode] = 0;
 		diode.reset();
 		lastvag = lastvac = curcount_a = curcount_c = curcount_g = 0;
@@ -108,15 +108,15 @@ public class SCRElm extends CircuitElm {
 
 		gate = newPointArray(2);
 		double leadlen = (dn - 16) / 2;
-		int gatelen = sim.gridSize;
-		gatelen += leadlen % sim.gridSize;
+		int gatelen = sim.getGridSize();
+		gatelen += leadlen % sim.getGridSize();
 		if (leadlen < gatelen) {
 			x2 = x;
 			y2 = y;
 			return;
 		}
 		interpPoint(lead2, point2, gate[0], gatelen / leadlen, gatelen * dir);
-		interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.gridSize * 2 * dir);
+		interpPoint(lead2, point2, gate[1], gatelen / leadlen, sim.getGridSize() * 2 * dir);
 	}
 
 	@Override
@@ -190,7 +190,7 @@ public class SCRElm extends CircuitElm {
 		double vac = volts[anode] - volts[cnode]; // typically negative
 		double vag = volts[anode] - volts[gnode]; // typically positive
 		if (Math.abs(vac - lastvac) > .01 || Math.abs(vag - lastvag) > .01)
-			sim.converged = false;
+			sim.setConverged(false);
 		lastvac = vac;
 		lastvag = vag;
 		diode.doStep(volts[inode] - volts[gnode]);
@@ -238,11 +238,13 @@ public class SCRElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
-		if (n == 0 && ei.value > 0)
-			triggerI = ei.value;
-		if (n == 1 && ei.value > 0)
-			holdingI = ei.value;
-		if (n == 2 && ei.value > 0)
-			cresistance = ei.value;
+		double val = ei.getValue();
+
+		if (n == 0 && val > 0)
+			triggerI = val;
+		if (n == 1 && val > 0)
+			holdingI = val;
+		if (n == 2 && val > 0)
+			cresistance = val;
 	}
 }

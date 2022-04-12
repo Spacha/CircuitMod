@@ -68,7 +68,7 @@ public class VoltageElm extends CircuitElm {
 	 */
 
 	@Override
-	void reset() {
+	public void reset() {
 		freqTimeZero = 0;
 		curcount = 0;
 	}
@@ -96,7 +96,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	public double getVoltage() {
-		double w = 2 * pi * (sim.t - freqTimeZero) * frequency + phaseShift;
+		double w = 2 * pi * (sim.getTime() - freqTimeZero) * frequency + phaseShift;
 		switch (waveform) {
 		case WF_DC:
 			return maxVoltage + bias;
@@ -213,7 +213,7 @@ public class VoltageElm extends CircuitElm {
 			break;
 		}
 		}
-		if (sim.showValuesCheckItem.getState()) {
+		if (sim.isShowingValues()) {
 			String s = getShortUnitText(frequency, "Hz");
 			if (dx == 0 || dy == 0)
 				drawValues(g, s, circleSize);
@@ -231,7 +231,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	double getVoltageDiff() {
+	public double getVoltageDiff() {
 		return volts[1] - volts[0];
 	}
 
@@ -283,8 +283,7 @@ public class VoltageElm extends CircuitElm {
 			EditInfo ei = new EditInfo("Waveform", waveform, -1, -1);
 			String[] waveForms = { "DC", "AC", "Square Wave", "Triangle",
 					"Sawtooth", "Pulse" };
-			ei.choice = new JComboBox<Object>(waveForms);
-			ei.choice.setSelectedIndex(waveform);
+			ei.setChoice(new JComboBox<Object>(waveForms), waveform);
 			return ei;
 		}
 		if (waveform == WF_DC)
@@ -304,37 +303,39 @@ public class VoltageElm extends CircuitElm {
 
 	@Override
 	public void setEditValue(int n, EditInfo ei) {
+		double val = ei.getValue();
+
 		if (n == 0)
-			maxVoltage = ei.value;
+			maxVoltage = val;
 		if (n == 3)
-			bias = ei.value;
+			bias = val;
 		if (n == 2) {
 			// adjust time zero to maintain continuity ind the waveform
 			// even though the frequency has changed.
 			double oldfreq = frequency;
-			frequency = ei.value;
-			double maxfreq = 1 / (8 * sim.timeStep);
+			frequency = val;
+			double maxfreq = 1 / (8 * sim.getTimeStep());
 			if (frequency > maxfreq)
 				frequency = maxfreq;
 			//double adj = frequency - oldfreq;
-			freqTimeZero = sim.t - oldfreq * (sim.t - freqTimeZero) / frequency;
+			freqTimeZero = sim.getTime() - oldfreq * (sim.getTime() - freqTimeZero) / frequency;
 		}
 		if (n == 1) {
 			int ow = waveform;
-			waveform = ei.choice.getSelectedIndex();
+			waveform = ei.getChoice();
 			if (waveform == WF_DC && ow != WF_DC) {
-				ei.newDialog = true;
+				ei.setNewDialog(true);
 				bias = 0;
 			} else if (waveform != WF_DC && ow == WF_DC) {
-				ei.newDialog = true;
+				ei.setNewDialog(true);
 			}
 			if ((waveform == WF_SQUARE || ow == WF_SQUARE) && waveform != ow)
-				ei.newDialog = true;
+				ei.setNewDialog(true);
 			setPoints();
 		}
 		if (n == 4)
-			phaseShift = ei.value * pi / 180;
+			phaseShift = val * pi / 180;
 		if (n == 5)
-			dutyCycle = ei.value * .01;
+			dutyCycle = val * .01;
 	}
 }
