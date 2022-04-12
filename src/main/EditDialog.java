@@ -19,12 +19,6 @@ import java.text.NumberFormat;
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
 
-interface Editable {
-	EditInfo getEditInfo(int n);
-
-	void setEditValue(int n, EditInfo ei);
-}
-
 class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		ItemListener, KeyListener, WindowListener {
 

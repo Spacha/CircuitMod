@@ -5,8 +5,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JScrollBar;
 
-class EditInfo {
-	EditInfo(String n, double val, double mn, double mx) {
+public class EditInfo {
+	public EditInfo(String n, double val, double mn, double mx) {
 		name = n;
 		value = val;
 		if (mn == 0 && mx == 0 && val > 0) {
@@ -20,12 +20,15 @@ class EditInfo {
 		}
 		forceLargeM = name.indexOf("(ohms)") > 0 || name.indexOf("(Hz)") > 0;
 		dimensionless = false;
-	}
+	}	
 
-	EditInfo setDimensionless() {
+	public EditInfo setDimensionless() {
 		dimensionless = true;
 		return this;
 	}
+	
+	public String getName() { return name; }
+	public double getValue() { return value; }
 
 	String name, text;
 	double value, minval, maxval;

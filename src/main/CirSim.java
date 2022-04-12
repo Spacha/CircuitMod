@@ -55,6 +55,19 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
+
+import main.elements.CapacitorElm;
+import main.elements.CircuitElm;
+import main.elements.CurrentElm;
+import main.elements.GroundElm;
+import main.elements.InductorElm;
+import main.elements.RailElm;
+import main.elements.ResistorElm;
+import main.elements.SwitchElm;
+import main.elements.TextElm;
+import main.elements.VoltageElm;
+import main.elements.WireElm;
+
 import javax.swing.UnsupportedLookAndFeelException;
 
 // For information about the theory behind this,
@@ -93,7 +106,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			undoItem, redoItem, cutItem, copyItem, pasteItem, mainMenuPasteItem,
 			selectAllItem, optionsItem, aboutItem, shortcutItem;
 	Menu optionsMenu;
-	Checkbox stoppedCheck;
+	Checkbox stoppedCheckItem;
 	CheckboxMenuItem dotsCheckItem;
 	CheckboxMenuItem voltsCheckItem;
 	CheckboxMenuItem powerCheckItem;
@@ -141,14 +154,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	int mouseMode = MODE_SELECT;
 	int tempMouseMode = MODE_SELECT;
 	String mouseModeStr = "Select";
-	static final double pi = 3.14159265358979323846;
-	static final int MODE_ADD_ELM = 0;
-	static final int MODE_DRAG_ALL = 1;
-	static final int MODE_DRAG_ROW = 2;
-	static final int MODE_DRAG_COLUMN = 3;
-	static final int MODE_DRAG_SELECTED = 4;
-	static final int MODE_DRAG_POST = 5;
-	static final int MODE_SELECT = 6;
+	public static final double pi = 3.14159265358979323846;
+	public static final int MODE_ADD_ELM = 0;
+	public static final int MODE_DRAG_ALL = 1;
+	public static final int MODE_DRAG_ROW = 2;
+	public static final int MODE_DRAG_COLUMN = 3;
+	public static final int MODE_DRAG_SELECTED = 4;
+	public static final int MODE_DRAG_POST = 5;
+	public static final int MODE_SELECT = 6;
 	static final int infoWidth = 120;
 	int dragX, dragY, initDragX, initDragY;
 	int selectedSource;
@@ -174,7 +187,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	static final int HINT_3DB_L = 5;
 	Vector<CircuitElm> elmList;
 	Vector<String> setupList;
-	CircuitElm dragElm, menuElm, mouseElm, stopElm;
+	public CircuitElm dragElm, menuElm, mouseElm, stopElm; // TODO: Some sort of getter API?
 	int mousePost = -1;
 	CircuitElm plotXElm, plotYElm;
 	int draggingPost;
@@ -193,8 +206,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	static EditDialog editDialog;
 	static ImportDialog impDialog;
 	Class<?> dumpTypes[];
-	static String muString = "μ";
-	static String ohmString = "Î©";
+	public static final String MU_STR = "μ";
+	public static final String OHM_STR = "Ω";
 	String clipboard;
 	Rectangle circuitArea;
 	int circuitBottom;
@@ -322,8 +335,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		String jv = System.getProperty("java.class.version");
 		double jvf = Double.valueOf(jv).doubleValue();
 		if (jvf >= 48) {
-			muString = "μ";
-			ohmString = "Î©";
+			MU_STR = "μ";
+			OHM_STR = "Î©";
 			useBufferedImage = true;
 		}
 
@@ -588,9 +601,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		dumpMatrixButton = new Button("Dump Matrix");
 		// main.add(dumpMatrixButton);
 		dumpMatrixButton.addActionListener(this);
-		stoppedCheck = new Checkbox("Stopped");
-		stoppedCheck.addItemListener(this);
-		sidebar.add(stoppedCheck);
+		stoppedCheckItem = new Checkbox("Stopped");
+		stoppedCheckItem.addItemListener(this);
+		sidebar.add(stoppedCheckItem);
 
 		sidebar.add(new Label("Simulation Speed", Label.CENTER));
 
@@ -908,7 +921,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			g.setColor(Color.black);
 		}
 		g.fillRect(0, 0, winSize.width, winSize.height);
-		if (!stoppedCheck.getState()) {
+		if (!stoppedCheckItem.getState()) {
 			try {
 				runCircuit();
 			} catch (Exception e) {
@@ -918,7 +931,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				return;
 			}
 		}
-		if (!stoppedCheck.getState()) {
+		if (!stoppedCheckItem.getState()) {
 			long sysTime = System.currentTimeMillis();
 			if (lastTime != 0) {
 				int inc = (int) (sysTime - lastTime);
@@ -1082,7 +1095,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		 */
 
 		realg.drawImage(dbimage, 0, 0, this);
-		if (!stoppedCheck.getState() && circuitMatrix != null) {
+		if (!stoppedCheckItem.getState() && circuitMatrix != null) {
 			// Limit to 50 fps (thanks to JÃ¼rgen KlÃ¶tzer for this)
 			long delay = 1000 / 50
 					- (System.currentTimeMillis() - lastFrameTime);
@@ -1258,6 +1271,18 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		if (n >= elmList.size())
 			return null;
 		return elmList.elementAt(n);
+	}
+
+	public int elmCount() {
+		return elmList.size();
+	}
+
+	int locateElm(CircuitElm elm) {
+		int i;
+		for (i = 0; i != elmList.size(); i++)
+			if (elm == elmList.elementAt(i))
+				return i;
+		return -1;
 	}
 
 	void analyzeCircuit() {
@@ -1817,21 +1842,21 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		stopMessage = s;
 		circuitMatrix = null;
 		stopElm = ce;
-		stoppedCheck.setState(true);
+		stoppedCheckItem.setState(true);
 		analyzeFlag = false;
 		cv.repaint();
 	}
 
 	// control voltage source vs with voltage from n1 to n2 (must
 	// also call stampVoltageSource())
-	void stampVCVS(int n1, int n2, double coef, int vs) {
+	public void stampVCVS(int n1, int n2, double coef, int vs) {
 		int vn = nodeList.size() + vs;
 		stampMatrix(vn, n1, coef);
 		stampMatrix(vn, n2, -coef);
 	}
 
 	// stamp independent voltage source #vs, from n1 to n2, amount v
-	void stampVoltageSource(int n1, int n2, int vs, double v) {
+	public void stampVoltageSource(int n1, int n2, int vs, double v) {
 		int vn = nodeList.size() + vs;
 		stampMatrix(vn, n1, -1);
 		stampMatrix(vn, n2, 1);
@@ -1841,7 +1866,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	// use this if the amount of voltage is going to be updated in doStep()
-	void stampVoltageSource(int n1, int n2, int vs) {
+	public void stampVoltageSource(int n1, int n2, int vs) {
 		int vn = nodeList.size() + vs;
 		stampMatrix(vn, n1, -1);
 		stampMatrix(vn, n2, 1);
@@ -1850,13 +1875,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		stampMatrix(n2, vn, -1);
 	}
 
-	void updateVoltageSource(@SuppressWarnings("unused") int n1,
+	public void updateVoltageSource(@SuppressWarnings("unused") int n1,
 			@SuppressWarnings("unused") int n2, int vs, double v) {
 		int vn = nodeList.size() + vs;
 		stampRightSide(vn, v);
 	}
 
-	void stampResistor(int n1, int n2, double r) {
+	public void stampResistor(int n1, int n2, double r) {
 		double r0 = 1 / r;
 		if (Double.isNaN(r0) || Double.isInfinite(r0)) {
 			System.out.print("bad resistance " + r + " " + r0 + "\n");
@@ -1869,7 +1894,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		stampMatrix(n2, n1, -r0);
 	}
 
-	void stampConductance(int n1, int n2, double r0) {
+	public void stampConductance(int n1, int n2, double r0) {
 		stampMatrix(n1, n1, r0);
 		stampMatrix(n2, n2, r0);
 		stampMatrix(n1, n2, -r0);
@@ -1877,20 +1902,20 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	// current from cn1 to cn2 is equal to voltage from vn1 to 2, divided by g
-	void stampVCCurrentSource(int cn1, int cn2, int vn1, int vn2, double g) {
+	public void stampVCCurrentSource(int cn1, int cn2, int vn1, int vn2, double g) {
 		stampMatrix(cn1, vn1, g);
 		stampMatrix(cn2, vn2, g);
 		stampMatrix(cn1, vn2, -g);
 		stampMatrix(cn2, vn1, -g);
 	}
 
-	void stampCurrentSource(int n1, int n2, double i) {
+	public void stampCurrentSource(int n1, int n2, double i) {
 		stampRightSide(n1, -i);
 		stampRightSide(n2, i);
 	}
 
 	// stamp a current source from n1 to n2 depending on current through vs
-	void stampCCCS(int n1, int n2, int vs, double gain) {
+	public void stampCCCS(int n1, int n2, int vs, double gain) {
 		int vn = nodeList.size() + vs;
 		stampMatrix(n1, vn, gain);
 		stampMatrix(n2, vn, -gain);
@@ -2127,7 +2152,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				scopes[i].resetGraph();
 			analyzeFlag = true;
 			t = 0;
-			stoppedCheck.setState(false);
+			stoppedCheckItem.setState(false);
 			cv.repaint();
 		}
 		if (e.getSource() == dumpMatrixButton)
@@ -2841,8 +2866,28 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 		setGrid();
 	}
+	
+	///////////////////////////////////////////////////////
+	// STATUS QUERY
+	/////////////////////////////////////////////////////
+	public boolean isSmallGrid() {
+		return smallGridCheckItem.getState();
+	}
+	public boolean isStopped() {
+		return stoppedCheckItem.getState();
+	}
+	public boolean isShowingCurrent() {
+		return dotsCheckItem.getState();
+	}
+	public boolean isShowingVoltage() {
+		return voltsCheckItem.getState();
+	}
+	public boolean isShowingPower() {
+		return powerCheckItem.getState();
+	}
+	/////////////////////////////////////////////////////
 
-	int snapGrid(int x) {
+	public int snapGrid(int x) {
 		return (x + gridRound) & gridMask;
 	}
 
@@ -2857,15 +2902,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		needAnalyze();
 		return true;
 	}
-
-	int locateElm(CircuitElm elm) {
-		int i;
-		for (i = 0; i != elmList.size(); i++)
-			if (elm == elmList.elementAt(i))
-				return i;
-		return -1;
+	
+	public int getMouseMode() {
+		return mouseMode;
 	}
-
+	
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// ignore right mouse button with no modifiers (needed on PC)
@@ -3344,7 +3385,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public void itemStateChanged(ItemEvent e) {
 		cv.repaint(pause);
 		Object mi = e.getItemSelectable();
-		if (mi == stoppedCheck)
+		if (mi == stoppedCheckItem)
 			return;
 		if (mi == smallGridCheckItem)
 			setGrid();

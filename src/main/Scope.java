@@ -10,6 +10,13 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.StringTokenizer;
 
+import main.elements.CircuitElm;
+import main.elements.LogicOutputElm;
+import main.elements.MemristorElm;
+import main.elements.OutputElm;
+import main.elements.ProbeElm;
+import main.elements.TransistorElm;
+
 class Scope {
 	final int FLAG_YELM = 32;
 	static final int VAL_POWER = 1;

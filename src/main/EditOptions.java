@@ -1,4 +1,7 @@
 package main;
+
+import main.elements.CircuitElm;
+
 class EditOptions implements Editable {
 	CirSim sim;
 
