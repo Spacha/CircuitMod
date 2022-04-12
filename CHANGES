@@ -8,8 +8,8 @@
 	* Fixed bugged text element drag (text also snaps to grid)
 	* Fixed many deprecation warnings (many still remain)
 	[X] Tested on Windows
-	[ ] Tested on Linux
-	[ ] Tested on OSX
+	[X] Tested on Linux
+	[ ] Tested on OS
 
 
 *****************
