@@ -2618,7 +2618,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	@Override
 	public void adjustmentValueChanged(AdjustmentEvent e) {
-		System.out.print(((Scrollbar) e.getSource()).getValue() + "\n");
+		//System.out.print(((Scrollbar) e.getSource()).getValue() + "\n");
 	}
 
 	ByteArrayOutputStream readUrlData(URL url) throws Exception {

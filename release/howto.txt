@@ -1,0 +1,23 @@
+https://stackoverflow.com/questions/4330936/how-can-i-convert-a-jar-to-an-exe
+https://sourceforge.net/projects/launch4j/
+
+Windows:
+    * Use Log4j, using "release.xml" as a base.
+
+Linux:
+    * Running jar: java -jar circuitmod.jar
+
+    Make executable:
+    $ cat exestub.sh circuitmod.jar > circuitmod
+    $ chmod +x circuitmod
+
+    E.g using WSL on Windows:
+    $ cat exestub.sh ../circuitmod.jar > 2.8.0/linux-v2.8.0/circuitmod
+    $ chmod +x 2.8.0/linux-v2.8.0/circuitmod
+
+Mac:
+    * ??
+
+
+Signing:
+    https://sourceforge.net/p/launch4j/discussion/332684/thread/d4985f08/

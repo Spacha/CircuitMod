@@ -3,7 +3,7 @@
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
   <jar>D:\Documents\code\CircuitMod\CircuitMod v2.7\circuitmod.jar</jar>
-  <outfile>D:\Documents\code\CircuitMod\CircuitMod v2.7\release\2.8.0\circuitmod.exe</outfile>
+  <outfile>D:\Documents\code\CircuitMod\CircuitMod v2.7\release\2.8.0\windows-v2.8.0\circuitmod.exe</outfile>
   <errTitle>CircuitMod</errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
