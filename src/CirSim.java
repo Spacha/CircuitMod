@@ -41,11 +41,10 @@ import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilterInputStream;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
-import java.net.URLDecoder;
+//import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -726,7 +725,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	void setFrameAndShow() {
 		if (useFrame) {
-			Dimension screen = getToolkit().getScreenSize();
+			//Dimension screen = getToolkit().getScreenSize();
 			handleResize();
 			// resize(860, 640);
 			// Dimension x = getSize();
@@ -2975,7 +2974,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			CircuitElm ce = getElm(i);
 			ce.move(dx, dy);
 		}
-		removeZeroLengthElements();
+		removeZeroLengthElements();  // TODO: Only after mouse release!
 	}
 
 	void dragRow(@SuppressWarnings("unused") int x, int y) {
@@ -2990,7 +2989,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			if (ce.y2 == dragY)
 				ce.movePoint(1, 0, dy);
 		}
-		removeZeroLengthElements();
+		removeZeroLengthElements();  // TODO: Only after mouse release!
 	}
 
 	void dragColumn(int x, @SuppressWarnings("unused") int y) {
@@ -3087,13 +3086,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	void removeZeroLengthElements() {
 		int i;
-		boolean changed = false;
+		//boolean changed = false;
 		for (i = elmList.size() - 1; i >= 0; i--) {
 			CircuitElm ce = getElm(i);
 			if (ce.x == ce.x2 && ce.y == ce.y2) {
 				elmList.removeElementAt(i);
 				ce.delete();
-				changed = true;
+				//changed = true;
 			}
 		}
 		needAnalyze();
@@ -3331,7 +3330,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void setMainMenuLabel(Menu m, CircuitElm elm) {
-		String theLabel = "";
 		for (int i = 0; i != m.getItemCount(); i++) {
 			MenuItem mc = m.getItem(i);
 			if (mc instanceof Menu)

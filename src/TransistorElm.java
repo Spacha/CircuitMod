@@ -173,7 +173,7 @@ class TransistorElm extends CircuitElm {
 
 	double limitStep(double vnew, double vold) {
 		double arg;
-		double oo = vnew;
+		//double oo = vnew;
 
 		if (vnew > vcrit && Math.abs(vnew - vold) > (vt + vt)) {
 			if (vold > 0) {

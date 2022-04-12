@@ -55,9 +55,9 @@ class SparkGapElm extends CircuitElm {
 
 	@Override
 	void draw(Graphics g) {
-		int i;
-		double v1 = volts[0];
-		double v2 = volts[1];
+		//int i;
+		//double v1 = volts[0];
+		//double v2 = volts[1];
 		setBbox(point1, point2, 8);
 		draw2Leads(g);
 		setPowerColor(g, true);

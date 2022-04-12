@@ -29,10 +29,10 @@ class ImportDialogLayout implements LayoutManager {
 	@Override
 	public void layoutContainer(Container target) {
 		Insets insets = target.getInsets();
-		int targetw = target.getSize().width - insets.left - insets.right;
-		int targeth = target.getSize().height - (insets.top + insets.bottom);
+		//int targetw = target.getSize().width - insets.left - insets.right;
+		//int targeth = target.getSize().height - (insets.top + insets.bottom);
 		int i;
-		int pw = 300;
+		//int pw = 300;
 		if (target.getComponentCount() == 0)
 			return;
 		Component cl = target.getComponent(target.getComponentCount() - 1);

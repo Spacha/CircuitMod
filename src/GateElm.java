@@ -136,7 +136,7 @@ abstract class GateElm extends CircuitElm {
 
 	@Override
 	void doStep() {
-		int i;
+		//int i;
 		boolean f = calcFunction();
 		if (isInverting())
 			f = !f;

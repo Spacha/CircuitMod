@@ -311,7 +311,7 @@ class Scope {
 			gridStep *= 10;
 		double tstart = sim.t - sim.timeStep * speed * rect.width;
 		double tx = sim.t - (sim.t % gridStep);
-		int first = 1;
+
 		for (ll = 0;; ll++) {
 			double tl = tx - gridStep * ll;
 			int gx = (int) ((tl - tstart) / ts);
@@ -322,7 +322,7 @@ class Scope {
 			if (tl < 0)
 				continue;
 			col = 0xFF202020;
-			first = 0;
+
 			if (((tl + gridStep / 4) % (gridStep * 10)) < gridStep) {
 				col = 0xFF909090;
 				if (((tl + gridStep / 4) % (gridStep * 100)) < gridStep)
@@ -332,8 +332,7 @@ class Scope {
 				pixels[i + gx] = col;
 		}
 
-		// these two loops are pretty much the same, and should be
-		// combined!
+		// TODO: These two loops are pretty much the same, and should be combined!
 		if (value == 0 && showI) {
 			int ox = -1, oy = -1;
 			int j;

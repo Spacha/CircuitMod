@@ -64,9 +64,9 @@ class ThermistorElm extends CircuitElm {
 
 	@Override
 	void draw(Graphics g) {
-		int i;
-		double v1 = volts[0];
-		double v2 = volts[1];
+		//int i;
+		//double v1 = volts[0];
+		//double v2 = volts[1];
 		setBbox(point1, point2, 6);
 		draw2Leads(g);
 		// FIXME need to draw properly, see ResistorElm.java
@@ -83,7 +83,7 @@ class ThermistorElm extends CircuitElm {
 
 	@Override
 	void startIteration() {
-		double vd = volts[0] - volts[1];
+		//double vd = volts[0] - volts[1];
 		// FIXME set resistance as appropriate, using slider.getValue()
 		resistance = minresistance;
 		// System.out.print(this + " res current set to " + current + "\n");

@@ -35,7 +35,7 @@ class EditDialogLayout implements LayoutManager {
 	public void layoutContainer(Container target) {
 		Insets insets = target.getInsets();
 		int targetw = target.getSize().width - insets.left - insets.right;
-		int targeth = target.getSize().height - (insets.top + insets.bottom);
+		//int targeth = target.getSize().height - (insets.top + insets.bottom);
 		int i;
 		int h = insets.top;
 		int pw = 300;
