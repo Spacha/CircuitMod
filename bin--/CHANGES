@@ -1,0 +1,43 @@
+2016-01-04:
+bugfixes
+========
+resize window to 0 -> stack trace
+select in options menu -> mouse mode = 0
+
+improvements
+============
+a grid is shown
+
+all shortcuts work
+  'A';AntennaElm
+  'a';OpAmpElm
+  'c';CapacitorElm
+  'd';DiodeElm
+  'f';NMosfetElm
+  'g';GroundElm
+  'i';CurrentElm
+  'I';InverterElm
+  'j';NJfetElm
+  'l';InductorElm
+  'L';LogicInputElm
+  'M';LogicOutputElm
+  'm';MemristorElm
+  'O';OutputElm
+  'p';ProbeElm
+  'R';RailElm
+  'r';ResistorElm
+  'S';Switch2Elm
+  's';SwitchElm
+  'T';TransformerElm
+  't';NTransistorElm
+  'v';VoltageElm
+  'w';WireElm
+  'x';TextElm
+  'z';ZenerElm
+
+circuitChanged behaves right (I hope)
+can move elements with arrow keys
+Alt+TAB (Alt+Shift+TAB) cyclic selects elements
+
+Help->Keyboard Shortcuts
+    reads file shortcuts.txt

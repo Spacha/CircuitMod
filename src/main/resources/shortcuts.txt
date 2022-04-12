@@ -1,0 +1,56 @@
+MainWindow
+         DELETE: Delete
+           DOWN: Move Down
+           LEFT: Move Left
+          RIGHT: Move Right
+          SPACE: Selection Mode
+             UP: Move Up
+
+         CTRL-A: Select All
+         CTRL-C: Copy
+         CTRL-E: Edit
+         CTRL-_: Flip Horizontal
+         CTRL-|: Flip Vertical
+         CTRL-R: Rotate
+         CRTL-V: Paste
+         CRTL-X: Cut
+
+         CTRL-Z: Undo
+   SHIFT-CTRL-Z: Redo
+
+        ALT_TAB: Select Next
+  SHIFT-ALT-TAB: Select Previous
+
+              A: OpAmp
+        SHIFT-A: Antenna
+              C: Capacitor
+              D: Diode
+              F: NMosfet
+          ALT-F: PMosfet
+              G: Ground
+              I: Current
+        SHIFT-I: Inverter
+              J: NJfet
+          ALT-J: PJfet
+              L: Inductor
+        SHIFT-L: LogicInput
+              M: Memristor
+        SHIFT-M: LogicOutput
+              O: Output
+              P: Probe
+              R: Resistor
+        SHIFT-R: Rail
+              S: Switch
+        SHIFT-S: Switch2
+              T: NTransistor
+        SHIFT-T: Transformer
+          ALT-T: PTransistor
+              V: DCVoltage
+              W: Wire
+              X: Text
+              Z: Zener Diode
+
+EditDialog
+            ESC: Close
+          ENTER: Apply; Close
+          ALT-A: Apply
