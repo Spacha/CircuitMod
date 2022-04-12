@@ -1,4 +1,3 @@
-
 import java.awt.BasicStroke;
 import java.awt.Button;
 import java.awt.Checkbox;
@@ -2869,7 +2868,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		// ignore right mouse button with no modifiers (needed on PC)
-		if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0) {
+		if (e.getButton() == MouseEvent.BUTTON3) {
 			int ex = e.getModifiersEx();
 			if ((ex & (InputEvent.META_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK
 					| InputEvent.CTRL_DOWN_MASK
@@ -3051,8 +3050,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0)
+		if (e.getButton() == MouseEvent.BUTTON1)
 			return;
+
 		int x = e.getX();
 		int y = e.getY();
 		dragX = snapGrid(x);
@@ -3137,7 +3137,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (mouseMode == MODE_SELECT || mouseMode == MODE_DRAG_SELECTED)
 				clearSelection();
 		}
@@ -3166,7 +3166,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			doPopupMenu(e);
 			return;
 		}
-		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != 0) {
+		if (e.getButton() == MouseEvent.BUTTON1) {
 			// left mouse
 			tempMouseMode = mouseMode;
 			if ((ex & InputEvent.ALT_DOWN_MASK) != 0
@@ -3182,7 +3182,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			else if ((ex & (InputEvent.CTRL_DOWN_MASK
 					| InputEvent.META_DOWN_MASK)) != 0)
 				tempMouseMode = MODE_DRAG_POST;
-		} else if ((e.getModifiers() & InputEvent.BUTTON3_MASK) != 0) {
+		} else if (e.getButton() == MouseEvent.BUTTON3) {
 			// right mouse
 			if ((ex & InputEvent.SHIFT_DOWN_MASK) != 0)
 				tempMouseMode = MODE_DRAG_ROW;
