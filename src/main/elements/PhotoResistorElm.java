@@ -29,17 +29,17 @@ public class PhotoResistorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 186;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + minresistance + " " + maxresistance;
 	}
 
@@ -55,7 +55,7 @@ public class PhotoResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		ps3 = new Point();
@@ -63,14 +63,14 @@ public class PhotoResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void delete() {
+	public void delete() {
 		// TODO
 		//CirSim.main.remove(label);
 		//CirSim.main.remove(slider);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		//int i;
 		//double v1 = volts[0];
 		//double v2 = volts[1];
@@ -89,7 +89,7 @@ public class PhotoResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		//double vd = volts[0] - volts[1];
 		// FIXME set resistance as appropriate, using slider.getValue()
 		resistance = minresistance;
@@ -97,18 +97,18 @@ public class PhotoResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.stampResistor(nodes[0], nodes[1], resistance);
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		// FIXME
 		arr[0] = "spark gap";
 		getBasicInfo(arr);

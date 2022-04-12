@@ -46,7 +46,7 @@ public class TimerElm extends ChipElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -55,7 +55,7 @@ public class TimerElm extends ChipElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		// stamp voltage divider to put ctl pin at 2/3 V
 		sim.stampResistor(nodes[N_VIN], nodes[N_CTL], 5000);
 		sim.stampResistor(nodes[N_CTL], 0, 10000);
@@ -77,7 +77,7 @@ public class TimerElm extends ChipElm {
 	boolean setOut, out;
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		out = volts[N_OUT] > volts[N_VIN] / 2;
 		setOut = false;
 		// check comparators
@@ -88,7 +88,7 @@ public class TimerElm extends ChipElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		// if output is low, discharge pin 0. we use a small
 		// resistor because it's easier, and sometimes people tie
 		// the discharge pin to the trigger and threshold pins.
@@ -101,17 +101,17 @@ public class TimerElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return hasReset() ? 7 : 6;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 165;
 	}
 }

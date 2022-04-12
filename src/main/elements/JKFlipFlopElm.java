@@ -34,12 +34,12 @@ public class JKFlipFlopElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 5;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 2;
 	}
 
@@ -61,7 +61,7 @@ public class JKFlipFlopElm extends ChipElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 156;
 	}
 }

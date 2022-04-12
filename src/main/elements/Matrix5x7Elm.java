@@ -52,7 +52,7 @@ public class Matrix5x7Elm extends ChipElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawChip(g);
 
 		int xl = x + (csize * 24);
@@ -94,17 +94,17 @@ public class Matrix5x7Elm extends ChipElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 0;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 7 + 5;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 180;
 	}
 }

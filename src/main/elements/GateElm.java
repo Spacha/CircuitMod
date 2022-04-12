@@ -41,7 +41,7 @@ public abstract class GateElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + inputCount + " " + volts[inputCount];
 	}
 
@@ -49,7 +49,7 @@ public abstract class GateElm extends CircuitElm {
 	int ww;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		if (dn > 150 && this == sim.dragElm)
 			setSize(2);
@@ -77,7 +77,7 @@ public abstract class GateElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int i;
 		for (i = 0; i != inputCount; i++) {
 			setVoltageColor(g, volts[i]);
@@ -101,33 +101,33 @@ public abstract class GateElm extends CircuitElm {
 	Point pcircle, linePoints[];
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return inputCount + 1;
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		if (n == inputCount)
 			return point2;
 		return inPosts[n];
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	abstract String getGateName();
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = getGateName();
 		arr[1] = "Vout = " + getVoltageText(volts[inputCount]);
 		arr[2] = "Iout = " + getCurrentText(getCurrent());
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(0, nodes[inputCount], voltSource);
 	}
 
@@ -138,7 +138,7 @@ public abstract class GateElm extends CircuitElm {
 	abstract boolean calcFunction();
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		//int i;
 		boolean f = calcFunction();
 		if (isInverting())
@@ -164,12 +164,12 @@ public abstract class GateElm extends CircuitElm {
 	// there is no current path through the gate inputs, but there
 	// is an indirect path through the output to ground.
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return false;
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return (n1 == inputCount);
 	}
 }

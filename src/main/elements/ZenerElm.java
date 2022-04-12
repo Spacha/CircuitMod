@@ -28,12 +28,12 @@ public class ZenerElm extends DiodeElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'z';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + zvoltage;
 	}
 
@@ -43,7 +43,7 @@ public class ZenerElm extends DiodeElm {
 	Point wing[];
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(16);
 		cathode = newPointArray(2);
@@ -57,7 +57,7 @@ public class ZenerElm extends DiodeElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, hs);
 
 		double v1 = volts[0];
@@ -85,7 +85,7 @@ public class ZenerElm extends DiodeElm {
 	final double default_zvoltage = 5.6;
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		super.getInfo(arr);
 		arr[0] = "Zener diode";
 		arr[5] = "Vz = " + getVoltageText(zvoltage);

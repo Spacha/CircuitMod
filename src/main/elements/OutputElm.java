@@ -22,7 +22,7 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'O';
 	}
 
@@ -32,18 +32,18 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		lead1 = new Point();
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
 		Font f = new Font("SansSerif", selected ? Font.BOLD : 0, 14);
 		g.setFont(f);
@@ -71,7 +71,7 @@ public class OutputElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "output";
 		arr[1] = "V = " + getVoltageText(volts[0]);
 	}

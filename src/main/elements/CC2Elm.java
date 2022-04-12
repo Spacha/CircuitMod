@@ -21,7 +21,7 @@ public class CC2Elm extends ChipElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + gain;
 	}
 
@@ -42,7 +42,7 @@ public class CC2Elm extends ChipElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = (gain == 1) ? "CCII+" : "CCII-";
 		arr[1] = "X,Y = " + getVoltageText(volts[0]);
 		arr[2] = "Z = " + getVoltageText(volts[2]);
@@ -51,7 +51,7 @@ public class CC2Elm extends ChipElm {
 
 	// boolean nonLinear() { return true; }
 	@Override
-	void stamp() {
+	public void stamp() {
 		// X voltage = Y voltage
 		sim.stampVoltageSource(0, nodes[0], pins[0].voltSource);
 		sim.stampVCVS(0, nodes[1], 1, pins[0].voltSource);
@@ -60,23 +60,23 @@ public class CC2Elm extends ChipElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		pins[2].current = pins[0].current * gain;
 		drawChip(g);
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 179;
 	}
 }

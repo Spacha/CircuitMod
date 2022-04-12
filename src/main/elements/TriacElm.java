@@ -56,7 +56,7 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -68,12 +68,12 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 183;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + (volts[anode] - volts[cnode]) + " " + (volts[anode] - volts[gnode]) + " " + triggerI
 				+ " " + holdingI + " " + cresistance;
 	}
@@ -87,7 +87,7 @@ public class TriacElm extends CircuitElm {
 	Point cathode[], gate[];
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int dir = 0;
 		if (abs(dx) > abs(dy)) {
@@ -120,7 +120,7 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, hs);
 		adjustBbox(gate[0], gate[1]);
 
@@ -154,17 +154,17 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : gate[1];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
 	@Override
-	int getInternalNodeCount() {
+	public int getInternalNodeCount() {
 		return 1;
 	}
 
@@ -176,7 +176,7 @@ public class TriacElm extends CircuitElm {
 	double aresistance;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[anode]);
 		sim.stampNonLinear(nodes[cnode]);
 		sim.stampNonLinear(nodes[gnode]);
@@ -186,7 +186,7 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vac = volts[anode] - volts[cnode]; // typically negative
 		double vag = volts[anode] - volts[gnode]; // typically positive
 		if (Math.abs(vac - lastvac) > .01 || Math.abs(vag - lastvag) > .01)
@@ -205,7 +205,7 @@ public class TriacElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "SCR";
 		double vac = volts[anode] - volts[cnode];
 		double vag = volts[anode] - volts[gnode];

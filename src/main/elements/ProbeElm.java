@@ -21,7 +21,7 @@ public class ProbeElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'p';
 	}
 
@@ -33,7 +33,7 @@ public class ProbeElm extends CircuitElm {
 	Point center;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		// swap points so that we subtract higher from lower
 		if (point2.y < point1.y) {
@@ -45,7 +45,7 @@ public class ProbeElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int hs = 8;
 		setBbox(point1, point2, hs);
 		boolean selected = (needsHighlight() || sim.getPlotYElm() == this);
@@ -77,13 +77,13 @@ public class ProbeElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "scope probe";
 		arr[1] = "Vd = " + getVoltageText(getVoltageDiff());
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return false;
 	}
 

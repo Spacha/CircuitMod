@@ -1,7 +1,7 @@
 package main.elements;
 import java.util.StringTokenizer;
 
-class CD4028 extends ChipCDElm {
+public class CD4028 extends ChipCDElm {
 
 	public CD4028(int xx, int yy) {
 		super(xx, yy);
@@ -84,15 +84,15 @@ class CD4028 extends ChipCDElm {
 			pins[13].value = true;
 	}
 
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return bits + 6;
 	}
 
-	int getPostCount() {
+	public int getPostCount() {
 		return bits * 2 + 6;
 	}
 
-	int getDumpType() {
+	public int getDumpType() {
 		return 185;
 	}
 }

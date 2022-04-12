@@ -48,17 +48,17 @@ public class ADCElm extends ChipElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return bits;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return bits + 2;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 167;
 	}
 }

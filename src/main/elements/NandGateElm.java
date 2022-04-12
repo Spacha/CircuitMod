@@ -21,7 +21,7 @@ public class NandGateElm extends AndGateElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 151;
 	}
 }

@@ -5,7 +5,7 @@ public class DCVoltageElm extends VoltageElm {
 	}
 
 	@Override
-	Class<VoltageElm> getDumpClass() {
+	public Class<VoltageElm> getDumpClass() {
 		return VoltageElm.class;
 	}
 }

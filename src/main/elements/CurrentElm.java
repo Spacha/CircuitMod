@@ -25,12 +25,12 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + currentValue;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'i';
 	}
 
@@ -43,7 +43,7 @@ public class CurrentElm extends CircuitElm {
 	Point ashaft1, ashaft2, center;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(26);
 		ashaft1 = interpPoint(lead1, lead2, .25);
@@ -54,7 +54,7 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int cr = 12;
 		draw2Leads(g);
 		setVoltageColor(g, (volts[0] + volts[1]) / 2);
@@ -75,7 +75,7 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		current = currentValue;
 		sim.stampCurrentSource(nodes[0], nodes[1], current);
 	}
@@ -93,7 +93,7 @@ public class CurrentElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "current source";
 		getBasicInfo(arr);
 	}

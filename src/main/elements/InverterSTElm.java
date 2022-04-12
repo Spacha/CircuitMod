@@ -27,17 +27,17 @@ public class InverterSTElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + slewRate;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 186;
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawPosts(g);
 		draw2Leads(g);
 		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
@@ -72,7 +72,7 @@ public class InverterSTElm extends CircuitElm {
 	Point pcircle;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int hs = 16;
 		int ww = 16;
@@ -89,12 +89,12 @@ public class InverterSTElm extends CircuitElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(0, nodes[1], voltSource);
 	}
 
@@ -125,7 +125,7 @@ public class InverterSTElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "schmitt trigger inverter";
 		arr[1] = "Vi = " + getVoltageText(volts[0]);
 		arr[2] = "Vo = " + getVoltageText(volts[1]);
@@ -146,12 +146,12 @@ public class InverterSTElm extends CircuitElm {
 	// there is no current path through the inverter input, but there
 	// is an indirect path through the output to ground.
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return false;
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return (n1 == 1);
 	}
 }

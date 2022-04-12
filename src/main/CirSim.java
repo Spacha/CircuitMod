@@ -331,14 +331,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		String os = System.getProperty("os.name");
 		isMac = (os.indexOf("Mac ") == 0);
-		ctrlMetaKey = (isMac) ? "âŒ˜" : "Ctrl";
+		ctrlMetaKey = (isMac) ? "⌘" : "Ctrl";
 		String jv = System.getProperty("java.class.version");
 		double jvf = Double.valueOf(jv).doubleValue();
-		if (jvf >= 48) {
-			MU_STR = "μ";
-			OHM_STR = "Î©";
+		if (jvf >= 48)
 			useBufferedImage = true;
-		}
 
 		dumpTypes = new Class[300];
 		// these characters are reserved
@@ -795,7 +792,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	CheckboxMenuItem getClassCheckItem(String s, String t) {
 		try {
-			Class<?> c = Class.forName("main." + t);
+			Class<?> c = Class.forName("main.elements." + t);
 			CircuitElm elm = constructElement(c, 0, 0);
 			register(c, elm);
 			int dt = 0;
@@ -1003,8 +1000,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				int bb = 0, j;
 				CircuitNodeLink cnl = cn.links.elementAt(0);
 				for (j = 0; j != elmList.size(); j++)
-					if (cnl.elm != getElm(j)
-							&& getElm(j).boundingBox.contains(cn.x, cn.y))
+					if (cnl.elm != getElm(j) && getElm(j).contains(cn.x, cn.y))
 						bb++;
 				if (bb > 0) {
 					g.setColor(Color.red);
@@ -1191,7 +1187,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					+ CircuitElm.getUnitText(
 							1 / (2 * pi
 									* Math.sqrt(
-											ie.inductance * ce.capacitance)),
+											ie.getInductance() * ce.getCapacitance())),
 							"Hz");
 		}
 		if (hintType == HINT_RC) {
@@ -1202,7 +1198,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			ResistorElm re = (ResistorElm) c1;
 			CapacitorElm ce = (CapacitorElm) c2;
 			return "RC = " + CircuitElm
-					.getUnitText(re.resistance * ce.capacitance, "s");
+					.getUnitText(re.getResistance() * ce.getCapacitance(), "s");
 		}
 		if (hintType == HINT_3DB_C) {
 			if (!(c1 instanceof ResistorElm))
@@ -1212,7 +1208,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			ResistorElm re = (ResistorElm) c1;
 			CapacitorElm ce = (CapacitorElm) c2;
 			return "f.3db = " + CircuitElm.getUnitText(
-					1 / (2 * pi * re.resistance * ce.capacitance), "Hz");
+					1 / (2 * pi * re.getResistance() * ce.getCapacitance()), "Hz");
 		}
 		if (hintType == HINT_3DB_L) {
 			if (!(c1 instanceof ResistorElm))
@@ -1222,7 +1218,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			ResistorElm re = (ResistorElm) c1;
 			InductorElm ie = (InductorElm) c2;
 			return "f.3db = " + CircuitElm.getUnitText(
-					re.resistance / (2 * pi * ie.inductance), "Hz");
+					re.getResistance() / (2 * pi * ie.getInductance()), "Hz");
 		}
 		if (hintType == HINT_TWINT) {
 			if (!(c1 instanceof ResistorElm))
@@ -1232,7 +1228,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			ResistorElm re = (ResistorElm) c1;
 			CapacitorElm ce = (CapacitorElm) c2;
 			return "fc = " + CircuitElm.getUnitText(
-					1 / (2 * pi * re.resistance * ce.capacitance), "Hz");
+					1 / (2 * pi * re.getResistance() * ce.getCapacitance()), "Hz");
 		}
 		return null;
 	}
@@ -1740,7 +1736,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		int i;
 		circuitBottom = 0;
 		for (i = 0; i != elmList.size(); i++) {
-			Rectangle rect = getElm(i).boundingBox;
+			Rectangle rect = getElm(i).getBoundingBox();
 			int bottom = rect.height + rect.y;
 			if (bottom > circuitBottom)
 				circuitBottom = bottom;
@@ -2613,7 +2609,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		f |= (showValuesCheckItem.getState()) ? 0 : 16;
 		// 32 = linear scale in afilter
 		String dump = "$ " + f + " " + timeStep + " " + getIterCount() + " "
-				+ currentBar.getValue() + " " + CircuitElm.voltageRange + " "
+				+ currentBar.getValue() + " " + CircuitElm.getVoltageRange() + " "
 				+ powerBar.getValue() + "\n";
 		for (i = 0; i != elmList.size(); i++)
 			dump += getElm(i).dump() + "\n";
@@ -2774,7 +2770,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			speedBar.setValue(117); // 57
 			currentBar.setValue(50);
 			powerBar.setValue(50);
-			CircuitElm.voltageRange = 5;
+			CircuitElm.setVoltageRange(5);
 			scopeCount = 0;
 		}
 		cv.repaint();
@@ -2895,7 +2891,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// int sp2 = (int) (Math.log(sp)*24+1.5);
 		speedBar.setValue(sp2);
 		currentBar.setValue(Integer.valueOf(st.nextToken()).intValue());
-		CircuitElm.voltageRange = Double.valueOf(st.nextToken()).doubleValue();
+		CircuitElm.setVoltageRange(Double.valueOf(st.nextToken()).doubleValue());
 		try {
 			powerBar.setValue(Integer.valueOf(st.nextToken()).intValue());
 		} catch (Exception e) {
@@ -2934,7 +2930,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			return false;
 		SwitchElm se = (SwitchElm) mouseElm;
 		se.toggle();
-		if (se.momentary)
+		if (se.isMomentary())
 			heldSwitchElm = se;
 		needAnalyze();
 		return true;
@@ -3096,7 +3092,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		int i;
 		for (i = 0; i != elmList.size(); i++) {
 			CircuitElm ce = getElm(i);
-			ce.selectRect(selectedArea);
+			ce.selectIfWithin(selectedArea);
 		}
 	}
 
@@ -3142,9 +3138,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		int bestArea = 100000;
 		for (i = 0; i != elmList.size(); i++) {
 			CircuitElm ce = getElm(i);
-			if (ce.boundingBox.contains(x, y)) {
+			if (ce.contains(x, y)) {
 				int j;
-				int area = ce.boundingBox.width * ce.boundingBox.height;
+				int area = ce.getBoundingBox().width * ce.getBoundingBox().height;
 				int jn = ce.getPostCount();
 				if (jn > 2)
 					jn = 2;

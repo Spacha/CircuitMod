@@ -38,7 +38,7 @@ public class LEDArrayElm extends ChipElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawChip(g);
 		g.setColor(Color.green);
 		int s = csize * 16;
@@ -82,17 +82,17 @@ public class LEDArrayElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 10;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 0;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 176;
 	}
 }

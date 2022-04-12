@@ -31,12 +31,12 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + temp + " " + nom_pow + " " + nom_v + " " + warmTime + " " + coolTime;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 181;
 	}
 
@@ -52,7 +52,7 @@ public class LampElm extends CircuitElm {
 	final int filament_len = 24;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int llen = 16;
 		calcLeads(llen);
@@ -90,7 +90,7 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		double v1 = volts[0];
 		double v2 = volts[1];
 		setBbox(point1, point2, 4);
@@ -130,18 +130,18 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		// based on http://www.intusoft.com/nlpdf/nl11.pdf
 		double nom_r = nom_v * nom_v / nom_pow;
 		// this formula doesn't work for values over 5390
@@ -158,12 +158,12 @@ public class LampElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.stampResistor(nodes[0], nodes[1], resistance);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "lamp";
 		getBasicInfo(arr);
 		arr[3] = "R = " + getUnitText(resistance, CirSim.OHM_STR);

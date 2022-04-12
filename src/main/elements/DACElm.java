@@ -35,7 +35,7 @@ public class DACElm extends ChipElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		int ival = 0;
 		int i;
 		for (i = 0; i != bits; i++)
@@ -47,17 +47,17 @@ public class DACElm extends ChipElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return bits + 2;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 166;
 	}
 }

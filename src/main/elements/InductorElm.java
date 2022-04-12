@@ -10,6 +10,8 @@ import main.Inductor;
 public class InductorElm extends CircuitElm {
 	Inductor ind;
 	double inductance;
+	
+	public double getInductance() { return inductance; }
 
 	public InductorElm(int xx, int yy) {
 		super(xx, yy);
@@ -28,7 +30,7 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'l';
 	}
 
@@ -38,18 +40,18 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + inductance + " " + current;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		double v1 = volts[0];
 		double v2 = volts[1];
 		//int i;
@@ -73,17 +75,17 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		ind.stamp(nodes[0], nodes[1]);
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		ind.startIteration(volts[0] - volts[1]);
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return ind.nonLinear();
 	}
 
@@ -94,13 +96,13 @@ public class InductorElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double voltdiff = volts[0] - volts[1];
 		ind.doStep(voltdiff);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "inductor";
 		getBasicInfo(arr);
 		arr[3] = "L = " + getUnitText(inductance, "H");

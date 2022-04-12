@@ -53,12 +53,12 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'v';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + waveform + " " + frequency + " "
 				+ maxVoltage + " " + bias + " " + phaseShift + " " + dutyCycle;
 	}
@@ -80,7 +80,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		if (waveform == WF_DC)
 			sim.stampVoltageSource(nodes[0], nodes[1], voltSource,
 					getVoltage());
@@ -89,7 +89,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		if (waveform != WF_DC)
 			sim.updateVoltageSource(nodes[0], nodes[1], voltSource,
 					getVoltage());
@@ -119,14 +119,14 @@ public class VoltageElm extends CircuitElm {
 	final int circleSize = 17;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(
 				(waveform == WF_DC || waveform == WF_VAR) ? 8 : circleSize * 2);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(x, y, x2, y2);
 		draw2Leads(g);
 		if (waveform == WF_DC) {
@@ -221,7 +221,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
@@ -236,7 +236,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		switch (waveform) {
 		case WF_DC:
 		case WF_VAR:

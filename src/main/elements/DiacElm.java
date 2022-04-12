@@ -29,24 +29,24 @@ public class DiacElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 185;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + onresistance + " " + offresistance + " " + breakdown + " " + holdcurrent;
 	}
 
 	Point ps3, ps4;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		ps3 = new Point();
@@ -54,7 +54,7 @@ public class DiacElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		// FIXME need to draw Diac
 		//int i;
 		//double v1 = volts[0];
@@ -76,7 +76,7 @@ public class DiacElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		double vd = volts[0] - volts[1];
 		if (Math.abs(current) < holdcurrent)
 			state = false;
@@ -86,7 +86,7 @@ public class DiacElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		if (state)
 			sim.stampResistor(nodes[0], nodes[1], onresistance);
 		else
@@ -94,13 +94,13 @@ public class DiacElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		// FIXME
 		arr[0] = "spark gap";
 		getBasicInfo(arr);

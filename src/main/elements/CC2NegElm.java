@@ -6,7 +6,7 @@ public class CC2NegElm extends CC2Elm {
 	}
 
 	@Override
-	Class<CC2Elm> getDumpClass() {
+	public Class<CC2Elm> getDumpClass() {
 		return CC2Elm.class;
 	}
 }

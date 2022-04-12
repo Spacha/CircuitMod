@@ -31,7 +31,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'm';
 	}
 
@@ -41,7 +41,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + r_on + " " + r_off + " " + dopeWidth + " "
 				+ totalWidth + " " + mobility;
 	}
@@ -49,7 +49,7 @@ public class MemristorElm extends CircuitElm {
 	Point ps3, ps4;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		ps3 = new Point();
@@ -57,7 +57,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int segments = 6;
 		int i;
 		int ox = 0;
@@ -91,7 +91,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -106,7 +106,7 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		double wd = dopeWidth / totalWidth;
 		dopeWidth += sim.getTimeStep() * mobility * r_on * current / totalWidth;
 		if (dopeWidth < 0)
@@ -117,18 +117,18 @@ public class MemristorElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.stampResistor(nodes[0], nodes[1], resistance);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "memristor";
 		getBasicInfo(arr);
 		arr[3] = "R = " + getUnitText(resistance, CirSim.OHM_STR);

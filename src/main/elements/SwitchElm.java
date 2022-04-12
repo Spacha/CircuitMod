@@ -39,9 +39,13 @@ public class SwitchElm extends CircuitElm {
 		momentary = Boolean.valueOf(st.nextToken()).booleanValue();
 		posCount = 2;
 	}
+	
+	public boolean isMomentary() {
+		return momentary;
+	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 's';
 	}
 
@@ -51,14 +55,14 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + position + " " + momentary;
 	}
 
 	Point ps, ps2;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		ps = new Point();
@@ -66,7 +70,7 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int openhs = 16;
 		int hs1 = (position == 1) ? 0 : 2;
 		int hs2 = (position == 1) ? openhs : 2;
@@ -93,29 +97,29 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		if (position == 0)
 			sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return (position == 1) ? 0 : 1;
 	}
 
-	void mouseUp() {
+	public void mouseUp() {
 		//if (momentary)
 		//	toggle();
 	}
 
-	void toggle() {
+	public void toggle() {
 		position++;
 		if (position >= posCount)
 			position = 0;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = (momentary) ? "push switch (SPST)" : "switch (SPST)";
 		if (position == 1) {
 			arr[1] = "open";
@@ -128,12 +132,12 @@ public class SwitchElm extends CircuitElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return position == 0;
 	}
 
 	@Override
-	boolean isWire() {
+	public boolean isWire() {
 		return true;
 	}
 

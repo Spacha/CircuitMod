@@ -33,12 +33,12 @@ public class VCOElm extends ChipElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		// output pin
 		sim.stampVoltageSource(0, nodes[1], pins[1].voltSource);
 		// attach Vi to R1 pin so its current is proportional to Vi
@@ -57,7 +57,7 @@ public class VCOElm extends ChipElm {
 	int cDir;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vc = volts[3] - volts[2];
 		double vo = volts[1];
 		int dir = (vo < 2.5) ? 1 : -1;
@@ -98,23 +98,23 @@ public class VCOElm extends ChipElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		computeCurrent();
 		drawChip(g);
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 6;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 3;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 158;
 	}
 }

@@ -21,7 +21,7 @@ public class NorGateElm extends OrGateElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 153;
 	}
 }

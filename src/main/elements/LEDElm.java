@@ -28,19 +28,19 @@ public class LEDElm extends DiodeElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 162;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + colorR + " " + colorG + " " + colorB;
 	}
 
 	Point ledLead1, ledLead2, ledCenter;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int cr = 12;
 		ledLead1 = interpPoint(point1, point2, .5 - cr / dn);
@@ -49,7 +49,7 @@ public class LEDElm extends DiodeElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		if (needsHighlight() || this == sim.dragElm) {
 			super.draw(g);
 			return;
@@ -77,7 +77,7 @@ public class LEDElm extends DiodeElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		super.getInfo(arr);
 		arr[0] = "LED";
 	}

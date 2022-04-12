@@ -9,7 +9,7 @@ public class ClockElm extends RailElm {
 	}
 
 	@Override
-	Class<RailElm> getDumpClass() {
+	public Class<RailElm> getDumpClass() {
 		return RailElm.class;
 	}
 }

@@ -35,7 +35,7 @@ public class SevenSegElm extends ChipElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawChip(g);
 		g.setColor(Color.red);
 		int xl = x + cspc * 5;
@@ -61,17 +61,17 @@ public class SevenSegElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 7;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 0;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 157;
 	}
 }

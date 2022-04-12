@@ -13,6 +13,8 @@ public class CapacitorElm extends CircuitElm {
 	double compResistance, voltdiff;
 	Point plate1[], plate2[];
 	public static final int FLAG_BACK_EULER = 2;
+	
+	public double getCapacitance() { return capacitance; }
 
 	public CapacitorElm(int xx, int yy) {
 		super(xx, yy);
@@ -31,7 +33,7 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	void setNodeVoltage(int n, double c) {
+	public void setNodeVoltage(int n, double c) {
 		super.setNodeVoltage(n, c);
 		voltdiff = volts[0] - volts[1];
 	}
@@ -44,17 +46,17 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'c';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + capacitance + " " + voltdiff;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		double f = (dn / 2 - 4) / dn;
 		// calc leads
@@ -68,7 +70,7 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int hs = 12;
 		setBbox(point1, point2, hs);
 
@@ -99,7 +101,7 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		// capacitor companion model using trapezoidal approximation
 		// (Norton equivalent) consists of a current source in
 		// parallel with a resistor. Trapezoidal is more accurate
@@ -116,7 +118,7 @@ public class CapacitorElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		if (isTrapezoidal())
 			curSourceValue = -voltdiff / compResistance - current;
 		else
@@ -138,12 +140,12 @@ public class CapacitorElm extends CircuitElm {
 	double curSourceValue;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.stampCurrentSource(nodes[0], nodes[1], curSourceValue);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "capacitor";
 		getBasicInfo(arr);
 		arr[3] = "C = " + getUnitText(capacitance, "F");

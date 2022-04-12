@@ -19,7 +19,7 @@ public class RailElm extends VoltageElm {
 	final int FLAG_CLOCK = 1;
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'R';
 	}
 
@@ -34,18 +34,18 @@ public class RailElm extends VoltageElm {
 	// }
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, circleSize);
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, point1, lead1);
@@ -81,7 +81,7 @@ public class RailElm extends VoltageElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		if (waveform == WF_DC)
 			sim.stampVoltageSource(0, nodes[0], voltSource, getVoltage());
 		else
@@ -89,13 +89,13 @@ public class RailElm extends VoltageElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		if (waveform != WF_DC)
 			sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return true;
 	}
 }

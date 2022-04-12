@@ -5,7 +5,7 @@ public class NMosfetElm extends MosfetElm {
 	}
 
 	@Override
-	Class<MosfetElm> getDumpClass() {
+	public Class<MosfetElm> getDumpClass() {
 		return MosfetElm.class;
 	}
 }

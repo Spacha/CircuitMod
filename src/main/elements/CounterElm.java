@@ -43,7 +43,7 @@ public class CounterElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		if (hasEnable())
 			return bits + 3;
 		return bits + 2;
@@ -54,7 +54,7 @@ public class CounterElm extends ChipElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return bits;
 	}
 
@@ -83,7 +83,7 @@ public class CounterElm extends ChipElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 164;
 	}
 }

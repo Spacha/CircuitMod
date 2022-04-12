@@ -45,12 +45,12 @@ public class DFlipFlopElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return hasReset() ? 5 : 4;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 2;
 	}
 
@@ -68,7 +68,7 @@ public class DFlipFlopElm extends ChipElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 155;
 	}
 

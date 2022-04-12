@@ -5,7 +5,7 @@ public class PTransistorElm extends TransistorElm {
 	}
 
 	@Override
-	Class<TransistorElm> getDumpClass() {
+	public Class<TransistorElm> getDumpClass() {
 		return TransistorElm.class;
 	}
 }

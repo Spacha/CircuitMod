@@ -51,17 +51,17 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + maxOut + " " + minOut + " " + gbw;
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, opheight * 2);
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, in1p[0], in1p[1]);
@@ -97,7 +97,7 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		if (dn > 150 && this == sim.dragElm)
 			setSize(2);
@@ -121,22 +121,22 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? in1p[0] : (n == 1) ? in2p[0] : point2;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "op-amp";
 		arr[1] = "V+ = " + getVoltageText(volts[1]);
 		arr[2] = "V- = " + getVoltageText(volts[0]);
@@ -152,14 +152,14 @@ public class OpAmpElm extends CircuitElm {
 	double lastvd;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		int vn = sim.nodeCount() + voltSource;
 		sim.stampNonLinear(vn);
 		sim.stampMatrix(nodes[2], vn, 1);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vd = volts[1] - volts[0];
 		if (Math.abs(lastvd - vd) > .1)
 			sim.setConverged(false);
@@ -196,12 +196,12 @@ public class OpAmpElm extends CircuitElm {
 	// there is no current path through the op-amp inputs, but there
 	// is an indirect path through the output to ground.
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return false;
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return (n1 == 2);
 	}
 
@@ -211,7 +211,7 @@ public class OpAmpElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'a';
 	}
 

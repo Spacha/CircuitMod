@@ -29,24 +29,24 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 187;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + onresistance + " " + offresistance + " " + breakdown + " " + holdcurrent;
 	}
 
 	Polygon arrow1, arrow2;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int dist = 16;
 		int alen = 8;
@@ -58,7 +58,7 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		//int i;
 		//double v1 = volts[0];
 		//double v2 = volts[1];
@@ -87,7 +87,7 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		if (Math.abs(current) < holdcurrent)
 			state = false;
 		double vd = volts[0] - volts[1];
@@ -96,19 +96,19 @@ public class SparkGapElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		resistance = (state) ? onresistance : offresistance;
 		sim.stampResistor(nodes[0], nodes[1], resistance);
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "spark gap";
 		getBasicInfo(arr);
 		arr[3] = state ? "on" : "off";

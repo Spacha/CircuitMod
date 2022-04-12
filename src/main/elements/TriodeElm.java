@@ -28,7 +28,7 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -39,12 +39,12 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + mu + " " + kg1;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 173;
 	}
 
@@ -52,7 +52,7 @@ public class TriodeElm extends CircuitElm {
 	int circler;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		plate = newPointArray(4);
 		grid = newPointArray(8);
@@ -82,7 +82,7 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		g.setColor(Color.gray);
 		drawThickCircle(g, point2.x, point2.y, circler);
 		setBbox(point1, plate[0], 16);
@@ -116,12 +116,12 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? plate[0] : (n == 1) ? grid[0] : cath[0];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
@@ -133,7 +133,7 @@ public class TriodeElm extends CircuitElm {
 	double lastv0, lastv1, lastv2;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vs[] = new double[3];
 		vs[0] = volts[0];
 		vs[1] = volts[1];
@@ -194,14 +194,14 @@ public class TriodeElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 		sim.stampNonLinear(nodes[2]);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "triode";
 		double vbc = volts[0] - volts[1];
 		double vbe = volts[0] - volts[2];
@@ -213,7 +213,7 @@ public class TriodeElm extends CircuitElm {
 
 	// grid not connected to other terminals
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return !(n1 == 1 || n2 == 1);
 	}
 }

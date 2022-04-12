@@ -20,7 +20,7 @@ public class WireElm extends CircuitElm {
 	static final int FLAG_SHOWVOLTAGE = 2;
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, point1, point2);
 		doDots(g);
@@ -37,7 +37,7 @@ public class WireElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
 	}
 
@@ -50,19 +50,19 @@ public class WireElm extends CircuitElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "wire";
 		arr[1] = "I = " + getCurrentDText(getCurrent());
 		arr[2] = "V = " + getVoltageText(volts[0]);
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'w';
 	}
 
@@ -77,7 +77,7 @@ public class WireElm extends CircuitElm {
 	}
 
 	@Override
-	boolean isWire() {
+	public boolean isWire() {
 		return true;
 	}
 

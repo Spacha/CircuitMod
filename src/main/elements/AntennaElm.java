@@ -15,12 +15,12 @@ public class AntennaElm extends RailElm {
 	double fmphase;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(0, nodes[0], voltSource);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.updateVoltageSource(0, nodes[0], voltSource, getVoltage());
 	}
 
@@ -37,7 +37,7 @@ public class AntennaElm extends RailElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'A';
 	}
 

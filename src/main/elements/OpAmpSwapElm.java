@@ -6,7 +6,7 @@ public class OpAmpSwapElm extends OpAmpElm {
 	}
 
 	@Override
-	Class<OpAmpElm> getDumpClass() {
+	public Class<OpAmpElm> getDumpClass() {
 		return OpAmpElm.class;
 	}
 }

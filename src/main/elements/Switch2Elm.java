@@ -29,7 +29,7 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'S';
 	}
 
@@ -39,7 +39,7 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + link;
 	}
 
@@ -47,7 +47,7 @@ public class Switch2Elm extends SwitchElm {
 	Point swposts[], swpoles[];
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		swposts = newPointArray(2);
@@ -59,7 +59,7 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, openhs);
 
 		// draw first lead
@@ -87,12 +87,12 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : swposts[n - 1];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
@@ -103,19 +103,19 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		if (position == 2) // in center?
 			return;
 		sim.stampVoltageSource(nodes[0], nodes[position + 1], voltSource, 0);
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return (position == 2) ? 0 : 1;
 	}
 
 	@Override
-	void toggle() {
+	public void toggle() {
 		super.toggle();
 		if (link != 0) {
 			int i;
@@ -131,14 +131,14 @@ public class Switch2Elm extends SwitchElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		if (position == 2)
 			return false;
 		return comparePair(n1, n2, 0, 1 + position);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = (link == 0) ? "switch (SPDT)" : "switch (DPDT)";
 		arr[1] = "I = " + getCurrentDText(getCurrent());
 	}

@@ -1,7 +1,7 @@
 package main.elements;
 import java.util.StringTokenizer;
 
-class CD4040 extends ChipCDElm {
+public class CD4040 extends ChipCDElm {
 	final int FLAG_ENABLE = 2;
 	final int bits = 12;
 
@@ -37,7 +37,7 @@ class CD4040 extends ChipCDElm {
 		allocNodes();
 	}
 
-	int getPostCount() {
+	public int getPostCount() {
 		if (hasEnable())
 			return bits + 3;
 		return bits + 2;
@@ -47,7 +47,7 @@ class CD4040 extends ChipCDElm {
 		return (flags & FLAG_ENABLE) != 0;
 	}
 
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return bits;
 	}
 
@@ -75,7 +75,7 @@ class CD4040 extends ChipCDElm {
 		lastClock = pins[0].value;
 	}
 
-	int getDumpType() {
+	public int getDumpType() {
 		return 183;
 	}
 }

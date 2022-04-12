@@ -20,7 +20,7 @@ public class JfetElm extends MosfetElm {
 	Point gatePt;
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, hs);
 		setVoltageColor(g, volts[1]);
 		drawThickLine(g, src[0], src[1]);
@@ -44,7 +44,7 @@ public class JfetElm extends MosfetElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 
 		// find the coordinates of the various points we need to draw
@@ -70,7 +70,7 @@ public class JfetElm extends MosfetElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'j';
 	}
 
@@ -86,7 +86,7 @@ public class JfetElm extends MosfetElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		getFetInfo(arr, "JFET");
 	}
 }

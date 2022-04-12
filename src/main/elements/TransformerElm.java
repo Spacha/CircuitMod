@@ -45,6 +45,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
+	public
 	void drag(int xx, int yy) {
 		xx = sim.snapGrid(xx);
 		yy = sim.snapGrid(yy);
@@ -57,7 +58,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'T';
 	}
 
@@ -67,7 +68,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + inductance + " " + ratio + " " + current[0]
 				+ " " + current[1] + " " + couplingCoef;
 	}
@@ -77,7 +78,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int i;
 		for (i = 0; i != 4; i++) {
 			setVoltageColor(g, volts[i]);
@@ -104,7 +105,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		point2.y = point1.y;
 		ptEnds = newPointArray(4);
@@ -126,12 +127,12 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return ptEnds[n];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 4;
 	}
 
@@ -143,7 +144,7 @@ public class TransformerElm extends CircuitElm {
 	double a1, a2, a3, a4;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		// equations for transformer:
 		// v1 = L1 di1/dt + M di2/dt
 		// v2 = M di1/dt + L2 di2/dt
@@ -192,7 +193,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		double voltdiff1 = volts[0] - volts[2];
 		double voltdiff2 = volts[1] - volts[3];
 		if (isTrapezoidal()) {
@@ -207,7 +208,7 @@ public class TransformerElm extends CircuitElm {
 	double curSourceValue1, curSourceValue2;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.stampCurrentSource(nodes[0], nodes[2], curSourceValue1);
 		sim.stampCurrentSource(nodes[1], nodes[3], curSourceValue2);
 	}
@@ -221,7 +222,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "transformer";
 		arr[1] = "L = " + getUnitText(inductance, "H");
 		arr[2] = "Ratio = 1:" + ratio;
@@ -232,7 +233,7 @@ public class TransformerElm extends CircuitElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		if (comparePair(n1, n2, 0, 2))
 			return true;
 		if (comparePair(n1, n2, 1, 3))

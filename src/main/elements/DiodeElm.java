@@ -36,7 +36,7 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -45,12 +45,12 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'd';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		flags |= FLAG_FWDROP;
 		return super.dump() + " " + fwdrop;
 	}
@@ -60,7 +60,7 @@ public class DiodeElm extends CircuitElm {
 	Point cathode[];
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(16);
 		cathode = newPointArray(2);
@@ -71,7 +71,7 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawDiode(g);
 		doDots(g);
 		drawPosts(g);
@@ -102,12 +102,12 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		diode.stamp(nodes[0], nodes[1]);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		diode.doStep(volts[0] - volts[1]);
 	}
 
@@ -117,7 +117,7 @@ public class DiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "diode";
 		arr[1] = "I = " + getCurrentText(getCurrent());
 		arr[2] = "Vd = " + getVoltageText(getVoltageDiff());

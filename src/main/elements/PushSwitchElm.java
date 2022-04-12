@@ -5,7 +5,7 @@ public class PushSwitchElm extends SwitchElm {
 	}
 
 	@Override
-	Class<SwitchElm> getDumpClass() {
+	public Class<SwitchElm> getDumpClass() {
 		return SwitchElm.class;
 	}
 }

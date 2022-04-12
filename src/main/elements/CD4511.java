@@ -1,7 +1,7 @@
 package main.elements;
 import java.util.StringTokenizer;
 
-class CD4511 extends ChipCDElm {
+public class CD4511 extends ChipCDElm {
 
 	boolean[] latch = new boolean[7];
 	boolean le;
@@ -211,15 +211,15 @@ class CD4511 extends ChipCDElm {
 		}
 	}
 
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 7;
 	}
 
-	int getPostCount() {
+	public int getPostCount() {
 		return 7 + 7;
 	}
 
-	int getDumpType() {
+	public int getDumpType() {
 		return 184;
 	}
 }

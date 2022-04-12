@@ -32,31 +32,31 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 170;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
 	final int circleSize = 17;
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + minF + " " + maxF + " " + maxV + " "
 				+ sweepTime;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - circleSize / dn);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, circleSize);
 		setVoltageColor(g, volts[0]);
 		drawThickLine(g, point1, lead1);
@@ -99,7 +99,7 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampVoltageSource(0, nodes[0], voltSource);
 	}
 
@@ -133,7 +133,7 @@ public class SweepElm extends CircuitElm {
 	double v;
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		// has timestep been changed?
 		if (sim.getTimeStep() != savedTimeStep)
 			setParams();
@@ -156,7 +156,7 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		sim.updateVoltageSource(0, nodes[0], voltSource, v);
 	}
 
@@ -166,17 +166,17 @@ public class SweepElm extends CircuitElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return true;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "sweep " + (((flags & FLAG_LOG) == 0) ? "(linear)" : "(log)");
 		arr[1] = "I = " + getCurrentDText(getCurrent());
 		arr[2] = "V = " + getVoltageText(volts[0]);

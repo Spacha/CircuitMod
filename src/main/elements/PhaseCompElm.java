@@ -27,12 +27,12 @@ public class PhaseCompElm extends ChipElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		int vn = sim.nodeCount() + pins[2].voltSource;
 		sim.stampNonLinear(vn);
 		sim.stampNonLinear(0);
@@ -42,7 +42,7 @@ public class PhaseCompElm extends ChipElm {
 	boolean ff1, ff2;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		boolean v1 = volts[0] > 2.5;
 		boolean v2 = volts[1] > 2.5;
 		if (v1 && !pins[0].value)
@@ -65,17 +65,17 @@ public class PhaseCompElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 161;
 	}
 }

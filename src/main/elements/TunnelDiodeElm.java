@@ -16,7 +16,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -24,7 +24,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 175;
 	}
 
@@ -33,7 +33,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	Point cathode[];
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(16);
 		cathode = newPointArray(4);
@@ -45,7 +45,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, hs);
 
 		double v1 = volts[0];
@@ -87,7 +87,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 	}
@@ -100,7 +100,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	static final double piv = 370e-6;
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double voltdiff = volts[0] - volts[1];
 		if (Math.abs(voltdiff - lastvoltdiff) > .01)
 			sim.setConverged(false);
@@ -128,7 +128,7 @@ public class TunnelDiodeElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "tunnel diode";
 		arr[1] = "I = " + getCurrentText(getCurrent());
 		arr[2] = "Vd = " + getVoltageText(getVoltageDiff());

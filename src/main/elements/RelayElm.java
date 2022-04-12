@@ -75,19 +75,19 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 178;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + poleCount + " " + inductance + " "
 				+ coilCurrent + " " + r_on + " " + r_off + " " + onCurrent + " "
 				+ coilR;
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int i, p;
 		for (i = 0; i != 2; i++) {
 			setVoltageColor(g, volts[nCoil1 + i]);
@@ -146,7 +146,7 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		setupPoles();
 		allocNodes();
@@ -190,19 +190,19 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		if (n < 3 * poleCount)
 			return swposts[n / 3][n % 3];
 		return coilPosts[n - 3 * poleCount];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 2 + poleCount * 3;
 	}
 
 	@Override
-	int getInternalNodeCount() {
+	public int getInternalNodeCount() {
 		return 1;
 	}
 
@@ -219,7 +219,7 @@ public class RelayElm extends CircuitElm {
 	double a1, a2, a3, a4;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		// inductor from coil post 1 to internal node
 		ind.stamp(nodes[nCoil1], nodes[nCoil3]);
 		// resistor from internal node to coil post 2
@@ -231,7 +231,7 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	void startIteration() {
+	public void startIteration() {
 		ind.startIteration(volts[nCoil1] - volts[nCoil3]);
 
 		// magic value to balance operate speed with reset speed
@@ -255,12 +255,12 @@ public class RelayElm extends CircuitElm {
 
 	// we need this to be able to change the matrix for each step
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double voltdiff = volts[nCoil1] - volts[nCoil3];
 		ind.doStep(voltdiff);
 		int p;
@@ -290,7 +290,7 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = i_position == 0 ? "relay (off)"
 				: i_position == 1 ? "relay (on)" : "relay";
 		int i;
@@ -355,7 +355,7 @@ public class RelayElm extends CircuitElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return (n1 / 3 == n2 / 3);
 	}
 }

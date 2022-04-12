@@ -30,12 +30,12 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + threshold;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'M';
 	}
 
@@ -45,7 +45,7 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
@@ -62,13 +62,13 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - 12 / dn);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		Font f = new Font("SansSerif", Font.BOLD, 20);
 		g.setFont(f);
 		// g.setColor(needsHighlight() ? selectColor : lightGrayColor);
@@ -92,7 +92,7 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		if (needsPullDown())
 			sim.stampResistor(nodes[0], 0, 1e6);
 	}
@@ -103,7 +103,7 @@ public class LogicOutputElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "logic output";
 		arr[1] = (volts[0] < threshold) ? "low" : "high";
 		if (isNumeric())

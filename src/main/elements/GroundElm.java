@@ -12,17 +12,17 @@ public class GroundElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'g';
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setVoltageColor(g, 0);
 		drawThickLine(g, point1, point2);
 		int i;
@@ -54,18 +54,18 @@ public class GroundElm extends CircuitElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "ground";
 		arr[1] = "I = " + getCurrentText(getCurrent());
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return true;
 	}
 

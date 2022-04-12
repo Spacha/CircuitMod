@@ -3,7 +3,6 @@ import java.awt.Label;
 import java.awt.Scrollbar;
 import java.util.StringTokenizer;
 
-import main.CirSim;
 import main.EditInfo;
 
 public class VarRailElm extends RailElm {
@@ -27,12 +26,12 @@ public class VarRailElm extends RailElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + sliderText;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 172;
 	}
 
@@ -53,7 +52,7 @@ public class VarRailElm extends RailElm {
 	}
 
 	@Override
-	void delete() {
+	public void delete() {
 		// TODO
 		//CirSim.main.remove(label);
 		//CirSim.main.remove(slider);

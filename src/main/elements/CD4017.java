@@ -1,7 +1,7 @@
 package main.elements;
 import java.util.StringTokenizer;
 
-class CD4017 extends ChipCDElm {
+public class CD4017 extends ChipCDElm {
 
 	public CD4017(int xx, int yy) {
 		super(xx, yy);
@@ -107,17 +107,17 @@ class CD4017 extends ChipCDElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 11;
 	} // Outputs
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3 + 11;
 	} // Total Pins
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 189;
 	}
 }

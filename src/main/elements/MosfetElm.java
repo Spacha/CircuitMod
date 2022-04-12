@@ -45,7 +45,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -59,19 +59,19 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + vt;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'f';
 	}
 
 	final int hs = 16;
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, hs);
 		setVoltageColor(g, volts[1]);
 		drawThickLine(g, src[0], src[1]);
@@ -132,7 +132,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? src[0] : drn[0];
 	}
 
@@ -147,7 +147,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
@@ -156,7 +156,7 @@ public class MosfetElm extends CircuitElm {
 	Polygon arrowPoly;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 
 		// find the coordinates of the various points we need to draw
@@ -192,13 +192,13 @@ public class MosfetElm extends CircuitElm {
 	double gm = 0;
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[1]);
 		sim.stampNonLinear(nodes[2]);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vs[] = new double[3];
 		vs[0] = volts[0];
 		vs[1] = volts[1];
@@ -287,11 +287,12 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		getFetInfo(arr, "MOSFET");
 	}
 
 	@Override
+	public
 	boolean canViewInScope() {
 		return true;
 	}
@@ -302,7 +303,7 @@ public class MosfetElm extends CircuitElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return !(n1 == 0 || n2 == 0);
 	}
 

@@ -41,7 +41,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'L';
 	}
 
@@ -51,23 +51,23 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + hiV + " " + loV;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 1;
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		lead1 = interpPoint(point1, point2, 1 - 12 / dn);
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		Font f = new Font("SansSerif", Font.BOLD, 20);
 		g.setFont(f);
 		g.setColor(needsHighlight() ? selectColor : whiteColor);
@@ -89,7 +89,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		double v = (position == 0) ? loV : hiV;
 		if (isTernary())
 			v = position * 2.5;
@@ -97,7 +97,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 1;
 	}
 
@@ -107,7 +107,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "logic input";
 		arr[1] = (position == 0) ? "low" : "high";
 		if (isNumeric())
@@ -117,7 +117,7 @@ public class LogicInputElm extends SwitchElm {
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return true;
 	}
 

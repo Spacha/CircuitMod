@@ -20,7 +20,7 @@ public abstract class CircuitElm implements Editable {
 	static double voltageRange = 5;
 	static int colorScaleCount = 32;
 	static Color colorScale[];
-	static double currentMult, powerMult;
+	public static double currentMult, powerMult;			// TODO: Public or getters?
 	static Point ps1, ps2;
 	protected static CirSim sim;
 	public static Color whiteColor, selectColor, lightGrayColor;
@@ -29,7 +29,7 @@ public abstract class CircuitElm implements Editable {
 	public static NumberFormat showFormat, shortFormat, noCommaFormat;
 	static final double pi = 3.14159265358979323846;
 
-	int x, y, x2, y2, flags, nodes[], voltSource;
+	public int x, y, x2, y2, flags, nodes[], voltSource;	// TODO: Public or getters?
 	int dx, dy, dsign;
 	double dn, dpx1, dpy1;
 	Point point1, point2, lead1, lead2;
@@ -39,11 +39,11 @@ public abstract class CircuitElm implements Editable {
 	boolean noDiagonal;
 	public boolean selected;
 
-	int getDumpType() {
+	public int getDumpType() {
 		return 0;
 	}
 
-	Class<? extends CircuitElm> getDumpClass() {
+	public Class<? extends CircuitElm> getDumpClass() {
 		return getClass();
 	}
 
@@ -59,7 +59,7 @@ public abstract class CircuitElm implements Editable {
 		voltageRange = r;
 	}
 
-	static void initClass(CirSim s) {
+	public static void initClass(CirSim s) {
 		unitsFont = new Font("SansSerif", 0, 10);
 		sim = s;
 
@@ -119,7 +119,7 @@ public abstract class CircuitElm implements Editable {
 		volts = new double[getPostCount() + getInternalNodeCount()];
 	}
 
-	String dump() {
+	public String dump() {
 		int t = getDumpType();
 		return (t < 127 ? ((char) t) + " " : t + " ") + x + " " + y + " " + x2
 				+ " " + y2 + " " + flags;
@@ -132,7 +132,7 @@ public abstract class CircuitElm implements Editable {
 		curcount = 0;
 	}
 
-	void draw(@SuppressWarnings("unused") Graphics g) {
+	public void draw(@SuppressWarnings("unused") Graphics g) {
 	}
 
 	public void setCurrent(@SuppressWarnings("unused") int x, double c) {
@@ -143,20 +143,20 @@ public abstract class CircuitElm implements Editable {
 		return current;
 	}
 
-	void doStep() {
+	public void doStep() {
 	}
 
-	void delete() {
+	public void delete() {
 	}
 
-	void startIteration() {
+	public void startIteration() {
 	}
 
-	double getPostVoltage(int x) {
+	public double getPostVoltage(int x) {
 		return volts[x];
 	}
 
-	void setNodeVoltage(int n, double c) {
+	public void setNodeVoltage(int n, double c) {
 		volts[n] = c;
 		calculateCurrent();
 	}
@@ -164,7 +164,7 @@ public abstract class CircuitElm implements Editable {
 	void calculateCurrent() {
 	}
 
-	void setPoints() {
+	public void setPoints() {
 		dx = x2 - x;
 		dy = y2 - y;
 		dn = Math.sqrt(dx * dx + dy * dy);
@@ -305,7 +305,7 @@ public abstract class CircuitElm implements Editable {
 		return p;
 	}
 
-	void drag(int xx, int yy) {
+	public void drag(int xx, int yy) {
 		xx = sim.snapGrid(xx);
 		yy = sim.snapGrid(yy);
 		if (noDiagonal) {
@@ -320,7 +320,7 @@ public abstract class CircuitElm implements Editable {
 		setPoints();
 	}
 
-	void move(int dx, int dy) {
+	public void move(int dx, int dy) {
 		x += dx;
 		y += dy;
 		x2 += dx;
@@ -331,7 +331,7 @@ public abstract class CircuitElm implements Editable {
 
 	// determine if moving this element by (dx,dy) will put it on top of another
 	// element
-	boolean allowMove(int dx, int dy) {
+	public boolean allowMove(int dx, int dy) {
 		int nx = x + dx;
 		int ny = y + dy;
 		int nx2 = x2 + dx;
@@ -347,7 +347,7 @@ public abstract class CircuitElm implements Editable {
 		return true;
 	}
 
-	void movePoint(int n, int dx, int dy) {
+	public void movePoint(int n, int dx, int dy) {
 		if (n == 0) {
 			x += dx;
 			y += dy;
@@ -358,7 +358,7 @@ public abstract class CircuitElm implements Editable {
 		setPoints();
 	}
 
-	void drawPosts(Graphics g) {
+	public void drawPosts(Graphics g) {
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Point p = getPost(i);
@@ -366,22 +366,22 @@ public abstract class CircuitElm implements Editable {
 		}
 	}
 
-	void stamp() {
+	public void stamp() {
 	}
 
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return 0;
 	}
 
-	int getInternalNodeCount() {
+	public int getInternalNodeCount() {
 		return 0;
 	}
 
-	void setNode(int p, int n) {
+	public void setNode(int p, int n) {
 		nodes[p] = n;
 	}
 
-	void setVoltageSource(@SuppressWarnings("unused") int n, int v) {
+	public void setVoltageSource(@SuppressWarnings("unused") int n, int v) {
 		voltSource = v;
 	}
 
@@ -393,23 +393,23 @@ public abstract class CircuitElm implements Editable {
 		return volts[0] - volts[1];
 	}
 
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return false;
 	}
 
-	int getPostCount() {
+	public int getPostCount() {
 		return 2;
 	}
 
-	int getNode(int n) {
+	public int getNode(int n) {
 		return nodes[n];
 	}
 
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : null;
 	}
 
-	void drawPost(Graphics g, int x0, int y0, int n) {
+	public void drawPost(Graphics g, int x0, int y0, int n) {
 		if (sim.dragElm == null && !needsHighlight() && sim.getCircuitNode(n).linkCount() == 2)
 			return;
 		if (sim.getMouseMode() == CirSim.MODE_DRAG_ROW || sim.getMouseMode() == CirSim.MODE_DRAG_COLUMN)
@@ -417,7 +417,7 @@ public abstract class CircuitElm implements Editable {
 		drawPost(g, x0, y0);
 	}
 
-	void drawPost(Graphics g, int x0, int y0) {
+	public void drawPost(Graphics g, int x0, int y0) {
 		g.setColor(whiteColor);
 		g.fillOval(x0 - 3, y0 - 3, 7, 7);
 	}
@@ -467,7 +467,8 @@ public abstract class CircuitElm implements Editable {
 		adjustBbox(p1.x, p1.y, p2.x, p2.y);
 	}
 
-	boolean isCenteredText() {
+	// TODO: Oddly specific for CircuitElm...
+	public boolean isCenteredText() {
 		return false;
 	}
 
@@ -657,7 +658,7 @@ public abstract class CircuitElm implements Editable {
 	void setupAdjust() {
 	}
 
-	void getInfo(@SuppressWarnings("unused") String arr[]) {
+	public void getInfo(@SuppressWarnings("unused") String arr[]) {
 	}
 
 	int getBasicInfo(String arr[]) {
@@ -672,8 +673,7 @@ public abstract class CircuitElm implements Editable {
 			return;
 		}
 		if (!sim.isShowingVoltage()) {
-			if (!sim.isShowingPower()) // &&
-												// !conductanceCheckItem.getState())
+			if (!sim.isShowingPower()) // && !conductanceCheckItem.getState())
 				g.setColor(whiteColor);
 			return;
 		}
@@ -744,20 +744,20 @@ public abstract class CircuitElm implements Editable {
 	public void setEditValue(int n, EditInfo ei) {
 	}
 
-	boolean getConnection(@SuppressWarnings("unused") int n1,
+	public boolean getConnection(@SuppressWarnings("unused") int n1,
 			@SuppressWarnings("unused") int n2) {
 		return true;
 	}
 
-	boolean hasGroundConnection(@SuppressWarnings("unused") int n1) {
+	public boolean hasGroundConnection(@SuppressWarnings("unused") int n1) {
 		return false;
 	}
 
-	boolean isWire() {
+	public boolean isWire() {
 		return false;
 	}
 
-	boolean canViewInScope() {
+	public boolean canViewInScope() {
 		return getPostCount() <= 2;
 	}
 
@@ -769,16 +769,28 @@ public abstract class CircuitElm implements Editable {
 		return sim.mouseElm == this || selected;
 	}
 
-	boolean isSelected() {
+	public boolean isSelected() {
 		return selected;
 	}
 
-	void setSelected(boolean x) {
+	public void setSelected(boolean x) {
 		selected = x;
 	}
 
-	void selectRect(Rectangle r) {
+	public void selectIfWithin(Rectangle r) {
 		selected = r.intersects(boundingBox);
+	}
+	
+	public Rectangle getBoundingBox() {
+		return boundingBox;
+	}
+	
+	public boolean contains(int px, int py) {
+		return boundingBox.contains(px, py);
+	}
+	
+	public boolean needsShortcut() {
+		return false;
 	}
 	
 	// FIXME: What are these generic math operations doing here? 
@@ -798,18 +810,10 @@ public abstract class CircuitElm implements Editable {
 	public static int max(int a, int b) {
 		return (a > b) ? a : b;
 	}
-
+	
 	public static double distance(Point p1, Point p2) {
 		double x = p1.x - p2.x;
 		double y = p1.y - p2.y;
 		return Math.sqrt(x * x + y * y);
-	}
-
-	public Rectangle getBoundingBox() {
-		return boundingBox;
-	}
-
-	public boolean needsShortcut() {
-		return false;
 	}
 }

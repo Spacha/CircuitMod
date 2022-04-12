@@ -39,12 +39,12 @@ public class DecadeElm extends ChipElm {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return bits + 2;
 	}
 
 	@Override
-	int getVoltageSourceCount() {
+	public int getVoltageSourceCount() {
 		return bits;
 	}
 
@@ -71,7 +71,7 @@ public class DecadeElm extends ChipElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 163;
 	}
 }

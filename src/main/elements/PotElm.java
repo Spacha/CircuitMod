@@ -41,22 +41,22 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 174;
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? point2 : post3;
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + maxResistance + " " + position + " " + sliderText;
 	}
 
@@ -71,7 +71,8 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 		int value = (int) (position * 100);
 		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
 		//CirSim.main.validate();
-		slider.addAdjustmentListener(this);
+		// TODO
+		//slider.addAdjustmentListener(this);
 	}
 
 	@Override
@@ -81,7 +82,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	@Override
-	void delete() {
+	public void delete() {
 		// TODO
 		//CirSim.main.remove(label);
 		//CirSim.main.remove(slider);
@@ -92,7 +93,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	int bodyLen;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int offset = 0;
 		if (abs(dx) > abs(dy)) {
@@ -127,7 +128,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int segments = 16;
 		int i;
 		int ox = 0;
@@ -207,7 +208,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		resistance1 = maxResistance * position;
 		resistance2 = maxResistance * (1 - position);
 		sim.stampResistor(nodes[0], nodes[2], resistance1);
@@ -215,7 +216,7 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "potentiometer";
 		arr[1] = "Vd = " + getVoltageDText(getVoltageDiff());
 		arr[2] = "R1 = " + getUnitText(resistance1, CirSim.OHM_STR);

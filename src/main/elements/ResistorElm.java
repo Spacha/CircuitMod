@@ -8,6 +8,8 @@ import main.EditInfo;
 
 public class ResistorElm extends CircuitElm {
 	double resistance;
+	
+	public double getResistance() { return resistance; }
 
 	public ResistorElm(int xx, int yy) {
 		super(xx, yy);
@@ -20,19 +22,19 @@ public class ResistorElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'r';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + resistance;
 	}
 
 	Point ps3, ps4;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		calcLeads(32);
 		ps3 = new Point();
@@ -40,7 +42,7 @@ public class ResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		int segments = 16;
 		int i;
 		int ox = 0;
@@ -104,12 +106,12 @@ public class ResistorElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampResistor(nodes[0], nodes[1], resistance);
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "resistor";
 		getBasicInfo(arr);
 		arr[3] = "R = " + getUnitText(resistance, CirSim.OHM_STR);

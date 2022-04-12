@@ -54,16 +54,17 @@ public class TextElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + size + " " + text;
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 'x';
 	}
 
 	@Override
+	public
 	boolean canViewInScope() {
 		return false;
 	}
@@ -74,7 +75,7 @@ public class TextElm extends CircuitElm {
 	}
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		g.setColor(needsHighlight() ? selectColor : lightGrayColor);
 		Font f = new Font("SansSerif", 0, size);
 		g.setFont(f);
@@ -150,17 +151,17 @@ public class TextElm extends CircuitElm {
 	}
 
 	@Override
-	boolean isCenteredText() {
+	public boolean isCenteredText() {
 		return (flags & FLAG_CENTER) != 0;
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = text;
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 0;
 	}
 }

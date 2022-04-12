@@ -12,7 +12,7 @@ public class AndGateElm extends GateElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 
 		// 0=topleft, 1-10 = top curve, 11 = right, 12-21=bottom curve,
@@ -48,7 +48,7 @@ public class AndGateElm extends GateElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 150;
 	}
 }

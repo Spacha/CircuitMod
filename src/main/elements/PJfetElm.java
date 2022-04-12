@@ -5,7 +5,7 @@ public class PJfetElm extends JfetElm {
 	}
 
 	@Override
-	Class<JfetElm> getDumpClass() {
+	public Class<JfetElm> getDumpClass() {
 		return JfetElm.class;
 	}
 }

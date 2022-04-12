@@ -61,7 +61,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	abstract void setupPins();
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		drawChip(g);
 	}
 
@@ -110,6 +110,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	boolean lastClock;
 
 	@Override
+	public
 	void drag(int xx, int yy) {
 		yy = sim.snapGrid(yy);
 		if (xx < x) {
@@ -123,7 +124,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		if (x2 - x > sizeX * cspc2 && this == sim.dragElm)
 			setSize(2);
 		// int hs = cspc;
@@ -157,15 +158,15 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return pins[n].post;
 	}
 
 	@Override
-	abstract int getVoltageSourceCount(); // output count
+	public abstract int getVoltageSourceCount(); // output count
 
 	@Override
-	void setVoltageSource(int j, int vs) {
+	public void setVoltageSource(int j, int vs) {
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Pin p = pins[i];
@@ -178,7 +179,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Pin p = pins[i];
@@ -191,7 +192,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		int i;
 		for (i = 0; i != getPostCount(); i++) {
 			Pin p = pins[i];
@@ -219,7 +220,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		// int t = getDumpType();
 		String s = super.dump();
 		if (needsBits())
@@ -233,7 +234,7 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = getChipName();
 		int i, a = 1;
 		for (i = 0; i != getPostCount(); i++) {
@@ -266,12 +267,12 @@ public abstract class ChipCDElm extends CircuitElm {
 	}
 
 	@Override
-	boolean getConnection(int n1, int n2) {
+	public boolean getConnection(int n1, int n2) {
 		return false;
 	}
 
 	@Override
-	boolean hasGroundConnection(int n1) {
+	public boolean hasGroundConnection(int n1) {
 		return pins[n1].output;
 	}
 

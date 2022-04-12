@@ -48,7 +48,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	boolean nonLinear() {
+	public boolean nonLinear() {
 		return true;
 	}
 
@@ -59,12 +59,12 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 't';
 	}
 
 	@Override
-	String dump() {
+	public String dump() {
 		return super.dump() + " " + pnp + " " + (volts[0] - volts[1]) + " "
 				+ (volts[0] - volts[2]) + " " + beta;
 	}
@@ -73,7 +73,7 @@ public class TransistorElm extends CircuitElm {
 	Polygon rectPoly, arrowPoly;
 
 	@Override
-	void draw(Graphics g) {
+	public void draw(Graphics g) {
 		setBbox(point1, point2, 16);
 		setPowerColor(g, true);
 		// draw collector
@@ -117,12 +117,12 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	Point getPost(int n) {
+	public Point getPost(int n) {
 		return (n == 0) ? point1 : (n == 1) ? coll[0] : emit[0];
 	}
 
 	@Override
-	int getPostCount() {
+	public int getPostCount() {
 		return 3;
 	}
 
@@ -134,7 +134,7 @@ public class TransistorElm extends CircuitElm {
 	Point rect[], coll[], emit[], base;
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 		int hs = 16;
 		if ((flags & FLAG_FLIP) != 0)
@@ -197,14 +197,14 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	void stamp() {
+	public void stamp() {
 		sim.stampNonLinear(nodes[0]);
 		sim.stampNonLinear(nodes[1]);
 		sim.stampNonLinear(nodes[2]);
 	}
 
 	@Override
-	void doStep() {
+	public void doStep() {
 		double vbc = volts[0] - volts[1]; // typically negative
 		double vbe = volts[0] - volts[2]; // typically positive
 		if (Math.abs(vbc - lastvbc) > .01 || // .01
@@ -277,7 +277,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
-	void getInfo(String arr[]) {
+	public void getInfo(String arr[]) {
 		arr[0] = "transistor (" + ((pnp == -1) ? "PNP)" : "NPN)") + " beta="
 				+ showFormat.format(beta);
 		double vbc = volts[0] - volts[1];
@@ -353,6 +353,7 @@ public class TransistorElm extends CircuitElm {
 	}
 
 	@Override
+	public
 	boolean canViewInScope() {
 		return true;
 	}

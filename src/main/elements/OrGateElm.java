@@ -17,7 +17,7 @@ public class OrGateElm extends GateElm {
 	}
 
 	@Override
-	void setPoints() {
+	public void setPoints() {
 		super.setPoints();
 
 		// 0-15 = top curve, 16 = right, 17-32=bottom curve,
@@ -57,7 +57,7 @@ public class OrGateElm extends GateElm {
 	}
 
 	@Override
-	int getDumpType() {
+	public int getDumpType() {
 		return 152;
 	}
 }
