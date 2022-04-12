@@ -41,6 +41,7 @@ import java.awt.event.MouseMotionListener;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FilterInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
@@ -2664,7 +2665,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		int stackptr = 0;
 		stack[stackptr++] = menu;
 		try {
-			URL url = new URL(getCodeBase() + "setuplist.txt");
+			URL url = getClass().getResource("resources/setuplist.txt");
 			ByteArrayOutputStream ba = readUrlData(url);
 			
 			byte b[] = ba.toByteArray();
@@ -2707,7 +2708,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				}
 				p += l;
 			}
-		//} catch (Exception e) {
 		} catch (Exception e) {
 			//e.printStackTrace();
 			//stop("Can't read setuplist.txt!", null);
@@ -2730,7 +2730,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		t = 0;
 		// System.out.println(str);
 		try {
-			URL url = new URL(getCodeBase() + "circuits/" + str);
+			URL url = getClass().getResource("resources/circuits/" + str);
 			ByteArrayOutputStream ba = readUrlData(url);
 			readSetup(ba.toByteArray(), ba.size(), false);
 		} catch (Exception e) {
