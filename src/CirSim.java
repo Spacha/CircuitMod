@@ -6,7 +6,6 @@ import java.awt.CheckboxMenuItem;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Event;
 import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -270,6 +269,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		boolean convention = true;
 
 		CircuitElm.initClass(this);
+		addWindowListener(new MainWindowListener(this));
 
 		// FIXME: Is this even necessary?
 		try {/*
@@ -866,14 +866,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	void destroyFrame() {
 		if (app == null)
 			dispose();
-	}
-
-	@Override
-	public boolean handleEvent(Event ev) {
-		if (ev.id == Event.WINDOW_DESTROY) {
-			doExit();
-		}
-		return true;
 	}
 
 	@Override
