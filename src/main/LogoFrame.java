@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.URL;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -45,7 +46,10 @@ class LogoFrameCanvas extends JComponent {
 
 	public LogoFrameCanvas() {
 		try {
-			img = ImageIO.read(getClass().getResource("resources/images/logo.png"));
+			URL url = getClass().getResource("resources/images/logo.png");
+			if (url == null)
+				throw new IOException("Cannot find logo resource");
+			img = ImageIO.read(url);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
