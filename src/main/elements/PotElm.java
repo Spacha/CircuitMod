@@ -61,18 +61,11 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 	}
 
 	void createSlider() {
-		// TODO
-		System.out.println("Implement PotElm.java:createSlider() and PotElm.java:delete().");
-		//CirSim.addComponent(label = new Label(sliderText, Label.CENTER));
-		//CirSim.addComponent(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		
-		// Old way:
-		//CirSim.main.add(label = new Label(sliderText, Label.CENTER));
 		int value = (int) (position * 100);
-		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		//CirSim.main.validate();
-		// TODO
-		//slider.addAdjustmentListener(this);
+		CirSim.addSidebarComponent(label = new Label(sliderText, Label.CENTER));
+		CirSim.addSidebarComponent(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		CirSim.updateSidebar();
+		slider.addAdjustmentListener(this);
 	}
 
 	@Override
@@ -83,9 +76,9 @@ public class PotElm extends CircuitElm implements AdjustmentListener {
 
 	@Override
 	public void delete() {
-		// TODO
-		//CirSim.main.remove(label);
-		//CirSim.main.remove(slider);
+		CirSim.removeSidebarComponent(label);
+		CirSim.removeSidebarComponent(slider);
+		CirSim.updateSidebar();
 	}
 
 	Point post3, corner2, arrowPoint, midpoint, arrow1, arrow2;

@@ -46,12 +46,10 @@ public class ThermistorElm extends CircuitElm {
 	Point ps3, ps4;
 
 	void createSlider() {
-		// TODO
-		System.out.println("Implement ThermistorElm.java:createSlider() and ThermistorElm.java:delete().");
-		//CirSim.main.add(label = new Label("Temperature", Label.CENTER));
 		int value = 50;
-		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		//CirSim.main.validate();
+		CirSim.addSidebarComponent(label = new Label("Temperature", Label.CENTER));
+		CirSim.addSidebarComponent(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		CirSim.updateSidebar();
 	}
 
 	@Override
@@ -64,9 +62,9 @@ public class ThermistorElm extends CircuitElm {
 
 	@Override
 	public void delete() {
-		// TODO
-		//CirSim.main.remove(label);
-		//CirSim.main.remove(slider);
+		CirSim.removeSidebarComponent(label);
+		CirSim.removeSidebarComponent(slider);
+		CirSim.updateSidebar();
 	}
 
 	@Override

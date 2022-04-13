@@ -3,6 +3,7 @@ import java.awt.Label;
 import java.awt.Scrollbar;
 import java.util.StringTokenizer;
 
+import main.CirSim;
 import main.EditInfo;
 
 public class VarRailElm extends RailElm {
@@ -36,13 +37,11 @@ public class VarRailElm extends RailElm {
 	}
 
 	void createSlider() {
-		// TODO
-		System.out.println("Implement VarRailElm.java:createSlider() and VarRailElm.java:delete().");
 		waveform = WF_VAR;
-		//CirSim.main.add(label = new Label(sliderText, Label.CENTER));
 		int value = (int) ((frequency - bias) * 100 / (maxVoltage - bias));
-		//CirSim.main.add(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
-		//CirSim.main.validate();
+		CirSim.addSidebarComponent(label = new Label(sliderText, Label.CENTER));
+		CirSim.addSidebarComponent(slider = new Scrollbar(Scrollbar.HORIZONTAL, value, 1, 0, 101));
+		CirSim.updateSidebar();
 	}
 
 	@Override
@@ -53,9 +52,9 @@ public class VarRailElm extends RailElm {
 
 	@Override
 	public void delete() {
-		// TODO
-		//CirSim.main.remove(label);
-		//CirSim.main.remove(slider);
+		CirSim.removeSidebarComponent(label);
+		CirSim.removeSidebarComponent(slider);
+		CirSim.updateSidebar();
 	}
 
 	@Override

@@ -520,9 +520,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		activeMenu.add(getClassCheckItem("Add Triode", "TriodeElm")); // 173
 		// activeMenu.add(getClassCheckItem("Add Diac", "DiacElm"));
 		// activeMenu.add(getClassCheckItem("Add Triac", "TriacElm"));
-		// activeMenu.add(getClassCheckItem("Add Photoresistor",
-		// "PhotoResistorElm")); // Alpha
-		// activeMenu.add(getClassCheckItem("Add Thermistor", "ThermistorElm"));
+		// activeMenu.add(getClassCheckItem("Add Photoresistor", "PhotoResistorElm")); // Alpha
+		activeMenu.add(getClassCheckItem("Add Thermistor", "ThermistorElm"));
 		activeMenu.add(getClassCheckItem("Add CCII+", "CC2Elm")); // 179
 		activeMenu.add(getClassCheckItem("Add CCII-", "CC2NegElm"));
 
@@ -594,7 +593,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		/////////////////////////////////////////////////////////////////////////////////////////
 
 		Font f = new Font("SansSerif", Font.BOLD, 12);
-
 		titleLabel = new Label("Untitled");
 		titleLabel.setFont(f);
 
