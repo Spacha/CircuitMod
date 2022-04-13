@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="79df86f2-b747-4775-8cbc-60cb537ad6dc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CircuitMod.iml" beforeDir="false" afterPath="$PROJECT_DIR$/CircuitMod.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/LogoFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/LogoFrame.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

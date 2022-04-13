@@ -2602,11 +2602,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	String dumpCircuit() {
 		int i;
-		int f = (dotsCheckItem.getState()) ? 1 : 0;
-		f |= (smallGridCheckItem.getState()) ? 2 : 0;
-		f |= (voltsCheckItem.getState()) ? 0 : 4;
-		f |= (powerCheckItem.getState()) ? 8 : 0;
-		f |= (showValuesCheckItem.getState()) ? 0 : 16;
+		int f  = (dotsCheckItem.getState()) 		? (1 << 0) : 0;
+		    f |= (smallGridCheckItem.getState()) 	? (1 << 1) : 0;
+		    f |= (!voltsCheckItem.getState()) 		? (1 << 2) : 0;
+		    f |= (powerCheckItem.getState()) 		? (1 << 3) : 0;
+		    f |= (!showValuesCheckItem.getState()) 	? (1 << 4) : 0;
 		// 32 = linear scale in afilter
 		String dump = "$ " + f + " " + timeStep + " " + getIterCount() + " "
 				+ currentBar.getValue() + " " + CircuitElm.getVoltageRange() + " "
@@ -2620,6 +2620,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 		if (hintType != -1)
 			dump += "h " + hintType + " " + hintItem1 + " " + hintItem2 + "\n";
+
 		return dump;
 	}
 
@@ -3279,8 +3280,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			return;
 
 		pushUndo();
+		System.out.println("drag creater");
 		dragElm = constructElement(addingClass, x0, y0);
 
+		// create text instantly
 		if (dragElm instanceof TextElm) {
 			elmList.addElement(dragElm);
 			dragElm = null;
@@ -3367,14 +3370,16 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		int ex = e.getModifiersEx();
-		if ((ex & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK
-				| InputEvent.META_DOWN_MASK)) == 0 && e.isPopupTrigger()) {
+		if ((ex & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK)) == 0
+				&& e.isPopupTrigger()) {
 			doPopupMenu(e);
 			return;
 		}
+
 		tempMouseMode = mouseMode;
 		selectedArea = null;
 		dragging = false;
+
 		boolean circuitChanged = false;
 		if (heldSwitchElm != null) {
 			heldSwitchElm.mouseUp();
@@ -3391,10 +3396,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			}
 			dragElm = null;
 		}
-		if (circuitChanged)
-			needAnalyze();
 		if (dragElm != null)
 			dragElm.delete();
+
+		if (circuitChanged) {
+			needAnalyze();
+			//pushUndo();
+		}
+
 		dragElm = null;
 		cv.repaint();
 	}
@@ -3455,7 +3464,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				modeInfoLabel.setText("Select");
 			} else if (s.length() > 0) {
 				try {
-					addingClass = Class.forName(s);
+					addingClass = Class.forName("main.elements." + s);
 				} catch (Exception ee) {
 					ee.printStackTrace();
 				}
@@ -3709,7 +3718,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 									if (keyChar == 'v')
 										element = "DCVoltageElm";
 									try {
-										addingClass = Class.forName(element);
+										addingClass = Class.forName("main.elements." + element);
 									} catch (ClassNotFoundException e1) {
 										e1.printStackTrace();
 									}
