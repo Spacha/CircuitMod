@@ -4,6 +4,7 @@ import java.awt.Button;
 import java.awt.Checkbox;
 import java.awt.CheckboxMenuItem;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -222,7 +223,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	CircuitCanvas cv;
-	SidebarContainer sidebar;
+	static SidebarContainer sidebar;
 	CircuitMod app;
 
 	SaveOpenDialog saveOpenDialog;
@@ -592,6 +593,21 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		/////////////////////////////////////////////////////////////////////////////////////////
 
+		Font f = new Font("SansSerif", Font.BOLD, 12);
+
+		titleLabel = new Label("Untitled");
+		titleLabel.setFont(f);
+
+		modeInfoLabel = new Label("Select");
+		modeInfoLabel.setFont(f);
+
+		sidebar.add(new Label("Current Circuit:"));
+		sidebar.add(titleLabel);
+		sidebar.add(new Label("Current Mode:"));
+		sidebar.add(modeInfoLabel);
+
+		sidebar.addSeparator();
+
 		//main.setBounds(circuitMatrixFullSize, dragY, infoWidth, HINT_3DB_C);
 		sidebar.add(resetButton = new Button("Reset"));
 		resetButton.addActionListener(this);
@@ -620,25 +636,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		powerBar.setEnabled(false);
 		powerLabel.setEnabled(false);
 
-		// main.add(new Label("CircuitMod"));
-
-		Font f = new Font("SansSerif", Font.BOLD, 12);
-
-		titleLabel = new Label("Untitled");
-		titleLabel.setFont(f);
-
-		modeInfoLabel = new Label("Select");
-		modeInfoLabel.setFont(f);
-
 		sidebar.addSeparator();
 		sidebar.addSpacer();
-		sidebar.addSeparator();
-
-		sidebar.add(new Label(""));
-		sidebar.add(new Label("Current Circuit"));
-		sidebar.add(titleLabel);
-		sidebar.add(new Label("Current Mode"));
-		sidebar.add(modeInfoLabel);
 
 		///////////////////////////////////////////////////////////////////////////////////////
 
@@ -2899,7 +2898,19 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 		setGrid();
 	}
+
+	public static void addSidebarComponent(Component c) {
+		sidebar.add(c);
+	}
+
+	public static void removeSidebarComponent(Component c) {
+		sidebar.remove(c);
+	}
 	
+	public static void updateSidebar() {
+		sidebar.validate();
+	}
+
 	///////////////////////////////////////////////////////
 	// STATUS QUERY
 	/////////////////////////////////////////////////////
@@ -3280,7 +3291,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			return;
 
 		pushUndo();
-		System.out.println("drag creater");
 		dragElm = constructElement(addingClass, x0, y0);
 
 		// create text instantly
