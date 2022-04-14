@@ -19,7 +19,7 @@ import main.Editable;
 public abstract class CircuitElm implements Editable {
 	static double voltageRange = 5;
 	static int colorScaleCount = 32;
-	static Color colorScale[];
+	static Color[] colorScale;
 	public static double currentMult, powerMult;			// TODO: Public or getters?
 	static Point ps1, ps2;
 	protected static CirSim sim;
@@ -29,11 +29,12 @@ public abstract class CircuitElm implements Editable {
 	public static NumberFormat showFormat, shortFormat, noCommaFormat;
 	static final double pi = 3.14159265358979323846;
 
-	public int x, y, x2, y2, flags, nodes[], voltSource;	// TODO: Public or getters?
+	public int x, y, x2, y2, flags, voltSource;	// TODO: Public or getters?
+	public int[] nodes;
 	int dx, dy, dsign;
 	double dn, dpx1, dpy1;
 	Point point1, point2, lead1, lead2;
-	double volts[];
+	double[] volts;
 	double current, curcount;
 	Rectangle boundingBox;
 	boolean noDiagonal;
@@ -482,7 +483,11 @@ public abstract class CircuitElm implements Editable {
 				y + fm.getAscent() / 2 + fm.getDescent());
 	}
 
-	void drawValues(Graphics g, String s, double hs) {
+	void drawValues(Graphics g, String s, double hs, int yOffset) {
+		// yOffset:
+		//  0 => (no effect)
+		// -1 => move text 0.5*fontHeight up
+		// +1 => move text 0.5*fontHeight down
 		if (s == null)
 			return;
 		g.setFont(unitsFont);
@@ -501,12 +506,15 @@ public abstract class CircuitElm implements Editable {
 		int dpx = (int) (dpx1 * hs);
 		int dpy = (int) (dpy1 * hs);
 		if (dpx == 0) {
-			g.drawString(s, xc - w / 2, yc - abs(dpy) - 2);
+			// horizontal element
+			//System.out.println("Horizontal: " + s);
+			g.drawString(s, xc - w / 2, yc - abs(dpy) - 2 + yOffset * ya);
 		} else {
+			//System.out.println("Non-horizontal: " + s);
 			int xx = xc + abs(dpx) + 2;
 			if (this instanceof VoltageElm || (x < x2 && y > y2))
 				xx = xc - (w + abs(dpx) + 2);
-			g.drawString(s, xx, yc + dpy + ya);
+			g.drawString(s, xx, yc + dpy + ya + yOffset * ya);
 		}
 	}
 

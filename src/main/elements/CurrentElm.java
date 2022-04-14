@@ -69,7 +69,7 @@ public class CurrentElm extends CircuitElm {
 		if (sim.isShowingValues()) {
 			String s = getShortUnitText(currentValue, "A");
 			if (dx == 0 || dy == 0)
-				drawValues(g, s, cr);
+				drawValues(g, s, cr, 0);
 		}
 		drawPosts(g);
 	}

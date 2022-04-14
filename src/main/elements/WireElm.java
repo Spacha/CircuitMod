@@ -25,20 +25,31 @@ public class WireElm extends CircuitElm {
 		drawThickLine(g, point1, point2);
 		doDots(g);
 		setBbox(point1, point2, 3);
-		// TODO: draw voltage & current on separate locations
-		if (mustShowCurrent()) {
-			String s = getShortUnitText(Math.abs(getCurrent()), "A");
-			drawValues(g, s, 4);
-		} else if (mustShowVoltage()) {
-			String s = getShortUnitText(volts[0], "V");
-			drawValues(g, s, 4);
-		}
+
+		if (mustShowCurrent())
+			drawCurrentValue(g, getShortUnitText(Math.abs(getCurrent()), "A"));
+		if (mustShowVoltage())
+			drawVoltageValue(g, getShortUnitText(volts[0], "V"));
+
 		drawPosts(g);
+	}
+
+	void drawVoltageValue(Graphics g, String s) {
+		drawValues(g, s, 4, mustShowBoth() ? 1 : 0);
+	}
+
+	void drawCurrentValue(Graphics g, String s) {
+		drawValues(g, s, 4, mustShowBoth() ? -1 : 0);
 	}
 
 	@Override
 	public void stamp() {
 		sim.stampVoltageSource(nodes[0], nodes[1], voltSource, 0);
+	}
+
+	boolean mustShowBoth() {
+		int both = (FLAG_SHOWVOLTAGE | FLAG_SHOWCURRENT);
+		return (flags & both) == both;
 	}
 
 	boolean mustShowCurrent() {
@@ -100,13 +111,13 @@ public class WireElm extends CircuitElm {
 	public void setEditValue(int n, EditInfo ei) {
 		if (n == 0) {
 			if (ei.isChecked())
-				flags = FLAG_SHOWCURRENT;
+				flags |= FLAG_SHOWCURRENT;
 			else
 				flags &= ~FLAG_SHOWCURRENT;
 		}
 		if (n == 1) {
 			if (ei.isChecked())
-				flags = FLAG_SHOWVOLTAGE;
+				flags |= FLAG_SHOWVOLTAGE;
 			else
 				flags &= ~FLAG_SHOWVOLTAGE;
 		}

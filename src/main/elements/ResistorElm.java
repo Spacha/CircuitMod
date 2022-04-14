@@ -93,7 +93,7 @@ public class ResistorElm extends CircuitElm {
 		}
 		if (sim.isShowingValues()) {
 			String s = getShortUnitText(resistance, "");
-			drawValues(g, s, hs);
+			drawValues(g, s, hs, 0);
 		}
 		doDots(g);
 		drawPosts(g);

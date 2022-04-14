@@ -67,7 +67,7 @@ public class ProbeElm extends CircuitElm {
 			drawCenteredText(g, "Y", center.x, center.y, true);
 		if (mustShowVoltage()) {
 			String s = getShortUnitText(volts[0], "V");
-			drawValues(g, s, 4);
+			drawValues(g, s, 4, 0);
 		}
 		drawPosts(g);
 	}

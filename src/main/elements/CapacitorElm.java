@@ -96,7 +96,7 @@ public class CapacitorElm extends CircuitElm {
 		drawPosts(g);
 		if (sim.isShowingValues()) {
 			String s = getShortUnitText(capacitance, "F");
-			drawValues(g, s, hs);
+			drawValues(g, s, hs, 0);
 		}
 	}
 

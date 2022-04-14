@@ -216,7 +216,7 @@ public class VoltageElm extends CircuitElm {
 		if (sim.isShowingValues()) {
 			String s = getShortUnitText(frequency, "Hz");
 			if (dx == 0 || dy == 0)
-				drawValues(g, s, circleSize);
+				drawValues(g, s, circleSize, 0);
 		}
 	}
 

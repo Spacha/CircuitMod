@@ -3,7 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="79df86f2-b747-4775-8cbc-60cb537ad6dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/CirSim.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/CirSim.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/CapacitorElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/CapacitorElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/CircuitElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/CircuitElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/CurrentElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/CurrentElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/InductorElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/InductorElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/ProbeElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/ProbeElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/ResistorElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/ResistorElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/SweepElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/SweepElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/VoltageElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/VoltageElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/elements/WireElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/WireElm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
