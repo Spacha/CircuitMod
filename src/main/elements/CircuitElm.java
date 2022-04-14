@@ -242,7 +242,7 @@ public abstract class CircuitElm implements Editable {
 	}
 
 	Point[] newPointArray(int n) {
-		Point a[] = new Point[n];
+		Point[] a = new Point[n];
 		while (n > 0)
 			a[--n] = new Point();
 		return a;

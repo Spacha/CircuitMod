@@ -38,6 +38,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
@@ -86,6 +87,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	Dimension winSize;
 	Image dbImage;
+	BufferedImage gridImage;
+	boolean gridNeedsRepaint;
 
 	Random random;
 	//public static final int sourceRadius = 7;
@@ -285,7 +288,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		String os = System.getProperty("os.name");
 		isMac = (os.indexOf("Mac ") == 0);
 		ctrlMetaKey = (isMac) ? "⌘" : "Ctrl";
-		useBufferedImage = true;
 
 		dumpTypes = new Class[300];
 		// these characters are reserved
@@ -391,6 +393,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		m.add(euroResistorCheckItem = getCheckItem("European Resistors"));
 		m.add(printableCheckItem = getCheckItem("White Background"));
 		m.add(conventionCheckItem = getCheckItem("Conventional Current Motion"));
+		conventionCheckItem.setState(true);
 		m.add(optionsItem = getMenuItem("Other Options..."));
 		mb.add(m);
 
@@ -581,6 +584,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		///////////////////////////////////////////////////
 
 		setGrid();
+		gridNeedsRepaint = true;
+
 		elmList = new Vector<>();
 		setupList = new Vector<>();
 		undoStack = new Vector<>();
@@ -789,6 +794,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// after moving elements, need this to avoid singular matrix probs
 		needAnalyze();
 		circuitBottom = 0;
+		gridNeedsRepaint = true;
 	}
 
 	void destroyFrame() {
@@ -810,10 +816,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		CircuitElm realMouseElm;
 		if (winSize == null || winSize.width == 0)
 			return;
+
 		if (analyzeFlag) {
 			analyzeCircuit();
 			analyzeFlag = false;
 		}
+
 		if (editDialog != null && editDialog.elm instanceof CircuitElm)
 			mouseElm = (CircuitElm) (editDialog.elm);
 		realMouseElm = mouseElm;
@@ -821,10 +829,15 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			mouseElm = stopElm;
 		setupScopes();
 
+		///////////////////////////////////////////////////
+		// Draw
+		///////////////////////////////////////////////////
+
 		Graphics g = dbImage.getGraphics();
-		Color gridColor = new Color(10, 36, 36);
-		CircuitElm.selectColor = Color.cyan;
-		if (printableCheckItem.getState()) {
+		Color gridColor;
+		CircuitElm.selectColor = isUsingWhiteBackground() ? Color.magenta : Color.cyan;
+
+		if (isUsingWhiteBackground()) {
 			CircuitElm.whiteColor = Color.black;
 			CircuitElm.lightGrayColor = Color.black;
 			gridColor = Color.lightGray;
@@ -832,10 +845,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} else {
 			CircuitElm.whiteColor = Color.white;
 			CircuitElm.lightGrayColor = Color.lightGray;
+			gridColor = new Color(10, 36, 36);
 			g.setColor(Color.black);
 		}
-		g.fillRect(0, 0, winSize.width, winSize.height);
-		if (!stoppedCheckItem.getState()) {
+
+		// TODO: Should this be done in th beginning, and not ask for repaint since we are painting anyway?
+		if (!isStopped()) {
 			try {
 				runCircuit();
 			} catch (Exception e) {
@@ -844,15 +859,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				cv.repaint();
 				return;
 			}
-		}
-		if (!stoppedCheckItem.getState()) {
+
 			long sysTime = System.currentTimeMillis();
 			if (lastTime != 0) {
 				int inc = (int) (sysTime - lastTime);
 				double c = currentBar.getValue();
-				c = java.lang.Math.exp(c / 3.5 - 14.2);
+				c = Math.exp(c / 3.5 - 14.2);
 				CircuitElm.currentMult = 1.7 * inc * c;
-				if (!conventionCheckItem.getState())
+				if (!isUsingConventionalCurrent())
 					CircuitElm.currentMult = -CircuitElm.currentMult;
 			}
 			if (sysTime - secTime >= 1000) {
@@ -866,38 +880,30 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} else
 			lastTime = 0;
 		CircuitElm.powerMult = Math.exp(powerBar.getValue() / 4.762 - 7);
-		float[] dashes = {1.0f};
-		BasicStroke dashedStroke = new BasicStroke(0.0f, BasicStroke.CAP_BUTT,
-				BasicStroke.JOIN_MITER, 1.0f, dashes, 0.0f);
-		Graphics2D g2d = (Graphics2D) g.create();
-		g2d.setColor(gridColor);
-		BasicStroke oldStroke = (BasicStroke) g2d.getStroke();
-		for (int gx = 0; gx <= circuitArea.width; gx += gridSize) {
-			if (gx % 16 == 0)
-				g2d.setStroke(oldStroke);
-			else
-				g2d.setStroke(dashedStroke);
-			g2d.drawLine(gx, 0, gx, circuitArea.height - 5);
+
+		// Background: Flush the image and draw the grid
+		if (isShowingGrid()) {
+			// only flush the scope and hint area, since the circuit area is flushed by the grid
+			g.fillRect(0, circuitArea.height, winSize.width, (winSize.height - circuitArea.height));
+			drawGrid(g, gridColor);
+		} else {
+			g.fillRect(0, 0, winSize.width, winSize.height);
 		}
-		for (int gy = 0; gy <= circuitArea.height; gy += gridSize) {
-			if (gy % 16 == 0)
-				g2d.setStroke(oldStroke);
-			else
-				g2d.setStroke(dashedStroke);
-			g2d.drawLine(0, gy, circuitArea.width, gy);
-		}
-		g2d.dispose();
+
+		// Draw the elements
 		int i;
 		Font oldfont = g.getFont();
 		for (i = 0; i != elmList.size(); i++) {
-			if (powerCheckItem.getState())
+			if (isShowingPower())
 				g.setColor(Color.gray);
 			/*
-			 * else if (conductanceCheckItem.getState())
+			 * else if (isShowingConductance())
 			 * g.setColor(Color.white);
 			 */
 			getElm(i).draw(g);
 		}
+
+		// Draw dragged elements' posts
 		if (tempMouseMode == MODE_DRAG_ROW || tempMouseMode == MODE_DRAG_COLUMN
 				|| tempMouseMode == MODE_DRAG_POST
 				|| tempMouseMode == MODE_DRAG_SELECTED)
@@ -908,6 +914,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					ce.drawPost(g, ce.x2, ce.y2);
 				}
 			}
+
 		int badnodes = 0;
 		// find bad connections, nodes not connected to other elements which
 		// intersect other elements' bounding boxes
@@ -930,15 +937,19 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		 * if (mouseElm != null) { g.setFont(oldfont); g.drawString("+",
 		 * mouseElm.x+10, mouseElm.y); }
 		 */
-		if (dragElm != null
-				&& (dragElm.x != dragElm.x2 || dragElm.y != dragElm.y2))
+		// draw dragged element
+		if (dragElm != null && (dragElm.x != dragElm.x2 || dragElm.y != dragElm.y2))
 			dragElm.draw(g);
+
+		// Draw scopes (unless stopped)
 		g.setFont(oldfont);
 		int ct = scopeCount;
 		if (stopMessage != null)
 			ct = 0;
 		for (i = 0; i != ct; i++)
 			scopes[i].draw(g);
+
+		// Draw stop message or scopes
 		g.setColor(CircuitElm.whiteColor);
 		if (stopMessage != null) {
 			g.drawString(stopMessage, 10, circuitArea.height);
@@ -950,8 +961,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				if (mousePost == -1)
 					mouseElm.getInfo(info);
 				else
-					info[0] = "V = " + CircuitElm.getUnitText(
-							mouseElm.getPostVoltage(mousePost), "V");
+					info[0] = "V = " + CircuitElm.getUnitText(mouseElm.getPostVoltage(mousePost), "V");
 				/*
 				 * //shownodes for (i = 0; i != mouseElm.getPostCount(); i++)
 				 * info[0] += " " + mouseElm.nodes[i]; if
@@ -989,11 +999,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			for (i = 0; info[i] != null; i++)
 				g.drawString(info[i], x, ybase + 15 * (i + 1));
 		}
+
+		// draw the selection rectangle
 		if (selectedArea != null) {
 			g.setColor(CircuitElm.selectColor);
-			g.drawRect(selectedArea.x, selectedArea.y, selectedArea.width,
-					selectedArea.height);
+			g.drawRect(selectedArea.x, selectedArea.y, selectedArea.width, selectedArea.height);
 		}
+
 		mouseElm = realMouseElm;
 		frames++;
 		/*
@@ -1017,6 +1029,43 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			cv.repaint(0);
 		}
 		lastFrameTime = lastTime;
+	}
+
+	void drawGrid(Graphics g, Color gridColor) {
+		// if grid settings have changed, repaint the whole grid to gridImage.
+		if (gridNeedsRepaint) {
+			gridNeedsRepaint = false;
+
+			float[] dashes = {1.0f};
+			BasicStroke dashedStroke = new BasicStroke(0.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+					1.0f, dashes, 0.0f);
+
+			//Graphics2D g2d = (Graphics2D) g.create();
+			gridImage = new BufferedImage(circuitArea.width, circuitArea.height, BufferedImage.TYPE_INT_RGB);
+			Graphics2D g2d = (Graphics2D) gridImage.getGraphics();
+			g2d.setColor(g.getColor());
+			g2d.fillRect(0, 0, circuitArea.width, circuitArea.height);
+			g2d.setColor(gridColor);
+			BasicStroke oldStroke = (BasicStroke) g2d.getStroke();
+
+			for (int gx = 0; gx <= circuitArea.width; gx += gridSize) {
+				if (gx % 16 == 0)
+					g2d.setStroke(oldStroke);
+				else
+					g2d.setStroke(dashedStroke);
+				g2d.drawLine(gx, 0, gx, circuitArea.height - 5);
+			}
+			for (int gy = 0; gy <= circuitArea.height; gy += gridSize) {
+				if (gy % 16 == 0)
+					g2d.setStroke(oldStroke);
+				else
+					g2d.setStroke(dashedStroke);
+				g2d.drawLine(0, gy, circuitArea.width, gy);
+			}
+			g2d.dispose();
+		}
+
+		g.drawImage(gridImage, 0, 0, this);
 	}
 
 	void setupScopes() {
@@ -2769,6 +2818,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public boolean isShowingCurrent() { 			return dotsCheckItem.getState(); }
 	public boolean isShowingVoltage() { 			return voltsCheckItem.getState(); }
 	public boolean isShowingPower() { 				return powerCheckItem.getState(); }
+	public boolean isShowingGrid() { 				return showGridCheckItem.getState(); }
 	public boolean isSmallGrid() { 					return smallGridCheckItem.getState(); }
 	public boolean isShowingValues() { 				return showValuesCheckItem.getState(); }
 	//public boolean isShowingConductance() { 		return showConductanceCheckItem.getState();
@@ -3284,11 +3334,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		Object mi = evt.getItemSelectable();
 		if (mi == stoppedCheckItem)
 			return;
-		if (mi == smallGridCheckItem)
+		if (mi == smallGridCheckItem || mi == printableCheckItem) {
+			gridNeedsRepaint = true;
 			setGrid();
-		if (mi == powerCheckItem) {
-			voltsCheckItem.setState(!isShowingPower());
 		}
+		if (mi == powerCheckItem)
+			voltsCheckItem.setState(!isShowingPower());
 		if (mi == voltsCheckItem && isShowingVoltage())
 			powerCheckItem.setState(false);
 		enableItems();

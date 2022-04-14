@@ -22,7 +22,7 @@ class CircuitCanvas extends Canvas {
 
 	@Override
 	public void update(Graphics g) {
-		pg.updateCircuit(g);
+		paint(g);
 	}
 
 	@Override
