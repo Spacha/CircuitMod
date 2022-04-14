@@ -3,9 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="79df86f2-b747-4775-8cbc-60cb537ad6dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/CirSim.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/CirSim.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/CircuitCanvas.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/CircuitCanvas.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/elements/CircuitElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/CircuitElm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CHANGES" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/release/howto.txt" beforeDir="false" afterPath="$PROJECT_DIR$/release/howto.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CHANGES" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -2,7 +2,7 @@ https://stackoverflow.com/questions/4330936/how-can-i-convert-a-jar-to-an-exe
 https://sourceforge.net/projects/launch4j/
 
 Windows:
-    * Use Log4j, using "release.xml" as a base.
+    * Use Launch4j, using "release.xml" as a base.
 
 Linux:
     * Running jar: java -jar circuitmod.jar
