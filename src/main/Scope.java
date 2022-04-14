@@ -27,8 +27,10 @@ public class Scope {
 	public static final int VAL_VBC = 5;
 	public static final int VAL_VCE = 6;
 	public static final int VAL_R = 2;
-	double minV[], maxV[], minMaxV;
-	double minI[], maxI[], minMaxI;
+	double[] minV, maxV;
+	double minMaxV;
+	double[] minI, maxI;
+	double minMaxI;
 	int scopePointCount = 128;
 	int ptr, ctr, speed, position;
 	int value, ivalue;
@@ -38,9 +40,9 @@ public class Scope {
 	CircuitElm elm, xElm, yElm;
 	MemoryImageSource imageSource;
 	Image image;
-	int pixels[];
+	int[] pixels;
 	int draw_ox, draw_oy;
-	float dpixels[];
+	float[] dpixels;
 	CirSim sim;
 
 	Scope(CirSim s) {
@@ -608,30 +610,30 @@ public class Scope {
 		int h = rect.height;
 		if (w == 0 || h == 0)
 			return;
-		if (sim.useBufferedImage) {
-			try {
-				/*
-				 * simulate the following code using reflection: dbimage = new
-				 * BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_RGB);
-				 * DataBuffer db = (DataBuffer)(((BufferedImage)dbimage).
-				 * getRaster().getDataBuffer()); DataBufferInt dbi =
-				 * (DataBufferInt) db; pixels = dbi.getData();
-				 */
-				Class<?> biclass = Class.forName("java.awt.image.BufferedImage");
-				Class<?> dbiclass = Class.forName("java.awt.image.DataBufferInt");
-				Class<?> rasclass = Class.forName("java.awt.image.Raster");
-				Constructor<?> cstr = biclass.getConstructor(new Class[] { int.class, int.class, int.class });
-				image = (Image) cstr.newInstance(
-						new Object[] { Integer.valueOf(w), Integer.valueOf(h), Integer.valueOf(BufferedImage.TYPE_INT_RGB) });
-				Method m = biclass.getMethod("getRaster");
-				Object ras = m.invoke(image);
-				Object db = rasclass.getMethod("getDataBuffer").invoke(ras);
-				pixels = (int[]) dbiclass.getMethod("getData").invoke(db);
-			} catch (Exception ee) {
-				ee.printStackTrace();
-				// System.out.println("BufferedImage failed");
-			}
+
+		try {
+			/*
+			 * simulate the following code using reflection: dbimage = new
+			 * BufferedImage(d.width, d.height, BufferedImage.TYPE_INT_RGB);
+			 * DataBuffer db = (DataBuffer)(((BufferedImage)dbimage).
+			 * getRaster().getDataBuffer()); DataBufferInt dbi =
+			 * (DataBufferInt) db; pixels = dbi.getData();
+			 */
+			Class<?> biclass = Class.forName("java.awt.image.BufferedImage");
+			Class<?> dbiclass = Class.forName("java.awt.image.DataBufferInt");
+			Class<?> rasclass = Class.forName("java.awt.image.Raster");
+			Constructor<?> cstr = biclass.getConstructor(new Class[] { int.class, int.class, int.class });
+			image = (Image) cstr.newInstance(
+					new Object[] { Integer.valueOf(w), Integer.valueOf(h), Integer.valueOf(BufferedImage.TYPE_INT_RGB) });
+			Method m = biclass.getMethod("getRaster");
+			Object ras = m.invoke(image);
+			Object db = rasclass.getMethod("getDataBuffer").invoke(ras);
+			pixels = (int[]) dbiclass.getMethod("getData").invoke(db);
+		} catch (Exception ee) {
+			ee.printStackTrace();
+			// System.out.println("BufferedImage failed");
 		}
+
 		if (pixels == null) {
 			pixels = new int[w * h];
 			int i;

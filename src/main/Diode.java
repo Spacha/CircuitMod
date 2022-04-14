@@ -1,6 +1,6 @@
 package main;
 public class Diode {
-	int nodes[];
+	int[] nodes;
 	CirSim sim;
 
 	public Diode(CirSim s) {

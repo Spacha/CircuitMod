@@ -38,10 +38,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FilterInputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 //import java.net.URLDecoder;
@@ -85,18 +82,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	final int SETUP_READ_DUMP_WARNING = 1;
 	final int SETUP_READ_ERROR = 2;
 
-	Thread engine = null;
+	//Thread engine = null;
 
 	Dimension winSize;
-	Image dbimage;
+	Image dbImage;
 
 	Random random;
-	public static final int sourceRadius = 7;
-	public static final double freqMult = 3.14159265 * 2 * 4;
-
-	public String getAppInfo() {
-		return "CircuitMod, Original by Paul Falstad";
-	}
+	//public static final int sourceRadius = 7;
+	//public static final double freqMult = 3.14159265 * 2 * 4;
 
 	static Container main;
 	Label titleLabel;
@@ -114,7 +107,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	CheckboxMenuItem showGridCheckItem;
 	CheckboxMenuItem smallGridCheckItem;
 	CheckboxMenuItem showValuesCheckItem;
-	CheckboxMenuItem conductanceCheckItem;
+	//CheckboxMenuItem conductanceCheckItem;
 	CheckboxMenuItem euroResistorCheckItem;
 	CheckboxMenuItem printableCheckItem;
 	CheckboxMenuItem conventionCheckItem;
@@ -151,10 +144,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	CheckboxMenuItem scopeResistMenuItem;
 	CheckboxMenuItem scopeVceIcMenuItem;
 	MenuItem scopeSelectYMenuItem;
+
 	Class<?> addingClass;
 	int mouseMode = MODE_SELECT;
 	int tempMouseMode = MODE_SELECT;
 	String mouseModeStr = "Select";
+
 	public static final double pi = 3.14159265358979323846;
 	public static final int MODE_ADD_ELM = 0;
 	public static final int MODE_DRAG_ALL = 1;
@@ -163,9 +158,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public static final int MODE_DRAG_SELECTED = 4;
 	public static final int MODE_DRAG_POST = 5;
 	public static final int MODE_SELECT = 6;
+
 	static final int infoWidth = 120;
 	int dragX, dragY, initDragX, initDragY;
-	int selectedSource;
+	//int selectedSource;
 	Rectangle selectedArea;
 	int gridSize, gridMask, gridRound;
 	boolean dragging;
@@ -193,22 +189,26 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	CircuitElm plotXElm, plotYElm;
 	int draggingPost;
 	SwitchElm heldSwitchElm;
-	double circuitMatrix[][], circuitRightSide[], origRightSide[],
-			origMatrix[][];
-	RowInfo circuitRowInfo[];
-	int circuitPermute[];
+	double[][] circuitMatrix;
+	double[] circuitRightSide;
+	double[] origRightSide;
+	double[][] origMatrix;
+	RowInfo[] circuitRowInfo;
+	int[] circuitPermute;
 	boolean circuitNonLinear;
 	int voltageSourceCount;
 	int circuitMatrixSize, circuitMatrixFullSize;
 	boolean circuitNeedsMap;
 	int scopeCount;
-	Scope scopes[];
-	int scopeColCount[];
+	Scope[] scopes;
+	int[] scopeColCount;
 	static EditDialog editDialog;
 	static ImportDialog impDialog;
-	Class<?> dumpTypes[];
+	Class<?>[] dumpTypes;
+
 	public static final String MU_STR = "μ";
 	public static final String OHM_STR = "Ω";
+
 	String clipboard;
 	Rectangle circuitArea;
 	int circuitBottom;
@@ -234,21 +234,22 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	CirSim(CircuitMod a) {
 		super();
+		app = a;
 
 		// Set program name at startup
 		setTitleNameStart();
 
 		// Set icons to frame
-		ImageIcon img16 = new ImageIcon(
-				getClass().getResource("resources/images/icon16.png"));
-		ImageIcon img32 = new ImageIcon(
-				getClass().getResource("resources/images/icon32.png"));
-		iconList = new ArrayList<Image>();
-		iconList.add(img16.getImage());
-		iconList.add(img32.getImage());
-		setIconImages(iconList);
-
-		app = a;
+		URL icon16 = getClass().getResource("resources/images/icon16.png");
+		URL icon32 = getClass().getResource("resources/images/icon32.png");
+		if (icon16 != null && icon32 != null) {
+			ImageIcon img16 = new ImageIcon(icon16);
+			ImageIcon img32 = new ImageIcon(icon32);
+			iconList = new ArrayList<>();
+			iconList.add(img16.getImage());
+			iconList.add(img32.getImage());
+			setIconImages(iconList);
+		}
 
 		// Set native look and feel
 		try {
@@ -256,8 +257,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} catch (UnsupportedLookAndFeelException e) {
 			// Set Metal look and feel as alternative
 			try {
-				for (LookAndFeelInfo info : UIManager
-						.getInstalledLookAndFeels()) {
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 					if ("Metal".equals(info.getName())) {
 						UIManager.setLookAndFeel(info.getClassName());
 						break;
@@ -266,8 +266,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			} catch (Exception e2) {
 				e.printStackTrace();
 			}
-		} catch (ClassNotFoundException | InstantiationException
-				| IllegalAccessException e) {
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
 			e.printStackTrace();
 		}
 	}
@@ -278,65 +277,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	String baseURL = "http://circuitmod.sourceforge.net/";
 
 	public boolean init(String initCircuit) {
-		String euroResistor = null;
-		boolean printable = false;
-		boolean convention = true;
-
 		CircuitElm.initClass(this);
 		addWindowListener(new MainWindowListener(this));
-
-		// FIXME: Is this even necessary?
-		try {/*
-			baseURL = applet.getDocumentBase().getFile();
-			// look for circuit embedded in URL
-			String doc = applet.getDocumentBase().toString();
-			int in = doc.indexOf('#');
-			if (in > 0) {
-				String x = null;
-				try {
-					x = doc.substring(in + 1);
-					x = URLDecoder.decode(x, "UTF-8");
-					startCircuitText = x;
-				} catch (Exception e) {
-					//System.out.println("can't decode " + x);
-					showErrorDialog("Initialization: Can't decode " + x + ".");
-					e.printStackTrace();
-					return false;
-				}
-			}
-			in = doc.lastIndexOf('/');
-			if (in > 0)
-				baseURL = doc.substring(0, in + 1);
-
-			String param = applet.getParameter("PAUSE");
-			if (param != null)
-				pause = Integer.parseInt(param);
-			startCircuit = applet.getParameter("startCircuit");
-			startLabel = applet.getParameter("startLabel");
-			euroResistor = applet.getParameter("euroResistors");
-			String x = applet.getParameter("whiteBackground");
-			if (x != null && x.equalsIgnoreCase("true"))
-				printable = true;
-			x = applet.getParameter("conventionalCurrent");
-			if (x != null && x.equalsIgnoreCase("true"))
-				convention = false;*/
-		} catch (Exception e) {
-			showErrorDialog("Initialization: Error during parameter parsing.");
-			return false;
-		}
-
-		boolean euro = (euroResistor != null
-				&& euroResistor.equalsIgnoreCase("true"));
-
 		main = this;
 
 		String os = System.getProperty("os.name");
 		isMac = (os.indexOf("Mac ") == 0);
 		ctrlMetaKey = (isMac) ? "⌘" : "Ctrl";
-		String jv = System.getProperty("java.class.version");
-		double jvf = Double.valueOf(jv).doubleValue();
-		if (jvf >= 48)
-			useBufferedImage = true;
+		useBufferedImage = true;
 
 		dumpTypes = new Class[300];
 		// these characters are reserved
@@ -347,6 +295,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		dumpTypes['?'] = Scope.class;
 		dumpTypes['B'] = Scope.class;
 
+		///////////////////////////////////////////////////
+		// Set the main layout
+		///////////////////////////////////////////////////
+
 		// set a horizontal 2-panel layout with fixed size toolbox
 		GridBagLayout gbl = new GridBagLayout();
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -356,25 +308,28 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		main.setLayout(gbl);
 
-		gbc.weightx = 1;	// fill remaining space
+		gbc.weightx = 1;	// fill remaining space with the canvas
 		cv = new CircuitCanvas(this);
 		cv.addComponentListener(this);
 		cv.addMouseMotionListener(this);
 		cv.addMouseListener(this);
 		main.add(cv, gbc);
 
-		gbc.weightx = 0;	// fixed size
+		gbc.weightx = 0;	// the sidebar has has a fixed size
 		gbc.insets = new java.awt.Insets(5, 5, 5, 5);
 		sidebar = new SidebarContainer(this);
 		main.add(sidebar, gbc);
 
 		keyboardInit();
 
-		mainMenu = new PopupMenu();
-		MenuBar mb = null;
+		MenuBar mb;
 		mb = new MenuBar();
+
+		///////////////////////////////////////////////////
+		// Menus / File
+		///////////////////////////////////////////////////
+
 		Menu m = new Menu("File");
-		mb.add(m);
 		m.add(newItem = getMenuItem("New"));
 		m.add(openItem = getMenuItem("Open..."));
 		m.addSeparator();
@@ -383,6 +338,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// m.add(exportLinkItem = getMenuItem("Export Link"));
 		m.addSeparator();
 		m.add(exitItem = getMenuItem("Exit"));
+		mb.add(m);
+
+		///////////////////////////////////////////////////
+		// Menus / Edit
+		///////////////////////////////////////////////////
 
 		m = new Menu("Edit");
 		m.add(undoItem = getMenuItem("Undo"));
@@ -401,142 +361,131 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		selectAllItem.setShortcut(new MenuShortcut(KeyEvent.VK_A));
 		mb.add(m);
 
+		///////////////////////////////////////////////////
+		// Menus / Scope
+		///////////////////////////////////////////////////
+
 		m = new Menu("Scope");
-		mb.add(m);
 		m.add(getMenuItem("Stack All", "stackAll"));
 		m.add(getMenuItem("Unstack All", "unstackAll"));
+		mb.add(m);
+
+		///////////////////////////////////////////////////
+		// Menus / Options
+		///////////////////////////////////////////////////
 
 		optionsMenu = m = new Menu("Options");
-		mb.add(m);
-		
 		m.add(dotsCheckItem = getCheckItem("Show Current"));
 		dotsCheckItem.setState(true);
-		
 		m.add(voltsCheckItem = getCheckItem("Show Voltage"));
 		voltsCheckItem.setState(true);
-		
 		m.add(powerCheckItem = getCheckItem("Show Power"));
-		
 		m.add(showValuesCheckItem = getCheckItem("Show Values"));
 		showValuesCheckItem.setState(true);
-		
 		m.add(showGridCheckItem = getCheckItem("Show Grid"));
 		showGridCheckItem.setState(true);
-		
 		m.addSeparator();
-		
 		// m.add(conductanceCheckItem = getCheckItem("Show Conductance"));
 		m.add(smallGridCheckItem = getCheckItem("Small Grid"));
-		
 		m.add(euroResistorCheckItem = getCheckItem("European Resistors"));
-		euroResistorCheckItem.setState(euro);
-		
 		m.add(printableCheckItem = getCheckItem("White Background"));
-		printableCheckItem.setState(printable);
-		
-		m.add(conventionCheckItem = getCheckItem(
-				"Conventional Current Motion"));
-		conventionCheckItem.setState(convention);
-		
+		m.add(conventionCheckItem = getCheckItem("Conventional Current Motion"));
 		m.add(optionsItem = getMenuItem("Other Options..."));
+		mb.add(m);
+
+		///////////////////////////////////////////////////
+		// Menus / Circuits
+		///////////////////////////////////////////////////
 
 		Menu circuitsMenu = new Menu("Circuits");
 		mb.add(circuitsMenu);
 
-		Menu helpMenu = new Menu("Help");
-		mb.add(helpMenu);
+		///////////////////////////////////////////////////
+		// Menus / Help
+		///////////////////////////////////////////////////
 
+		Menu helpMenu = new Menu("Help");
 		helpMenu.add(aboutItem = getMenuItem("About CircuitMod"));
 		helpMenu.add(shortcutItem = getMenuItem("Keyboard Shortcuts"));
+		mb.add(helpMenu);
 
-		mainMenu.add(getClassCheckItem("Add Wire", "WireElm")); 				// (Dump Data) w
-		mainMenu.add(getClassCheckItem("Add Resistor", "ResistorElm")); 		// r
-		mainMenu.add(getClassCheckItem("Add Capacitor", "CapacitorElm")); 		// c
-		mainMenu.add(getClassCheckItem("Add Ground", "GroundElm")); 			// g
+		///////////////////////////////////////////////////
+		// Popup menu
+		///////////////////////////////////////////////////
+
+		mainMenu = new PopupMenu();
+		mainMenu.add(getClassCheckItem("Add Wire", "WireElm")); 								// (Dump Data) w
+		mainMenu.add(getClassCheckItem("Add Resistor", "ResistorElm")); 						// r
+		mainMenu.add(getClassCheckItem("Add Capacitor", "CapacitorElm")); 					// c
+		mainMenu.add(getClassCheckItem("Add Ground", "GroundElm")); 							// g
 
 		Menu passMenu = new Menu("Passive Components");
-		mainMenu.add(passMenu);
-		passMenu.add(getClassCheckItem("Add Inductor", "InductorElm")); 		// l
-		passMenu.add(getClassCheckItem("Add Switch", "SwitchElm")); 			// s
+		passMenu.add(getClassCheckItem("Add Inductor", "InductorElm")); 						// l
+		passMenu.add(getClassCheckItem("Add Switch", "SwitchElm")); 							// s
 		passMenu.add(getClassCheckItem("Add Push Switch", "PushSwitchElm"));
-		passMenu.add(getClassCheckItem("Add SPDT Switch", "Switch2Elm")); 		// S
-		passMenu.add(getClassCheckItem("Add Potentiometer", "PotElm")); 		// 174
-		passMenu.add(getClassCheckItem("Add Transformer", "TransformerElm")); 	// T
-		passMenu.add(getClassCheckItem("Add Tapped Transformer",
-				"TappedTransformerElm")); 										// 169
-		passMenu.add(
-				getClassCheckItem("Add Transmission Line", "TransLineElm")); 	// 171
-		passMenu.add(getClassCheckItem("Add Relay", "RelayElm")); 				// 178
+		passMenu.add(getClassCheckItem("Add SPDT Switch", "Switch2Elm")); 					// S
+		passMenu.add(getClassCheckItem("Add Potentiometer", "PotElm")); 						// 174
+		passMenu.add(getClassCheckItem("Add Transformer", "TransformerElm")); 				// T
+		passMenu.add(getClassCheckItem("Add Tapped Transformer", "TappedTransformerElm")); 	// 169
+		passMenu.add(getClassCheckItem("Add Transmission Line", "TransLineElm")); 			// 171
+		passMenu.add(getClassCheckItem("Add Relay", "RelayElm")); 							// 178
 		passMenu.add(getClassCheckItem("Add Memristor", "MemristorElm"));
 		passMenu.add(getClassCheckItem("Add Spark Gap", "SparkGapElm"));
+		mainMenu.add(passMenu);
 
 		Menu inputMenu = new Menu("Inputs/Outputs");
-		mainMenu.add(inputMenu);
 		inputMenu.add(getClassCheckItem("Add Ground", "GroundElm"));
-		inputMenu.add(getClassCheckItem("Add Voltage Source (2-terminal)",
-				"DCVoltageElm"));
-		inputMenu.add(getClassCheckItem("Add A/C Source (2-terminal)",
-				"ACVoltageElm"));
-		inputMenu.add(getClassCheckItem("Add Voltage Source (1-terminal)",
-				"RailElm"));
-		inputMenu.add(
-				getClassCheckItem("Add A/C Source (1-terminal)", "ACRailElm"));
-		inputMenu.add(getClassCheckItem("Add Square Wave (1-terminal)",
-				"SquareRailElm"));
+		inputMenu.add(getClassCheckItem("Add Voltage Source (2-terminal)", "DCVoltageElm"));
+		inputMenu.add(getClassCheckItem("Add A/C Source (2-terminal)", "ACVoltageElm"));
+		inputMenu.add(getClassCheckItem("Add Voltage Source (1-terminal)", "RailElm"));
+		inputMenu.add(getClassCheckItem("Add A/C Source (1-terminal)", "ACRailElm"));
+		inputMenu.add(getClassCheckItem("Add Square Wave (1-terminal)", "SquareRailElm"));
 		inputMenu.add(getClassCheckItem("Add Analog Output", "OutputElm"));
 		inputMenu.add(getClassCheckItem("Add Logic Input", "LogicInputElm"));
 		inputMenu.add(getClassCheckItem("Add Logic Output", "LogicOutputElm"));
 		inputMenu.add(getClassCheckItem("Add Clock", "ClockElm"));
-		inputMenu.add(getClassCheckItem("Add A/C Sweep", "SweepElm")); 			// 170
-		inputMenu.add(getClassCheckItem("Add Var. Voltage", "VarRailElm")); 	// 172
+		inputMenu.add(getClassCheckItem("Add A/C Sweep", "SweepElm")); 						// 170
+		inputMenu.add(getClassCheckItem("Add Var. Voltage", "VarRailElm")); 					// 172
 		inputMenu.add(getClassCheckItem("Add Antenna", "AntennaElm"));
 		inputMenu.add(getClassCheckItem("Add Current Source", "CurrentElm"));
+		mainMenu.add(inputMenu);
 
 		Menu activeMenu = new Menu("Active Components");
-		mainMenu.add(activeMenu);
 		activeMenu.add(getClassCheckItem("Add Diode", "DiodeElm"));
 		activeMenu.add(getClassCheckItem("Add Zener Diode", "ZenerElm"));
-		activeMenu.add(getClassCheckItem("Add Transistor (bipolar, NPN)",
-				"NTransistorElm"));
-		activeMenu.add(getClassCheckItem("Add Transistor (bipolar, PNP)",
-				"PTransistorElm"));
+		activeMenu.add(getClassCheckItem("Add Transistor (bipolar, NPN)", "NTransistorElm"));
+		activeMenu.add(getClassCheckItem("Add Transistor (bipolar, PNP)", "PTransistorElm"));
 		activeMenu.add(getClassCheckItem("Add Op Amp (- on top)", "OpAmpElm"));
-		activeMenu.add(
-				getClassCheckItem("Add Op Amp (+ on top)", "OpAmpSwapElm"));
-		activeMenu
-				.add(getClassCheckItem("Add MOSFET (n-channel)", "NMosfetElm"));
-		activeMenu
-				.add(getClassCheckItem("Add MOSFET (p-channel)", "PMosfetElm"));
+		activeMenu.add(getClassCheckItem("Add Op Amp (+ on top)", "OpAmpSwapElm"));
+		activeMenu.add(getClassCheckItem("Add MOSFET (n-channel)", "NMosfetElm"));
+		activeMenu.add(getClassCheckItem("Add MOSFET (p-channel)", "PMosfetElm"));
 		activeMenu.add(getClassCheckItem("Add JFET (n-channel)", "NJfetElm"));
 		activeMenu.add(getClassCheckItem("Add JFET (p-channel)", "PJfetElm"));
-		activeMenu.add(getClassCheckItem("Add Analog Switch (SPST)",
-				"AnalogSwitchElm"));
-		activeMenu.add(getClassCheckItem("Add Analog Switch (SPDT)",
-				"AnalogSwitch2Elm"));
-		activeMenu.add(getClassCheckItem("Add SCR", "SCRElm")); 				// 177
-		// activeMenu.add(getClassCheckItem("Add Varactor/Varicap",
-		// "VaractorElm"));
-		activeMenu.add(getClassCheckItem("Add Tunnel Diode", "TunnelDiodeElm")); // 175
-		activeMenu.add(getClassCheckItem("Add Triode", "TriodeElm")); // 173
+		activeMenu.add(getClassCheckItem("Add Analog Switch (SPST)", "AnalogSwitchElm"));
+		activeMenu.add(getClassCheckItem("Add Analog Switch (SPDT)", "AnalogSwitch2Elm"));
+		activeMenu.add(getClassCheckItem("Add SCR", "SCRElm")); 								// 177
+		// activeMenu.add(getClassCheckItem("Add Varactor/Varicap", "VaractorElm"));
+		activeMenu.add(getClassCheckItem("Add Tunnel Diode", "TunnelDiodeElm")); 				// 175
+		activeMenu.add(getClassCheckItem("Add Triode", "TriodeElm")); 						// 173
 		// activeMenu.add(getClassCheckItem("Add Diac", "DiacElm"));
 		// activeMenu.add(getClassCheckItem("Add Triac", "TriacElm"));
 		// activeMenu.add(getClassCheckItem("Add Photoresistor", "PhotoResistorElm")); // Alpha
 		activeMenu.add(getClassCheckItem("Add Thermistor", "ThermistorElm"));
 		activeMenu.add(getClassCheckItem("Add CCII+", "CC2Elm")); // 179
 		activeMenu.add(getClassCheckItem("Add CCII-", "CC2NegElm"));
+		mainMenu.add(activeMenu);
 
 		Menu gateMenu = new Menu("Logic Gates");
-		mainMenu.add(gateMenu);
 		gateMenu.add(getClassCheckItem("Add Inverter", "InverterElm"));
 		gateMenu.add(getClassCheckItem("Add NAND Gate", "NandGateElm"));
 		gateMenu.add(getClassCheckItem("Add NOR Gate", "NorGateElm"));
 		gateMenu.add(getClassCheckItem("Add AND Gate", "AndGateElm"));
 		gateMenu.add(getClassCheckItem("Add OR Gate", "OrGateElm"));
 		gateMenu.add(getClassCheckItem("Add XOR Gate", "XorGateElm"));
-		gateMenu.add(getClassCheckItem("Add ST Inverter", "InverterSTElm")); 	// 186
+		gateMenu.add(getClassCheckItem("Add ST Inverter", "InverterSTElm")); 					// 186
+		mainMenu.add(gateMenu);
 
 		Menu chipMenu = new Menu("Chips");
-		mainMenu.add(chipMenu);
 		chipMenu.add(getClassCheckItem("Add D Flip-Flop", "DFlipFlopElm"));
 		chipMenu.add(getClassCheckItem("Add JK Flip-Flop", "JKFlipFlopElm"));
 		chipMenu.add(getClassCheckItem("Add 7 Segment LED", "SevenSegElm"));
@@ -547,50 +496,43 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		chipMenu.add(getClassCheckItem("Add 555 Timer", "TimerElm"));
 		chipMenu.add(getClassCheckItem("Add DAC", "DACElm"));
 		chipMenu.add(getClassCheckItem("Add ADC", "ADCElm"));
-		chipMenu.add(getClassCheckItem("Add Latch", "LatchElm")); 				// 168
+		chipMenu.add(getClassCheckItem("Add Latch", "LatchElm")); 							// 168
+		mainMenu.add(chipMenu);
 
 		Menu displayMenu = new Menu("Display Devices");
-		mainMenu.add(displayMenu);
 		displayMenu.add(getClassCheckItem("Add Text", "TextElm"));
 		displayMenu.add(getClassCheckItem("Add Scope Probe", "ProbeElm"));
 		displayMenu.add(getClassCheckItem("Add LED", "LEDElm"));
 		displayMenu.add(getClassCheckItem("Add Lamp (beta)", "LampElm"));
-		displayMenu.add(getClassCheckItem("Add LED Array", "LEDArrayElm")); 	// 176
-		displayMenu
-				.add(getClassCheckItem("Add LED-Matrix 5x7", "Matrix5x7Elm")); 	// 180
+		displayMenu.add(getClassCheckItem("Add LED Array", "LEDArrayElm")); 					// 176
+		displayMenu.add(getClassCheckItem("Add LED-Matrix 5x7", "Matrix5x7Elm")); 			// 180
+		mainMenu.add(displayMenu);
 
 		Menu mychipMenu = new Menu("CD Series");
+		mychipMenu.add(getClassCheckItem("Add Counter 7-bit (4024)", "CD4024")); 				// 182
+		mychipMenu.add(getClassCheckItem("Add BCD-to-Decimal Decoder (4028)", "CD4028")); 	// 185
+		mychipMenu.add(getClassCheckItem("Add Counter 12-bit (4040)", "CD4040")); // 183
+		mychipMenu.add(getClassCheckItem("Add BCD to 7-Segment Decoder (4511)", "CD4511")); 	// 184
+		mychipMenu.add(getClassCheckItem("Add Decade Counter (4017)", "CD4017")); 			// 189
 		mainMenu.add(mychipMenu);
-		mychipMenu.add(getClassCheckItem("Add Counter 7-bit (4024)", "CD4024")); // 182
-		mychipMenu.add(getClassCheckItem("Add BCD-to-Decimal Decoder (4028)",
-				"CD4028")); // 185
-		mychipMenu
-				.add(getClassCheckItem("Add Counter 12-bit (4040)", "CD4040")); // 183
-		mychipMenu.add(getClassCheckItem("Add BCD to 7-Segment Decoder (4511)",
-				"CD4511")); // 184
-		mychipMenu
-				.add(getClassCheckItem("Add Decade Counter (4017)", "CD4017")); // 189
 		// 190
 
 		Menu otherMenu = new Menu("Other");
 		mainMenu.add(otherMenu);
 		otherMenu.add(getCheckItem("Drag All (Alt-drag)", "DragAll"));
-		otherMenu.add(getCheckItem(
-				isMac ? "Drag Row (Alt-S-drag, S-right)" : "Drag Row (S-right)",
-				"DragRow"));
-		otherMenu.add(getCheckItem(isMac ? "Drag Column (Alt-âŒ˜-drag, âŒ˜-right)"
-				: "Drag Column (C-right)", "DragColumn"));
+		otherMenu.add(getCheckItem(isMac ? "Drag Row (Alt-S-drag, S-right)" : "Drag Row (S-right)", "DragRow"));
+		otherMenu.add(getCheckItem(isMac ? "Drag Column (Alt-⌘-drag, ⌘-right)" : "Drag Column (C-right)", "DragColumn"));
 		otherMenu.add(getCheckItem("Drag Selected", "DragSelected"));
-		otherMenu.add(getCheckItem("Drag Post (" + ctrlMetaKey + "-drag)",
-				"DragPost"));
+		otherMenu.add(getCheckItem("Drag Post (" + ctrlMetaKey + "-drag)", "DragPost"));
 		mainMenu.addSeparator();
 		mainMenu.add(mainMenuPasteItem = getMenuItem("Paste"));
 		mainMenuPasteItem.setEnabled(false);
-		mainMenu.add(getCheckItem("Select/Drag Selected (space or Shift-drag)",
-				"Select"));
+		mainMenu.add(getCheckItem("Select/Drag Selected (space or Shift-drag)", "Select"));
 		main.add(mainMenu);
 
-		/////////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////
+		// Sidebar
+		///////////////////////////////////////////////////
 
 		Font f = new Font("SansSerif", Font.BOLD, 12);
 		titleLabel = new Label("Untitled");
@@ -617,33 +559,31 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		sidebar.add(stoppedCheckItem);
 
 		sidebar.add(new Label("Simulation Speed", Label.CENTER));
-
-		// was max of 140 (260)
 		sidebar.add(speedBar = new Scrollbar(Scrollbar.HORIZONTAL, 3, 1, 0, 260));
 		speedBar.addAdjustmentListener(this);
 
 		sidebar.add(new Label("Current Speed", Label.CENTER));
-		currentBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100);
+		sidebar.add(currentBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100));
 		currentBar.addAdjustmentListener(this);
-		sidebar.add(currentBar);
 
 		sidebar.add(powerLabel = new Label("Power Brightness", Label.CENTER));
 		sidebar.add(powerBar = new Scrollbar(Scrollbar.HORIZONTAL, 50, 1, 1, 100));
 		powerBar.addAdjustmentListener(this);
-
-		powerBar.setEnabled(false);
 		powerLabel.setEnabled(false);
+		powerBar.setEnabled(false);
 
 		sidebar.addSeparator();
 		sidebar.addSpacer();
 
-		///////////////////////////////////////////////////////////////////////////////////////
+		///////////////////////////////////////////////////
+		// Other initializations
+		///////////////////////////////////////////////////
 
 		setGrid();
-		elmList = new Vector<CircuitElm>();
-		setupList = new Vector<String>();
-		undoStack = new Vector<String>();
-		redoStack = new Vector<String>();
+		elmList = new Vector<>();
+		setupList = new Vector<>();
+		undoStack = new Vector<>();
+		redoStack = new Vector<>();
 
 		scopes = new Scope[20];
 		scopeColCount = new int[20];
@@ -703,34 +643,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void setFrameAndShow() {
-		//Dimension screen = getToolkit().getScreenSize();
 		handleResize();
-		// resize(860, 640);
-		// Dimension x = getSize();
-		// move((screen.width - x.width)/2, (screen.height - x.height)/2);
-		// setBounds(
-		// (screen.width - 860)/2,
-		// (screen.height - 640)/2,
-		// 860, 640
-		// );
-		// show();
 		setSize(860, 640);
 		setLocationByPlatform(true);
 		setVisible(true);
 
-		// Start maximized
-		// setExtendedState( getExtendedState()|MAXIMIZED_BOTH );
-
 		main.requestFocus();
-	}
-
-	boolean shown = false;
-
-	public void triggerShow() {
-		if (!shown)
-			// show();
-			setVisible(true);
-		shown = true;
 	}
 
 	PopupMenu buildScopeMenu(boolean t) {
@@ -830,11 +748,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	void handleResize() {
 		winSize = cv.getSize();
 		try {
-			dbimage = main.createImage(winSize.width, winSize.height);
+			dbImage = main.createImage(winSize.width, winSize.height);
 		} catch (Exception e) {
 			cv.setSize(getMinimumSize());
 			winSize = cv.getSize();
-			dbimage = main.createImage(winSize.width, winSize.height);
+			dbImage = main.createImage(winSize.width, winSize.height);
 		}
 		int h = winSize.height / 5;
 		/*
@@ -848,11 +766,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			// centered text causes problems when trying to center the circuit,
 			// so we special-case it here
 			if (!ce.isCenteredText()) {
-				minx = min(ce.x, min(ce.x2, minx));
-				maxx = max(ce.x, max(ce.x2, maxx));
+				minx = Math.min(ce.x, Math.min(ce.x2, minx));
+				maxx = Math.max(ce.x, Math.max(ce.x2, maxx));
 			}
-			miny = min(ce.y, min(ce.y2, miny));
-			maxy = max(ce.y, max(ce.y2, maxy));
+			miny = Math.min(ce.y, Math.min(ce.y2, miny));
+			maxy = Math.max(ce.y, Math.max(ce.y2, maxy));
 		}
 		// center circuit; we don't use snapGrid() because that rounds
 		int dx = gridMask & ((circuitArea.width - (maxx - minx)) / 2 - minx);
@@ -880,7 +798,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		cv.repaint();
 	}
 
-	static final int resct = 6;
 	long lastTime = 0, lastFrameTime, lastIterTime, secTime = 0;
 	int frames = 0;
 	int steps = 0;
@@ -900,8 +817,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		if (mouseElm == null)
 			mouseElm = stopElm;
 		setupScopes();
-		Graphics g = null;
-		g = dbimage.getGraphics();
+
+		Graphics g = dbImage.getGraphics();
 		Color gridColor = new Color(10, 36, 36);
 		CircuitElm.selectColor = Color.cyan;
 		if (printableCheckItem.getState()) {
@@ -946,7 +863,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} else
 			lastTime = 0;
 		CircuitElm.powerMult = Math.exp(powerBar.getValue() / 4.762 - 7);
-		float dashes[] = { 1.0f };
+		float[] dashes = {1.0f};
 		BasicStroke dashedStroke = new BasicStroke(0.0f, BasicStroke.CAP_BUTT,
 				BasicStroke.JOIN_MITER, 1.0f, dashes, 0.0f);
 		Graphics2D g2d = (Graphics2D) g.create();
@@ -1025,7 +942,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		} else {
 			if (circuitBottom == 0)
 				calcCircuitBottom();
-			String info[] = new String[10];
+			String[] info = new String[10];
 			if (mouseElm != null) {
 				if (mousePost == -1)
 					mouseElm.getInfo(info);
@@ -1045,8 +962,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				CircuitElm.showFormat.setMinimumFractionDigits(0);
 			}
 			if (hintType != -1) {
-				for (i = 0; info[i] != null; i++)
-					;
+				for (i = 0; info[i] != null; i++);
 				String s = getHint();
 				if (s == null)
 					hintType = -1;
@@ -1056,20 +972,17 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			int x = 0;
 			if (ct != 0)
 				x = scopes[ct - 1].rightEdge() + 20;
-			x = max(x, winSize.width * 2 / 3);
+			x = Math.max(x, winSize.width * 2 / 3);
 
 			// count lines of data
-			for (i = 0; info[i] != null; i++)
-				;
+			for (i = 0; info[i] != null; i++);
 			if (badnodes > 0)
-				info[i++] = badnodes + ((badnodes == 1) ? " bad connection"
-						: " bad connections");
+				info[i++] = badnodes + ((badnodes == 1) ? " bad connection" : " bad connections");
 
-			// find where to show data; below circuit, not too high unless we
-			// need it
+			// find where to show data; below circuit, not too high unless we need it
 			int ybase = winSize.height - 15 * i - 5;
-			ybase = min(ybase, circuitArea.height);
-			ybase = max(ybase, circuitBottom);
+			ybase = Math.min(ybase, circuitArea.height);
+			ybase = Math.max(ybase, circuitBottom);
 			for (i = 0; info[i] != null; i++)
 				g.drawString(info[i], x, ybase + 15 * (i + 1));
 		}
@@ -1087,17 +1000,15 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		 * "iterc: " + (getIterCount()), 10, 70);
 		 */
 
-		realg.drawImage(dbimage, 0, 0, this);
+		realg.drawImage(dbImage, 0, 0, this);
 		if (!stoppedCheckItem.getState() && circuitMatrix != null) {
-			// Limit to 50 fps (thanks to JÃ¼rgen KlÃ¶tzer for this)
-			long delay = 1000 / 50
-					- (System.currentTimeMillis() - lastFrameTime);
+			// Limit to 50 fps (thanks to Jürgen Klötzer for this)
+			long delay = 1000 / 50 - (System.currentTimeMillis() - lastFrameTime);
 			// realg.drawString("delay: " + delay, 10, 90);
 			if (delay > 0) {
 				try {
 					Thread.sleep(delay);
-				} catch (InterruptedException e) {
-				}
+				} catch (InterruptedException ignored) {}
 			}
 
 			cv.repaint(0);
@@ -1108,8 +1019,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	void setupScopes() {
 		int i;
 
-		// check scopes to make sure the elements still exist, and remove
-		// unused scopes/columns
+		// check scopes to make sure the elements still exist, and remove unused scopes/columns
 		int pos = -1;
 		for (i = 0; i < scopeCount; i++) {
 			if (locateElm(scopes[i].elm) < 0)
@@ -1133,7 +1043,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		for (i = 0; i != scopeCount; i++)
 			scopeColCount[i] = 0;
 		for (i = 0; i != scopeCount; i++) {
-			pos = max(scopes[i].position, pos);
+			pos = Math.max(scopes[i].position, pos);
 			scopeColCount[scopes[i].position]++;
 		}
 		int colct = pos + 1;
@@ -1160,8 +1070,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				s.speed = speed;
 				s.resetGraph();
 			}
-			Rectangle r = new Rectangle(pos * w,
-					winSize.height - h + colh * row, w - marg, colh);
+			Rectangle r = new Rectangle(pos * w, winSize.height - h + colh * row, w - marg, colh);
 			row++;
 			if (!r.equals(s.rect))
 				s.setRect(r);
@@ -1230,29 +1139,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		return null;
 	}
 
-	public void toggleSwitch(int n) {
-		int i;
-		for (i = 0; i != elmList.size(); i++) {
-			CircuitElm ce = getElm(i);
-			if (ce instanceof SwitchElm) {
-				n--;
-				if (n == 0) {
-					((SwitchElm) ce).toggle();
-					analyzeFlag = true;
-					cv.repaint();
-					return;
-				}
-			}
-		}
-	}
-
 	void needAnalyze() {
 		analyzeFlag = true;
 		cv.repaint();
 	}
 
 	Vector<CircuitNode> nodeList;
-	CircuitElm voltageSources[];
+	CircuitElm[] voltageSources;
 
 	public CircuitNode getCircuitNode(int n) {
 		if (n >= nodeList.size())
@@ -1321,8 +1214,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				volt = ce;
 		}
 
-		// if no ground, and no rails, then the voltage elm's first terminal
-		// is ground
+		// if no ground, and no rails, then the voltage elm's first terminal is ground
 		if (!gotGround && volt != null && !gotRail) {
 			CircuitNode cn = new CircuitNode();
 			Point pt = volt.getPost(0);
@@ -1427,7 +1319,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// System.out.println("ac4");
 
 		// determine nodes that are unconnected
-		boolean closure[] = new boolean[nodeList.size()];
+		boolean[] closure = new boolean[nodeList.size()];
 		// boolean tempclosure[] = new boolean[nodeList.size()];
 		boolean changed = true;
 		closure[0] = true;
@@ -1636,7 +1528,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				continue;
 			}
 			if (elt.type == RowInfo.ROW_EQUAL) {
-				RowInfo e2 = null;
+				RowInfo e2;
 				// resolve chains of equality; 100 max steps to avoid loops
 				for (j = 0; j != 100; j++) {
 					e2 = circuitRowInfo[elt.nodeEq];
@@ -1679,8 +1571,8 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 		// make the new, simplified matrix
 		int newsize = nn;
-		double newmatx[][] = new double[newsize][newsize];
-		double newrs[] = new double[newsize];
+		double[][] newmatx = new double[newsize][newsize];
+		double[] newrs = new double[newsize];
 		int ii = 0;
 		for (i = 0; i != matrixSize; i++) {
 			RowInfo rri = circuitRowInfo[i];
@@ -1745,7 +1637,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		static final int VOLTAGE = 2;
 		static final int SHORT = 3;
 		static final int CAP_V = 4;
-		boolean used[];
+		boolean[] used;
 		int dest;
 		CircuitElm firstElm;
 		int type;
@@ -1894,8 +1786,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		double r0 = 1 / r;
 		if (Double.isNaN(r0) || Double.isInfinite(r0)) {
 			System.out.print("bad resistance " + r + " " + r0 + "\n");
-			int a = 0;
-			a /= a;
+			throw new ArithmeticException("Invalid conductance for stampResistor.");
 		}
 		stampMatrix(n1, n1, r0);
 		stampMatrix(n2, n2, r0);
@@ -2124,7 +2015,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				scopes[i].timeStep();
 			tm = System.currentTimeMillis();
 			lit = tm;
-			if (iter * 1000 >= steprate * (tm - lastIterTime)
+			if (iter * 1000L >= steprate * (tm - lastIterTime)
 					|| (tm - lastFrameTime > 500))
 				break;
 		}
@@ -2133,26 +2024,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// iter);
 	}
 
-	int min(int a, int b) {
-		return (a < b) ? a : b;
-	}
-
-	int max(int a, int b) {
-		return (a > b) ? a : b;
-	}
-
-	void editFuncPoint(@SuppressWarnings("unused") int x,
-			@SuppressWarnings("unused") int y) {
-		cv.repaint(pause);
-	}
+	@Override
+	public void componentHidden(ComponentEvent e) {}
 
 	@Override
-	public void componentHidden(ComponentEvent e) {
-	}
-
-	@Override
-	public void componentMoved(ComponentEvent e) {
-	}
+	public void componentMoved(ComponentEvent e) {}
 
 	@Override
 	public void componentShown(ComponentEvent e) {
@@ -2173,7 +2049,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 			// on IE, drawImage() stops working inexplicably every once in
 			// a while. Recreating it fixes the problem, so we do that here.
-			dbimage = main.createImage(winSize.width, winSize.height);
+			dbImage = main.createImage(winSize.width, winSize.height);
 
 			for (i = 0; i != elmList.size(); i++)
 				getElm(i).reset();
@@ -2399,23 +2275,21 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		JOptionPane.showOptionDialog(this,
 				"Warning. Some elements could not be read.\n"
 						+ "Make sure CircuitMod is up to date.",
-				"Warning", JOptionPane.PLAIN_MESSAGE,
+				"Warning", JOptionPane.DEFAULT_OPTION,
 				JOptionPane.WARNING_MESSAGE, null, options, options[0]);
 	}
 
 	void showSetupReadErrorDialog() {
 		Object[] options = { "   Ok   " };
 		JOptionPane.showOptionDialog(this, "ERROR. The file cannot be opened.",
-				"Error", JOptionPane.PLAIN_MESSAGE, JOptionPane.ERROR_MESSAGE,
+				"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
 				null, options, options[0]);
 	}
 	
 	void showErrorDialog(String message) {
-		//System.out.println(message);
-		//new ErrorFrame(message);
 		Object[] options = { "   Ok   " };
 		JOptionPane.showOptionDialog(this, "ERROR. " + message,
-				"Error", JOptionPane.PLAIN_MESSAGE, JOptionPane.ERROR_MESSAGE,
+				"Error", JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE,
 				null, options, options[0]);
 	}
 
@@ -2563,16 +2437,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		return 0;
 	}
 
-	//////////////////////////////////////
-	// End of Federico Garcia's Methods //
-	//////////////////////////////////////
-
 	// Exit the program.
 	void doExit() {
 		// Check if circuit needs saving
 		int n = saveIfModified();
 
-		// Only exit if opertion wasn't cancelled.
+		// Only exit if operation wasn't cancelled.
 		if (n != 2) {
 			destroyFrame();
 			System.exit(0);
@@ -2634,7 +2504,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			try (FilterInputStream fis = (FilterInputStream) o) {
 				ByteArrayOutputStream ba = new ByteArrayOutputStream(fis.available());
 				int blen = 1024;
-				byte b[] = new byte[blen];
+				byte[] b = new byte[blen];
 				while (true) {
 					int len = fis.read(b);
 					if (len <= 0)
@@ -2642,38 +2512,22 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					ba.write(b, 0, len);
 				}
 				return ba;
-			} catch(java.io.IOException e) {
-				throw e;  // let it fall through
 			}
-			
+
 		} catch (Exception e) {
 			throw e;  // let it fall through
 		}
 	}
 
-	URL getCodeBase() {
-		try {
-			/*if (applet != null)
-				return applet.getCodeBase();*/
-			File f = new File(System.getProperty("java.class.path"));
-			File dir = f.getAbsoluteFile().getParentFile();
-			String path = dir.toString();
-			return new URL("file:" + path + "/");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
 	boolean getSetupList(Menu menu, @SuppressWarnings("unused") boolean retry) {
-		Menu stack[] = new Menu[6];
+		Menu[] stack = new Menu[6];
 		int stackptr = 0;
 		stack[stackptr++] = menu;
 		try {
 			URL url = getClass().getResource("resources/setuplist.txt");
 			ByteArrayOutputStream ba = readUrlData(url);
 			
-			byte b[] = ba.toByteArray();
+			byte[] b = ba.toByteArray();
 			int len = ba.size();
 			int p;
 			if (len == 0 || b[0] != '#') {
@@ -2700,9 +2554,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					int i = line.indexOf(' ');
 					if (i > 0) {
 						String title = line.substring(i + 1);
-						boolean first = false;
-						if (line.charAt(0) == '>')
-							first = true;
+						boolean first = line.charAt(0) == '>';
 						String file = line.substring(first ? 1 : 0, i);
 						menu.add(getMenuItem(title, "setup " + file));
 						if (first && startCircuit == null) {
@@ -2714,8 +2566,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				p += l;
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
-			//stop("Can't read setuplist.txt!", null);
 			return false;
 		}
 		
@@ -2747,7 +2597,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	}
 
-	int readSetup(byte b[], int len, boolean retain) {
+	int readSetup(byte[] b, int len, boolean retain) {
 		int status = SETUP_READ_OK;
 
 		int i;
@@ -2809,12 +2659,12 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 						break;
 					}
 					if (tint >= '0' && tint <= '9')
-						tint = Integer.valueOf(type).intValue();
-					int x1 = Integer.valueOf(st.nextToken()).intValue();
-					int y1 = Integer.valueOf(st.nextToken()).intValue();
-					int x2 = Integer.valueOf(st.nextToken()).intValue();
-					int y2 = Integer.valueOf(st.nextToken()).intValue();
-					int f = Integer.valueOf(st.nextToken()).intValue();
+						tint = Integer.parseInt(type);
+					int x1 = Integer.parseInt(st.nextToken());
+					int y1 = Integer.parseInt(st.nextToken());
+					int x2 = Integer.parseInt(st.nextToken());
+					int y2 = Integer.parseInt(st.nextToken());
+					int f = Integer.parseInt(st.nextToken());
 					CircuitElm ce = null;
 					Class<?> cls = dumpTypes[tint];
 					if (cls == null) {
@@ -2823,7 +2673,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 						break;
 					}
 					// find element class
-					Class<?> carr[] = new Class[6];
+					Class<?>[] carr = new Class[6];
 					// carr[0] = getClass();
 					carr[0] = carr[1] = carr[2] = carr[3] = carr[4] = int.class;
 					carr[5] = StringTokenizer.class;
@@ -2831,13 +2681,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					cstr = cls.getConstructor(carr);
 
 					// invoke constructor with starting coordinates
-					Object oarr[] = new Object[6];
+					Object[] oarr = new Object[6];
 					// oarr[0] = this;
-					oarr[0] = Integer.valueOf(x1);
-					oarr[1] = Integer.valueOf(y1);
-					oarr[2] = Integer.valueOf(x2);
-					oarr[3] = Integer.valueOf(y2);
-					oarr[4] = Integer.valueOf(f);
+					oarr[0] = x1;
+					oarr[1] = y1;
+					oarr[2] = x2;
+					oarr[3] = y2;
+					oarr[4] = f;
 					oarr[5] = st;
 					ce = (CircuitElm) cstr.newInstance(oarr);
 					ce.setPoints();
@@ -2871,29 +2721,28 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void readHint(StringTokenizer st) {
-		hintType = Integer.valueOf(st.nextToken()).intValue();
-		hintItem1 = Integer.valueOf(st.nextToken()).intValue();
-		hintItem2 = Integer.valueOf(st.nextToken()).intValue();
+		hintType = Integer.parseInt(st.nextToken());
+		hintItem1 = Integer.parseInt(st.nextToken());
+		hintItem2 = Integer.parseInt(st.nextToken());
 	}
 
 	void readOptions(StringTokenizer st) {
-		int flags = Integer.valueOf(st.nextToken()).intValue();
+		int flags = Integer.parseInt(st.nextToken());
 		dotsCheckItem.setState((flags & 1) != 0);
 		smallGridCheckItem.setState((flags & 2) != 0);
 		voltsCheckItem.setState((flags & 4) == 0);
 		powerCheckItem.setState((flags & 8) == 8);
 		showValuesCheckItem.setState((flags & 16) == 0);
-		timeStep = Double.valueOf(st.nextToken()).doubleValue();
-		double sp = Double.valueOf(st.nextToken()).doubleValue();
+		timeStep = Double.parseDouble(st.nextToken());
+		double sp = Double.parseDouble(st.nextToken());
 		int sp2 = (int) (Math.log(10 * sp) * 24 + 61.5);
 		// int sp2 = (int) (Math.log(sp)*24+1.5);
 		speedBar.setValue(sp2);
-		currentBar.setValue(Integer.valueOf(st.nextToken()).intValue());
-		CircuitElm.setVoltageRange(Double.valueOf(st.nextToken()).doubleValue());
+		currentBar.setValue(Integer.parseInt(st.nextToken()));
+		CircuitElm.setVoltageRange(Double.parseDouble(st.nextToken()));
 		try {
-			powerBar.setValue(Integer.valueOf(st.nextToken()).intValue());
-		} catch (Exception e) {
-		}
+			powerBar.setValue(Integer.parseInt(st.nextToken()));
+		} catch (Exception ignored) {}
 		setGrid();
 	}
 
@@ -2909,9 +2758,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		sidebar.validate();
 	}
 
-	///////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
 	// STATUS QUERY
-	/////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+
 	public boolean isStopped() { 					return stoppedCheckItem.getState(); }
 	public boolean isShowingCurrent() { 			return dotsCheckItem.getState(); }
 	public boolean isShowingVoltage() { 			return voltsCheckItem.getState(); }
@@ -2928,14 +2778,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public int getMouseMode() { 					return mouseMode; }
 	public CircuitElm getPlotXElm( ) { 				return plotXElm; }
 	public CircuitElm getPlotYElm( ) { 				return plotYElm; }
-	/////////////////////////////////////////////////////
 
-	public int snapGrid(int x) {
-		return (x + gridRound) & gridMask;
+	///////////////////////////////////////////////////////////////////////////
+
+	public int snapGrid(int coord) {
+		return (coord + gridRound) & gridMask;
 	}
 
-	boolean doSwitch(@SuppressWarnings("unused") int x,
-			@SuppressWarnings("unused") int y) {
+	boolean doSwitch(@SuppressWarnings("unused") int x, @SuppressWarnings("unused") int y) {
 		if (mouseElm == null || !(mouseElm instanceof SwitchElm))
 			return false;
 		SwitchElm se = (SwitchElm) mouseElm;
@@ -3094,10 +2944,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	void selectArea(int x, int y) {
-		int x1 = min(x, initDragX);
-		int x2 = max(x, initDragX);
-		int y1 = min(y, initDragY);
-		int y2 = max(y, initDragY);
+		int x1 = Math.min(x, initDragX);
+		int x2 = Math.max(x, initDragX);
+		int y1 = Math.min(y, initDragY);
+		int y2 = Math.max(y, initDragY);
 		selectedArea = new Rectangle(x1, y1, x2 - x1, y2 - y1);
 		int i;
 		for (i = 0; i != elmList.size(); i++) {
@@ -3210,12 +3060,6 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			cv.repaint();
 	}
 
-	int distanceSq(int x1, int y1, int x2, int y2) {
-		x2 -= x1;
-		y2 -= y1;
-		return x2 * x2 + y2 * y2;
-	}
-
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) {
@@ -3228,8 +3072,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
@@ -3299,9 +3142,54 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 	}
 
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		int ex = e.getModifiersEx();
+		if ((ex & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK)) == 0
+				&& e.isPopupTrigger()) {
+			doPopupMenu(e);
+			return;
+		}
+
+		tempMouseMode = mouseMode;
+		selectedArea = null;
+		dragging = false;
+
+		boolean circuitChanged = false;
+		if (heldSwitchElm != null) {
+			heldSwitchElm.mouseUp();
+			heldSwitchElm = null;
+			circuitChanged = true;
+		}
+
+		if (dragElm != null) {
+			// only create the element if its size is larger than zero
+			if (!(dragElm.x == dragElm.x2 && dragElm.y == dragElm.y2)) {
+				elmList.addElement(dragElm);
+				circuitChanged = true;
+			}
+
+			dragElm.delete();
+			dragElm = null;
+		}
+
+		if (circuitChanged) {
+			needAnalyze();
+			//pushUndo();
+		}
+
+		cv.repaint();
+	}
+
+	int distanceSq(int x1, int y1, int x2, int y2) {
+		x2 -= x1;
+		y2 -= y1;
+		return x2 * x2 + y2 * y2;
+	}
+
 	CircuitElm constructElement(Class<?> c, int x0, int y0) {
 		// find element class
-		Class<?> carr[] = new Class[2];
+		Class<?>[] carr = new Class[2];
 		// carr[0] = getClass();
 		carr[0] = carr[1] = int.class;
 		Constructor<?> cstr = null;
@@ -3317,13 +3205,13 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 
 		// invoke constructor with starting coordinates
-		Object oarr[] = new Object[2];
-		oarr[0] = Integer.valueOf(x0);
-		oarr[1] = Integer.valueOf(y0);
+		Object[] oarr = new Object[2];
+		oarr[0] = x0;
+		oarr[1] = y0;
 		try {
 			return (CircuitElm) cstr.newInstance(oarr);
-		} catch (Exception ee) {
-			ee.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -3368,52 +3256,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 			if (mc instanceof Menu)
 				setMainMenuLabel((Menu) mc, elm);
 			if (mc instanceof CheckboxMenuItem) {
-				if (mc.getActionCommand() == elm.getClass().getName()) {
+				if (mc.getActionCommand().equals(elm.getClass().getName())) {
 					modeInfoLabel.setText(mc.getLabel());
 				}
 			}
 		}
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		int ex = e.getModifiersEx();
-		if ((ex & (InputEvent.SHIFT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.META_DOWN_MASK)) == 0
-				&& e.isPopupTrigger()) {
-			doPopupMenu(e);
-			return;
-		}
-
-		tempMouseMode = mouseMode;
-		selectedArea = null;
-		dragging = false;
-
-		boolean circuitChanged = false;
-		if (heldSwitchElm != null) {
-			heldSwitchElm.mouseUp();
-			heldSwitchElm = null;
-			circuitChanged = true;
-		}
-		if (dragElm != null) {
-			// if the element is zero size then don't create it
-			if (dragElm.x == dragElm.x2 && dragElm.y == dragElm.y2)
-				dragElm.delete();
-			else {
-				elmList.addElement(dragElm);
-				circuitChanged = true;
-			}
-			dragElm = null;
-		}
-		if (dragElm != null)
-			dragElm.delete();
-
-		if (circuitChanged) {
-			needAnalyze();
-			//pushUndo();
-		}
-
-		dragElm = null;
-		cv.repaint();
 	}
 
 	void enableItems() {
@@ -3436,12 +3283,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		if (mi == smallGridCheckItem)
 			setGrid();
 		if (mi == powerCheckItem) {
-			if (powerCheckItem.getState())
-				voltsCheckItem.setState(false);
-			else
-				voltsCheckItem.setState(true);
+			voltsCheckItem.setState(!isShowingPower());
 		}
-		if (mi == voltsCheckItem && voltsCheckItem.getState())
+		if (mi == voltsCheckItem && isShowingVoltage())
 			powerCheckItem.setState(false);
 		enableItems();
 		if (menuScope != -1) {
@@ -3817,21 +3661,20 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 							}
 							tempMouseMode = mouseMode;
 						} else if (e.getID() == KeyEvent.KEY_RELEASED) {
-
+							// ...
 						} else if (e.getID() == KeyEvent.KEY_TYPED) {
-
+							// ...
 						}
 						return false;
 					}
 				});
 	}
 
-	// factors a matrix into upper and lower triangular matrices by
-	// gaussian elimination. On entry, a[0..n-1][0..n-1] is the
-	// matrix to be factored. ipvt[] returns an integer vector of pivot
-	// indices, used in the lu_solve() routine.
-	boolean lu_factor(double a[][], int n, int ipvt[]) {
-		double scaleFactors[];
+	// Factors a matrix into upper and lower triangular matrices by gaussian elimination.
+	// On entry, a[0..n-1][0..n-1] is the matrix to be factored.
+	// ipvt[] returns an integer vector of pivot indices, used in the lu_solve() routine.
+	boolean lu_factor(double[][] a, int n, int[] ipvt) {
+		double[] scaleFactors;
 		int i, j, k;
 
 		scaleFactors = new double[n];
@@ -3903,13 +3746,14 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 					a[i][j] *= mult;
 			}
 		}
+
 		return true;
 	}
 
 	// Solves the set of n linear equations using a LU factorization
 	// previously performed by lu_factor. On input, b[0..n-1] is the right
 	// hand side of the equations, and on output, contains the solution.
-	void lu_solve(double a[][], int n, int ipvt[], double b[]) {
+	void lu_solve(double[][] a, int n, int[] ipvt, double[] b) {
 		int i;
 
 		// find first nonzero b element

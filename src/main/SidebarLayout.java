@@ -29,4 +29,4 @@ class SidebarLayout extends GridBagLayout {
 	public Dimension minimumLayoutSize(Container target) {
 		return new Dimension(100, 100);
 	}
-};
+}
