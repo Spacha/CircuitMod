@@ -208,6 +208,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	public static final String MU_STR = "μ";
 	public static final String OHM_STR = "Ω";
+	public static final String ELM_PATH = "main.elements";
 
 	String clipboard;
 	Rectangle circuitArea;
@@ -706,8 +707,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	CheckboxMenuItem getClassCheckItem(String s, String t) {
+		t = elmPath(t);
+
 		try {
-			Class<?> c = Class.forName("main.elements." + t);
+			Class<?> c = Class.forName(t);
 			CircuitElm elm = constructElement(c, 0, 0);
 			register(c, elm);
 			int dt = 0;
@@ -2778,6 +2781,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	public int getMouseMode() { 					return mouseMode; }
 	public CircuitElm getPlotXElm( ) { 				return plotXElm; }
 	public CircuitElm getPlotYElm( ) { 				return plotYElm; }
+	public static String elmPath(String s) {		return ELM_PATH + "." + s; }
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -3275,9 +3279,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 	}
 
 	@Override
-	public void itemStateChanged(ItemEvent e) {
+	public void itemStateChanged(ItemEvent evt) {
 		cv.repaint(pause);
-		Object mi = e.getItemSelectable();
+		Object mi = evt.getItemSelectable();
 		if (mi == stoppedCheckItem)
 			return;
 		if (mi == smallGridCheckItem)
@@ -3290,7 +3294,7 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		enableItems();
 		if (menuScope != -1) {
 			Scope sc = scopes[menuScope];
-			sc.handleMenu(e, mi);
+			sc.handleMenu(evt, mi);
 		}
 		if (mi instanceof CheckboxMenuItem) {
 			MenuItem mmi = (MenuItem) mi;
@@ -3316,9 +3320,9 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 				modeInfoLabel.setText("Select");
 			} else if (s.length() > 0) {
 				try {
-					addingClass = Class.forName("main.elements." + s);
-				} catch (Exception ee) {
-					ee.printStackTrace();
+					addingClass = Class.forName(s);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				mouseModeStr = s;
 				mouseMode = MODE_ADD_ELM;
@@ -3541,11 +3545,11 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyEventDispatcher() {
 					@Override
-					public boolean dispatchKeyEvent(KeyEvent e) {
-						if (e.getID() == KeyEvent.KEY_PRESSED) {
-							char keyChar = e.getKeyChar();
-							int keyCode = e.getKeyCode();
-							if (keyCode == KeyEvent.VK_E && e.isControlDown()
+					public boolean dispatchKeyEvent(KeyEvent evt) {
+						if (evt.getID() == KeyEvent.KEY_PRESSED) {
+							char keyChar = evt.getKeyChar();
+							int keyCode = evt.getKeyCode();
+							if (keyCode == KeyEvent.VK_E && evt.isControlDown()
 									&& editDialog == null) {
 								doEdit(mouseElm);
 								return true;
@@ -3553,30 +3557,30 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 							if (keyChar > ' ' && keyChar < 127) {
 								CircuitElm elm = null;
 								String element = null;
-								if (keyChar == 'f' || keyChar == 'j'
-										|| keyChar == 't' || keyChar == 'v') {
+								if (keyChar == 'f' || keyChar == 'j' || keyChar == 't' || keyChar == 'v') {
 									if (keyChar == 'f')
-										element = "NMosfetElm";
-									if (keyChar == 'f' && e.isAltDown())
-										element = "PMosfetElm";
+										element = elmPath("NMosfetElm");
+									if (keyChar == 'f' && evt.isAltDown())
+										element = elmPath("PMosfetElm");
 									if (keyChar == 'j')
-										element = "NJfetElm";
-									if (keyChar == 'j' && e.isAltDown())
-										element = "PJfetElm";
+										element = elmPath("NJfetElm");
+									if (keyChar == 'j' && evt.isAltDown())
+										element = elmPath("PJfetElm");
 									if (keyChar == 't')
-										element = "NTransistorElm";
-									if (keyChar == 't' && e.isAltDown())
-										element = "PTransistorElm";
+										element = elmPath("NTransistorElm");
+									if (keyChar == 't' && evt.isAltDown())
+										element = elmPath("PTransistorElm");
 									if (keyChar == 'v')
-										element = "DCVoltageElm";
+										element = elmPath("DCVoltageElm");
+
 									try {
-										addingClass = Class.forName("main.elements." + element);
-									} catch (ClassNotFoundException e1) {
-										e1.printStackTrace();
+										addingClass = Class.forName(element);
+									} catch (ClassNotFoundException e) {
+										e.printStackTrace();
 									}
 									elm = constructElement(addingClass, 0, 0);
-									mouseMode = MODE_ADD_ELM;
 									mouseModeStr = element;
+									mouseMode = MODE_ADD_ELM;
 									setMainMenuLabel(mainMenu, elm);
 									return true;
 								}
@@ -3631,38 +3635,38 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 									&& editDialog == null) {
 								doDelete();
 							}
-							if (e.isControlDown() && keyCode == KeyEvent.VK_Z) {
+							if (evt.isControlDown() && keyCode == KeyEvent.VK_Z) {
 								doUndo();
 							}
-							if (e.isControlDown() && e.isShiftDown()
+							if (evt.isControlDown() && evt.isShiftDown()
 									&& keyCode == KeyEvent.VK_Z) {
 								doRedo();
 							}
-							if (e.isControlDown()
-									&& e.getKeyCode() == KeyEvent.VK_X) {
+							if (evt.isControlDown()
+									&& evt.getKeyCode() == KeyEvent.VK_X) {
 								doCut();
 							}
-							if (e.isControlDown() && keyCode == KeyEvent.VK_C) {
+							if (evt.isControlDown() && keyCode == KeyEvent.VK_C) {
 								doCopy();
 							}
-							if (e.isControlDown() && keyCode == KeyEvent.VK_V) {
+							if (evt.isControlDown() && keyCode == KeyEvent.VK_V) {
 								if (clipboard != null && clipboard.length() > 0)
 									doPaste();
 							}
-							if (e.isControlDown() && keyCode == KeyEvent.VK_A) {
+							if (evt.isControlDown() && keyCode == KeyEvent.VK_A) {
 								doSelectAll();
 							}
-							if (e.isAltDown() && keyCode == KeyEvent.VK_TAB) {
+							if (evt.isAltDown() && keyCode == KeyEvent.VK_TAB) {
 								doSelectNext(1);
 							}
-							if (e.isAltDown() && e.isShiftDown()
+							if (evt.isAltDown() && evt.isShiftDown()
 									&& keyCode == KeyEvent.VK_TAB) {
 								doSelectNext(-1);
 							}
 							tempMouseMode = mouseMode;
-						} else if (e.getID() == KeyEvent.KEY_RELEASED) {
+						} else if (evt.getID() == KeyEvent.KEY_RELEASED) {
 							// ...
-						} else if (e.getID() == KeyEvent.KEY_TYPED) {
+						} else if (evt.getID() == KeyEvent.KEY_TYPED) {
 							// ...
 						}
 						return false;
