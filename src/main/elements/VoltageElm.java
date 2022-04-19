@@ -37,14 +37,14 @@ public class VoltageElm extends CircuitElm {
 		waveform = WF_DC;
 		dutyCycle = .5;
 		try {
-			waveform = Integer.valueOf(st.nextToken()).intValue();
-			frequency = Double.valueOf(st.nextToken()).doubleValue();
-			maxVoltage = Double.valueOf(st.nextToken()).doubleValue();
-			bias = Double.valueOf(st.nextToken()).doubleValue();
-			phaseShift = Double.valueOf(st.nextToken()).doubleValue();
-			dutyCycle = Double.valueOf(st.nextToken()).doubleValue();
-		} catch (Exception e) {
-		}
+			waveform = Integer.parseInt(st.nextToken());
+			frequency = Double.parseDouble(st.nextToken());
+			maxVoltage = Double.parseDouble(st.nextToken());
+			bias = Double.parseDouble(st.nextToken());
+			phaseShift = Double.parseDouble(st.nextToken());
+			dutyCycle = Double.parseDouble(st.nextToken());
+		} catch (Exception ignore) {}
+
 		if ((flags & FLAG_COS) != 0) {
 			flags &= ~FLAG_COS;
 			phaseShift = pi / 2;
@@ -236,7 +236,7 @@ public class VoltageElm extends CircuitElm {
 	}
 
 	@Override
-	public void getInfo(String arr[]) {
+	public void getInfo(String[] arr) {
 		switch (waveform) {
 		case WF_DC:
 		case WF_VAR:

@@ -3,7 +3,6 @@ import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Label;
 import java.awt.Point;
-import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -18,6 +17,7 @@ import java.text.NumberFormat;
 
 import javax.swing.JButton;
 import javax.swing.JScrollBar;
+import javax.swing.JTextField;
 
 class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		ItemListener, KeyListener, WindowListener {
@@ -26,7 +26,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 	Editable elm;
 	CirSim cframe;
 	JButton applyButton, okButton, closeButton;
-	EditInfo einfos[];
+	EditInfo[] einfos;
 	int einfocount;
 	final int barmax = 1000;
 	NumberFormat noCommaFormat;
@@ -54,16 +54,15 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 				add(ei.checkbox);
 				ei.checkbox.addItemListener(this);
 			} else {
-				add(ei.textf = new TextField(unitString(ei), 10));
+				add(ei.textf = new JTextField(unitString(ei), 10));
 				if (ei.text != null)
 					ei.textf.setText(ei.text);
 				ei.textf.addActionListener(this);
 				ei.textf.addKeyListener(this);
 				if (ei.text == null) {
-					add(ei.bar = new JScrollBar(JScrollBar.HORIZONTAL, 50, 10,
-							0, barmax + 2));
-					setBar(ei);
-					ei.bar.addAdjustmentListener(this);
+					//add(ei.bar = new JScrollBar(JScrollBar.HORIZONTAL, 50, 0, 0, barmax));
+					//setBar(ei);
+					//ei.bar.addAdjustmentListener(this);
 				}
 			}
 		}
@@ -167,11 +166,10 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 					/* ignored */ 
 				}
 			}
-			
 			elm.setEditValue(i, ei);
 			
-			if (ei.text == null)
-				setBar(ei);
+			//if (ei.text == null)
+				//setBar(ei);
 		}
 		
 		cframe.needAnalyze();
@@ -194,8 +192,8 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 						/* ignored */ }
 				}
 				elm.setEditValue(i, ei);
-				if (ei.text == null)
-					setBar(ei);
+				//if (ei.text == null)
+					//setBar(ei);
 				cframe.needAnalyze();
 			}
 		}
@@ -224,7 +222,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		for (i = 0; i != einfocount; i++) {
 			EditInfo ei = einfos[i];
 			if (ei.bar == src) {
-				double v = ei.bar.getValue() / 1000.;
+				double v = ei.bar.getValue() / 1000.0f;
 				if (v < 0)
 					v = 0;
 				if (v > 1)

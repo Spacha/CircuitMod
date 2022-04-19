@@ -1,6 +1,5 @@
 package main;
-import java.awt.TextField;
-
+import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JScrollBar;
@@ -58,7 +57,7 @@ public class EditInfo {
 
 	String name, text;
 	double value, minval, maxval;
-	TextField textf;
+	JTextField textf;
 	JScrollBar bar;
 	JComboBox<?> choice;
 	JCheckBox checkbox;
