@@ -2076,6 +2076,19 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		// iter);
 	}
 
+	public void setEditDialog(Editable elm) {
+		closeEditDialog();
+		editDialog = new EditDialog(elm, this);
+		editDialog.setVisible(true);
+	}
+
+	public void closeEditDialog() {
+		requestFocus();
+		if (editDialog != null)
+			editDialog.dispose();
+		editDialog = null;
+	}
+
 	@Override
 	public void componentHidden(ComponentEvent e) {}
 
@@ -2255,14 +2268,10 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 		}
 	}
 
-	void doEdit(Editable eable) {
+	public void doEdit(Editable eable) {
 		clearSelection();
 		// pushUndo();
-		if (editDialog != null) {
-			requestFocus();
-			editDialog.setVisible(false);
-			editDialog = null;
-		}
+		closeEditDialog();
 		editDialog = new EditDialog(eable, this);
 		// editDialog.setModal(true);
 		if (eable instanceof EditOptions)
@@ -3593,136 +3602,137 @@ public class CirSim extends Frame implements ComponentListener, ActionListener,
 
 	// Init keyboard detection
 	void keyboardInit() {
-		KeyboardFocusManager.getCurrentKeyboardFocusManager()
-				.addKeyEventDispatcher(new KeyEventDispatcher() {
-					@Override
-					public boolean dispatchKeyEvent(KeyEvent evt) {
-						if (evt.getID() == KeyEvent.KEY_PRESSED) {
-							char keyChar = evt.getKeyChar();
-							int keyCode = evt.getKeyCode();
-							if (keyCode == KeyEvent.VK_E && evt.isControlDown()
-									&& editDialog == null) {
-								doEdit(mouseElm);
-								return true;
-							}
-							if (keyChar > ' ' && keyChar < 127) {
-								CircuitElm elm = null;
-								String element = null;
-								if (keyChar == 'f' || keyChar == 'j' || keyChar == 't' || keyChar == 'v') {
-									if (keyChar == 'f')
-										element = elmPath("NMosfetElm");
-									if (keyChar == 'f' && evt.isAltDown())
-										element = elmPath("PMosfetElm");
-									if (keyChar == 'j')
-										element = elmPath("NJfetElm");
-									if (keyChar == 'j' && evt.isAltDown())
-										element = elmPath("PJfetElm");
-									if (keyChar == 't')
-										element = elmPath("NTransistorElm");
-									if (keyChar == 't' && evt.isAltDown())
-										element = elmPath("PTransistorElm");
-									if (keyChar == 'v')
-										element = elmPath("DCVoltageElm");
+		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+			@Override
+			public boolean dispatchKeyEvent(KeyEvent evt) {
+				if (evt.getID() == KeyEvent.KEY_PRESSED) {
+					char keyChar = evt.getKeyChar();
+					int keyCode = evt.getKeyCode();
 
-									try {
-										addingClass = Class.forName(element);
-									} catch (ClassNotFoundException e) {
-										e.printStackTrace();
-									}
-									elm = constructElement(addingClass, 0, 0);
-									mouseModeStr = element;
-									mouseMode = MODE_ADD_ELM;
-									setMainMenuLabel(mainMenu, elm);
-									return true;
-								}
-								Class<?> c = dumpTypes[keyChar];
-								if (c == null || c == Scope.class)
-									return false;
-								elm = constructElement(c, 0, 0);
-								if (elm == null || !(elm.needsShortcut()
-										&& elm.getDumpClass() == c))
-									return false;
-								mouseMode = MODE_ADD_ELM;
-								mouseModeStr = c.getName();
-								addingClass = c;
-								setMainMenuLabel(mainMenu, elm);
-							}
-							if (keyChar == ' ') {
-								mouseMode = MODE_SELECT;
-								mouseModeStr = "Select";
-								modeInfoLabel.setText(mouseModeStr);
-							}
-							switch (keyCode) {
-							case KeyEvent.VK_UP:
-								if (mouseElm != null) {
-									pushUndo();
-									mouseElm.move(0, -gridSize);
-									needAnalyze();
-								}
-								break;
-							case KeyEvent.VK_DOWN:
-								if (mouseElm != null) {
-									pushUndo();
-									mouseElm.move(0, gridSize);
-									needAnalyze();
-								}
-								break;
-							case KeyEvent.VK_LEFT:
-								if (mouseElm != null) {
-									pushUndo();
-									mouseElm.move(-gridSize, 0);
-									needAnalyze();
-								}
-								break;
-							case KeyEvent.VK_RIGHT:
-								if (mouseElm != null) {
-									pushUndo();
-									mouseElm.move(gridSize, 0);
-									needAnalyze();
-								}
-								break;
-							}
-							if (keyCode == KeyEvent.VK_DELETE
-									&& editDialog == null) {
-								doDelete();
-							}
-							if (evt.isControlDown() && keyCode == KeyEvent.VK_Z) {
-								doUndo();
-							}
-							if (evt.isControlDown() && evt.isShiftDown()
-									&& keyCode == KeyEvent.VK_Z) {
-								doRedo();
-							}
-							if (evt.isControlDown()
-									&& evt.getKeyCode() == KeyEvent.VK_X) {
-								doCut();
-							}
-							if (evt.isControlDown() && keyCode == KeyEvent.VK_C) {
-								doCopy();
-							}
-							if (evt.isControlDown() && keyCode == KeyEvent.VK_V) {
-								if (clipboard != null && clipboard.length() > 0)
-									doPaste();
-							}
-							if (evt.isControlDown() && keyCode == KeyEvent.VK_A) {
-								doSelectAll();
-							}
-							if (evt.isAltDown() && keyCode == KeyEvent.VK_TAB) {
-								doSelectNext(1);
-							}
-							if (evt.isAltDown() && evt.isShiftDown()
-									&& keyCode == KeyEvent.VK_TAB) {
-								doSelectNext(-1);
-							}
-							tempMouseMode = mouseMode;
-						} else if (evt.getID() == KeyEvent.KEY_RELEASED) {
-							// ...
-						} else if (evt.getID() == KeyEvent.KEY_TYPED) {
-							// ...
-						}
+					// unless the main window has focus, ignore all events
+					if (!isFocused())
 						return false;
+
+					if (keyCode == KeyEvent.VK_E && evt.isControlDown() && editDialog == null) {
+						doEdit(mouseElm);
+						return true;
 					}
-				});
+					if (keyChar > ' ' && keyChar < 127) {
+						CircuitElm elm = null;
+						String element = null;
+						if (keyChar == 'f' || keyChar == 'j' || keyChar == 't' || keyChar == 'v') {
+							if (keyChar == 'f')
+								element = elmPath("NMosfetElm");
+							if (keyChar == 'f' && evt.isAltDown())
+								element = elmPath("PMosfetElm");
+							if (keyChar == 'j')
+								element = elmPath("NJfetElm");
+							if (keyChar == 'j' && evt.isAltDown())
+								element = elmPath("PJfetElm");
+							if (keyChar == 't')
+								element = elmPath("NTransistorElm");
+							if (keyChar == 't' && evt.isAltDown())
+								element = elmPath("PTransistorElm");
+							if (keyChar == 'v')
+								element = elmPath("DCVoltageElm");
+
+							try {
+								addingClass = Class.forName(element);
+							} catch (ClassNotFoundException e) {
+								e.printStackTrace();
+							}
+							elm = constructElement(addingClass, 0, 0);
+							mouseModeStr = element;
+							mouseMode = MODE_ADD_ELM;
+							setMainMenuLabel(mainMenu, elm);
+							return true;
+						}
+						Class<?> c = dumpTypes[keyChar];
+						if (c == null || c == Scope.class)
+							return false;
+						elm = constructElement(c, 0, 0);
+						if (elm == null || !(elm.needsShortcut()
+								&& elm.getDumpClass() == c))
+							return false;
+						mouseMode = MODE_ADD_ELM;
+						mouseModeStr = c.getName();
+						addingClass = c;
+						setMainMenuLabel(mainMenu, elm);
+					}
+					if (keyChar == ' ') {
+						mouseMode = MODE_SELECT;
+						mouseModeStr = "Select";
+						modeInfoLabel.setText(mouseModeStr);
+					}
+					switch (keyCode) {
+					case KeyEvent.VK_UP:
+						if (mouseElm != null) {
+							pushUndo();
+							mouseElm.move(0, -gridSize);
+							needAnalyze();
+						}
+						break;
+					case KeyEvent.VK_DOWN:
+						if (mouseElm != null) {
+							pushUndo();
+							mouseElm.move(0, gridSize);
+							needAnalyze();
+						}
+						break;
+					case KeyEvent.VK_LEFT:
+						if (mouseElm != null) {
+							pushUndo();
+							mouseElm.move(-gridSize, 0);
+							needAnalyze();
+						}
+						break;
+					case KeyEvent.VK_RIGHT:
+						if (mouseElm != null) {
+							pushUndo();
+							mouseElm.move(gridSize, 0);
+							needAnalyze();
+						}
+						break;
+					}
+					if (keyCode == KeyEvent.VK_DELETE && editDialog == null) {
+						doDelete();
+					}
+					if (evt.isControlDown() && keyCode == KeyEvent.VK_Z) {
+						doUndo();
+					}
+					if (evt.isControlDown() && evt.isShiftDown()
+							&& keyCode == KeyEvent.VK_Z) {
+						doRedo();
+					}
+					if (evt.isControlDown()
+							&& evt.getKeyCode() == KeyEvent.VK_X) {
+						doCut();
+					}
+					if (evt.isControlDown() && keyCode == KeyEvent.VK_C) {
+						doCopy();
+					}
+					if (evt.isControlDown() && keyCode == KeyEvent.VK_V) {
+						if (clipboard != null && clipboard.length() > 0)
+							doPaste();
+					}
+					if (evt.isControlDown() && keyCode == KeyEvent.VK_A) {
+						doSelectAll();
+					}
+					if (evt.isAltDown() && keyCode == KeyEvent.VK_TAB) {
+						doSelectNext(1);
+					}
+					if (evt.isAltDown() && evt.isShiftDown() && keyCode == KeyEvent.VK_TAB) {
+						doSelectNext(-1);
+					}
+					tempMouseMode = mouseMode;
+				} else if (evt.getID() == KeyEvent.KEY_RELEASED) {
+					// ...
+				} else if (evt.getID() == KeyEvent.KEY_TYPED) {
+					// ...
+				}
+				return false;
+			}
+		});
 	}
 
 	// Factors a matrix into upper and lower triangular matrices by gaussian elimination.

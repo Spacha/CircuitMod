@@ -19,6 +19,8 @@ import javax.swing.JButton;
 import javax.swing.JScrollBar;
 import javax.swing.JTextField;
 
+import static java.awt.event.ItemEvent.SELECTED;
+
 class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		ItemListener, KeyListener, WindowListener {
 
@@ -32,7 +34,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 	NumberFormat noCommaFormat;
 
 	EditDialog(Editable ce, CirSim f) {
-		super(f, "Edit Component", false);
+		super(f, "Edit Component", true);
 		cframe = f;
 		elm = ce;
 		setLayout(new EditDialogLayout());
@@ -162,9 +164,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 				try {
 					double d = parseUnits(ei);
 					ei.value = d;
-				} catch (Exception ex) {
-					/* ignored */ 
-				}
+				} catch (Exception ignored) {}
 			}
 			elm.setEditValue(i, ei);
 			
@@ -188,8 +188,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 					try {
 						double d = parseUnits(ei);
 						ei.value = d;
-					} catch (Exception ex) {
-						/* ignored */ }
+					} catch (Exception ignored) {}
 				}
 				elm.setEditValue(i, ei);
 				//if (ei.text == null)
@@ -200,18 +199,14 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		
 		if (e.getSource() == okButton) {
 			apply();
-			CirSim.main.requestFocus();
-			setVisible(false);
-			CirSim.editDialog = null;
+			cframe.closeEditDialog();
 		}
 		
 		if (e.getSource() == applyButton)
 			apply();
 		
 		if (e.getSource() == closeButton) {
-			CirSim.main.requestFocus();
-			setVisible(false);
-			CirSim.editDialog = null;
+			cframe.closeEditDialog();
 		}
 	}
 
@@ -248,18 +243,16 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 		boolean changed = false;
 		for (i = 0; i != einfocount; i++) {
 			EditInfo ei = einfos[i];
-			if (ei.choice == src || ei.checkbox == src) {
+			if ((ei.choice == src && e.getStateChange() == SELECTED) || ei.checkbox == src) {
 				elm.setEditValue(i, ei);
 				if (ei.newDialog)
 					changed = true;
 				cframe.needAnalyze();
 			}
 		}
-		if (changed) {
-			setVisible(false);
-			CirSim.editDialog = new EditDialog(elm, cframe);
-			CirSim.editDialog.setVisible(true);
-		}
+
+		if (changed)
+			cframe.setEditDialog(elm);
 	}
 
 	// @Override
@@ -298,9 +291,7 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 	}
 
 	public void windowClosing(WindowEvent event) {
-		CirSim.main.requestFocus();
-		setVisible(false);
-		CirSim.editDialog = null;
+		cframe.closeEditDialog();
 	}
 
 	@Override
@@ -315,15 +306,10 @@ class EditDialog extends Dialog implements AdjustmentListener, ActionListener,
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			apply();
-			CirSim.main.requestFocus();
-			setVisible(false);
-			CirSim.editDialog = null;
+			cframe.closeEditDialog();
 		}
-		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-			CirSim.main.requestFocus();
-			setVisible(false);
-			CirSim.editDialog = null;
-		}
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			cframe.closeEditDialog();
 	}
 
 }

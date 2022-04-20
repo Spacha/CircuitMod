@@ -323,12 +323,18 @@ public class VoltageElm extends CircuitElm {
 		if (n == 1) {
 			int ow = waveform;
 			waveform = ei.getChoice();
+
+			// waveform changed from non-DC to DC
 			if (waveform == WF_DC && ow != WF_DC) {
 				ei.setNewDialog(true);
 				bias = 0;
+
+			// waveform changed from non-DC to another non-DC
 			} else if (waveform != WF_DC && ow == WF_DC) {
 				ei.setNewDialog(true);
 			}
+
+			// new/old waveform is/was square
 			if ((waveform == WF_SQUARE || ow == WF_SQUARE) && waveform != ow)
 				ei.setNewDialog(true);
 			setPoints();

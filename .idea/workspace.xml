@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="79df86f2-b747-4775-8cbc-60cb537ad6dc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/CirSim.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/CirSim.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/EditDialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/EditDialog.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/EditInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/EditInfo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/elements/VoltageElm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/elements/VoltageElm.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -69,5 +69,19 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/EditDialog.java</url>
+          <line>35</line>
+          <properties class="main.EditDialog" method="&lt;init&gt;">
+            <option name="EMULATED" value="true" />
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
